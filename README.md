@@ -1,87 +1,52 @@
-# Project Title
 
-One Paragraph of project description goes here
+# AcademiaDev Joinville - projeto PetCodes
 
-## Getting Started
+Projeto da aplicação para gerenciador de animais achados, perdidos e para adoção.
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+## Configuração
 
-### Prerequisites
+TODO
 
-What things you need to install the software and how to install them
+### Requisitos mínimos
 
-```
-Give examples
-```
+TODO
 
-### Installing
+### Instalação
 
-A step by step series of examples that tell you how to get a development env running
+TODO
 
-Say what the step will be
+## Executando os testes
 
-```
-Give the example
-```
+TODO
 
-And repeat
+## Utilização
 
-```
-until finished
-```
+TODO
 
-End with an example of getting some data out of the system or using it for a little demo
+## Tecnologias utilizadas
 
-## Running the tests
+TODO
 
-Explain how to run the automated tests for this system
+## Controle de versões
 
-### Break down into end to end tests
+TODO
 
-Explain what these tests test and why
+## Autores
 
-```
-Give an example
-```
+* **Time do backend:**
+  * **Julio Caye** - *Initial work* - [JCaye](https://github.com/JCaye)
+  * **Yan Henning** - *Initial work* - [Yanhennning](https://github.com/Yanhenning)
+  * **Yuri Salvador** - *Initial work* - [Yurihs](https://github.com/yurihs)
+* **Time do frontend:**
+  * **Larissa Lopes** - *Initial work* - [lopeslarissa](https://github.com/lopeslarissa)
+  * **Iago Elias** - *Initial work* - [imarinheiro](https://github.com/imarinheiro)
 
-### And coding style tests
+## Licença
 
-Explain what these tests test and why
+Pode ficar à vontade pra usar como quiser.
 
-```
-Give an example
-```
+## Agradecimentos
 
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
+* À [Code:Nation](https://www.codenation.com.br/) pela oportunidade de participar do projeto AcademiaDev Joinville
+* Ao [Bruno de souza](https://github.com/bnubruno) por ser um tutor supimpa
 * etc
