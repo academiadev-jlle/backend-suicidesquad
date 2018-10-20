@@ -43,7 +43,7 @@ TODO
 
 ## Licença
 
-Pode ficar à vontade pra usar como quiser.
+Esse projeto é feito sob a licença do [MIT](https://opensource.org/licenses/MIT).
 
 ## Agradecimentos
 
