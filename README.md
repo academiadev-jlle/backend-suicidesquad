@@ -1,4 +1,4 @@
-
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/academiadev-joinville/projeto-backend-suicidesquad.svg?columns=all)](https://waffle.io/academiadev-joinville/projeto-backend-suicidesquad)
 # AcademiaDev Joinville - projeto PetCodes
 
 Projeto da aplicação para gerenciador de animais achados, perdidos e para adoção.
@@ -43,7 +43,7 @@ TODO
 
 ## Licença
 
-Pode ficar à vontade pra usar como quiser.
+Esse projeto é feito sob a licença do [MIT](https://opensource.org/licenses/MIT).
 
 ## Agradecimentos
 
