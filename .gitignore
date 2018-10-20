@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 # Created by https://www.gitignore.io/api/gradle,eclipse,intellij
+=======
+# Created by https://www.gitignore.io/api/gradle,eclipse,intellij,visualstudiocode
+>>>>>>> da69e75adeab0edfd2b78d67b0940ae3f22ab0cf
 
 ### Eclipse ###
 
@@ -150,6 +154,16 @@ fabric.properties
 # Sonarlint plugin
 .idea/sonarlint
 
+<<<<<<< HEAD
+=======
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+>>>>>>> da69e75adeab0edfd2b78d67b0940ae3f22ab0cf
 ### Gradle ###
 .gradle
 /build/
@@ -170,4 +184,8 @@ gradle-app.setting
 **/build/
 
 
+<<<<<<< HEAD
 # End of https://www.gitignore.io/api/gradle,eclipse,intellij
+=======
+# End of https://www.gitignore.io/api/gradle,eclipse,intellij,visualstudiocode
+>>>>>>> da69e75adeab0edfd2b78d67b0940ae3f22ab0cf
