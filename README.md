@@ -34,12 +34,12 @@ TODO
 ## Autores
 
 * **Time do backend:**
-  * **Julio Caye** - *Initial work* - [JCaye](https://github.com/JCaye)
-  * **Yan Henning** - *Initial work* - [Yanhennning](https://github.com/Yanhenning)
-  * **Yuri Salvador** - *Initial work* - [Yurihs](https://github.com/yurihs)
+  * **Julio Caye** - [JCaye](https://github.com/JCaye)
+  * **Yan Henning** - [Yanhennning](https://github.com/Yanhenning)
+  * **Yuri Salvador** - [Yurihs](https://github.com/yurihs)
 * **Time do frontend:**
-  * **Larissa Lopes** - *Initial work* - [lopeslarissa](https://github.com/lopeslarissa)
-  * **Iago Elias** - *Initial work* - [imarinheiro](https://github.com/imarinheiro)
+  * **Larissa Lopes** - [lopeslarissa](https://github.com/lopeslarissa)
+  * **Iago Elias** - [imarinheiro](https://github.com/imarinheiro)
 
 ## Licença
 
