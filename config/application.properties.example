@@ -1,0 +1,5 @@
+# TODO: Copiar isso para o application.properties e configurar as credenciais para o seu banco.
+# Isso deve ser usado apenas para credenciais e outras configurações locais.
+spring.datasource.url=jdbc:postgresql://localhost:5432/suicidesquad
+spring.datasource.username=
+spring.datasource.password=

@@ -18,9 +18,8 @@
 *.ipr
 /out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+### Other ###
+
+/bin/
+/config/*
+!/config/*.example
