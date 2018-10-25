@@ -1,5 +1,6 @@
 package br.com.academiadev.suicidesquad.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "pet")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Pet implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
