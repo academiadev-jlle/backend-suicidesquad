@@ -1,8 +1,3 @@
-INSERT INTO tipo (descricao) VALUES
-  ('Cachorro'),
-	('Gato'),
-	('Equino');
-
 INSERT INTO raca (descricao) VALUES
 	('Abissínio'),
 	('Akita Inu'),
@@ -83,11 +78,6 @@ INSERT INTO raca (descricao) VALUES
 	('Weimaraner'),
 	('West Highland White Terrier'),
 	('Yorkshire');
-
-INSERT INTO porte (descricao) VALUES
-	('Pequeno'),
-	('Médio'),
-	('Grande');
 
 INSERT INTO cor (descricao) VALUES
 	('Abricot'),
@@ -174,7 +164,7 @@ INSERT INTO localizacao (bairro, cidade, uf) VALUES
   ('Centro', 'São Francisco do Sul', 'SC'),
   ('Floresta', 'Joinville', 'SC');
 
-INSERT INTO pet (id_comprimento_pelo, id_cor, id_localizacao, id_porte, id_raca, id_tipo) VALUES
+INSERT INTO pet (id_comprimento_pelo, id_cor, id_localizacao, porte, id_raca, tipo) VALUES
   (1, 1, 1, 1, 1, 1),
   (2, 2, 2, 2, 2, 2),
   (3, 3, 1, 3, 3, 3);

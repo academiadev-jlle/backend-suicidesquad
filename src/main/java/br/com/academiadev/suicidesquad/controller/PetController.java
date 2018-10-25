@@ -26,9 +26,8 @@ public class PetController {
 
     @GetMapping("/pets/{idPet}")
     public Pet getPet(@PathVariable Long idPet) {
-        if (!petRepository.existsById(idPet)) {
-            throw new ResourceNotFoundException("Pet com o id " + idPet + " não foi encontrado");
-        }
-        return petRepository.getOne(idPet);
+        return petRepository
+                .findById(idPet)
+                .orElseThrow(() -> new ResourceNotFoundException("Pet com o id " + idPet + " não foi encontrado"));
     }
 }

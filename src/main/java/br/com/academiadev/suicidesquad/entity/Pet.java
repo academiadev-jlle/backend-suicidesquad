@@ -1,10 +1,16 @@
 package br.com.academiadev.suicidesquad.entity;
 
+import br.com.academiadev.suicidesquad.converter.PorteConverter;
+import br.com.academiadev.suicidesquad.converter.TipoConverter;
+import br.com.academiadev.suicidesquad.enums.Porte;
+import br.com.academiadev.suicidesquad.enums.Tipo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,33 +23,33 @@ public class Pet implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
-    @JoinColumn(name = "id_tipo", nullable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JsonProperty("tipo")
+    @Convert(converter = TipoConverter.class)
+    @NotNull
     private Tipo tipo;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
-    @JoinColumn(name = "id_raca", nullable = false)
+    @JsonProperty("porte")
+    @Convert(converter = PorteConverter.class)
+    @NotNull
+    private Porte porte;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "id_raca")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Raca raca;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
-    @JoinColumn(name = "id_porte", nullable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    private Porte porte;
-
-    @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
-    @JoinColumn(name = "id_cor", nullable = false)
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "id_cor")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Cor cor;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
-    @JoinColumn(name = "id_comprimento_pelo", nullable = false)
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "id_comprimento_pelo")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private ComprimentoPelo comprimentoPelo;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
-    @JoinColumn(name = "id_localizacao", nullable = false)
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "id_localizacao")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Localizacao localizacao;
 
@@ -62,28 +68,12 @@ public class Pet implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Telefone> telefones = new ArrayList<>();
 
-    public Tipo getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(Tipo tipo) {
-        this.tipo = tipo;
-    }
-
     public Raca getRaca() {
         return raca;
     }
 
     public void setRaca(Raca raca) {
         this.raca = raca;
-    }
-
-    public Porte getPorte() {
-        return porte;
-    }
-
-    public void setPorte(Porte porte) {
-        this.porte = porte;
     }
 
     public Cor getCor() {
