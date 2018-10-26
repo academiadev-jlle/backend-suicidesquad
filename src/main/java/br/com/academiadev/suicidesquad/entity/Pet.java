@@ -68,6 +68,22 @@ public class Pet implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Telefone> telefones = new ArrayList<>();
 
+    public Tipo getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
+    }
+
+    public Porte getPorte() {
+        return porte;
+    }
+
+    public void setPorte(Porte porte) {
+        this.porte = porte;
+    }
+
     public Raca getRaca() {
         return raca;
     }
