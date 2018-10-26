@@ -1,6 +1,5 @@
 package br.com.academiadev.suicidesquad.converter;
 
-import br.com.academiadev.suicidesquad.enums.Porte;
 import br.com.academiadev.suicidesquad.enums.Tipo;
 
 import javax.persistence.AttributeConverter;
