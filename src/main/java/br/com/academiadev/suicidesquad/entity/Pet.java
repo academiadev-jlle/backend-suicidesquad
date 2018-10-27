@@ -6,8 +6,6 @@ import br.com.academiadev.suicidesquad.enums.Porte;
 import br.com.academiadev.suicidesquad.enums.Tipo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -33,39 +31,34 @@ public class Pet implements Serializable {
     @NotNull
     private Porte porte;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "id_raca")
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Raca raca;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "id_cor")
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Cor cor;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "id_comprimento_pelo")
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private ComprimentoPelo comprimentoPelo;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "id_localizacao")
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Localizacao localizacao;
 
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(
             name = "situacao_pet",
             joinColumns = @JoinColumn(name = "id_pet"),
             inverseJoinColumns = @JoinColumn(name = "id_situacao")
     )
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private List<Situacao> situacoes = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(orphanRemoval = true)
     private List<Email> emails  = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(orphanRemoval = true)
     private List<Telefone> telefones = new ArrayList<>();
 
     public Tipo getTipo() {
