@@ -42,11 +42,6 @@ public class UsuarioControllerTest {
     private UsuarioRepository usuarioRepository;
 
 
-/*    @Before
-    public void setUp() {
-        this.mvc = MockMvcBuilders.standaloneSetup(usu).build();
-    }*/
-
     @Test
     public void givenGetUsuariosThenUsuariosEncontrados() throws Exception {
         Usuario usuario1 = new Usuario();
@@ -66,16 +61,29 @@ public class UsuarioControllerTest {
         allUsuarios.add(usuario1);
         allUsuarios.add(usuario2);
 
-        usuarioRepository.save(usuario1);
-        usuarioRepository.save(usuario2);
-
-
+        when(usuarioRepository.findAll()).thenReturn(allUsuarios);
 
         this.mvc.perform(get("/usuarios"))
-                .andExpect(status().isOk());
-         //       .andExpect(jsonPath("$.content[0].email", is("primeiroemail@gmail.com")));
-        //.andExpect(jsonPath("$.content[0].nome", is("Nelson Nunes Guimarães")))
-        //.andExpect(jsonPath("$.content[1].nome", is("Salvador Di Bernardi")));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].email", is("primeiroemail@gmail.com")))
+                .andExpect(jsonPath("$[0].nome", is("Nelson Nunes Guimarães")))
+                .andExpect(jsonPath("$[1].nome", is("Salvador Di Bernardi")));
+    }
+
+    @Test
+    public void givenGetUsuarioPorIdThenUsuarioEncontrado() throws Exception {
+        Usuario usuario1 = new Usuario();
+        usuario1.setEmail("primeiroemail@gmail.com");
+        usuario1.setNome("Nelson Nunes Guimarães");
+        usuario1.setSenha("senha1");
+        usuario1.setId(1l);
+
+        when(usuarioRepository.findById(1l)).thenReturn(java.util.Optional.of(usuario1));
+
+        this.mvc.perform(get("/usuario/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nome", is("Nelson Nunes Guimarães")));
+
     }
 
 
