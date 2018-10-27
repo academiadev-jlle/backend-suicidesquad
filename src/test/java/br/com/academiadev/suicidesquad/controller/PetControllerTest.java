@@ -3,7 +3,7 @@ package br.com.academiadev.suicidesquad.controller;
 import br.com.academiadev.suicidesquad.entity.Pet;
 import br.com.academiadev.suicidesquad.enums.Porte;
 import br.com.academiadev.suicidesquad.enums.Tipo;
-import br.com.academiadev.suicidesquad.repository.PetRepository;
+import br.com.academiadev.suicidesquad.service.PetService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -40,7 +40,7 @@ public class PetControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private PetRepository petRepository;
+    private PetService petService;
 
     @Test
     public void getPets() throws Exception {
@@ -56,7 +56,7 @@ public class PetControllerTest {
         allPets.add(pet2);
 
         Page<Pet> pagedResponse = new PageImpl<>(allPets);
-        when(petRepository.findAll(any(Pageable.class))).thenReturn(pagedResponse);
+        when(petService.findAll(any(Pageable.class))).thenReturn(pagedResponse);
 
         this.mvc.perform(get("/pets"))
                 .andExpect(status().isOk())
@@ -71,7 +71,7 @@ public class PetControllerTest {
         pet.setTipo(Tipo.CACHORRO);
         pet.setPorte(Porte.PEQUENO);
 
-        when(petRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(pet));
+        when(petService.findById(1L)).thenReturn(java.util.Optional.of(pet));
 
         this.mvc.perform(get("/pets/1"))
                 .andExpect(status().isOk())
@@ -89,7 +89,7 @@ public class PetControllerTest {
             .andExpect(status().isOk());
 
         ArgumentCaptor<Pet> argument = ArgumentCaptor.forClass(Pet.class);
-        verify(petRepository, times(1)).save(argument.capture());
+        verify(petService, times(1)).save(argument.capture());
         assertThat(argument.getValue().getTipo(), equalTo(Tipo.CACHORRO));
         assertThat(argument.getValue().getPorte(), equalTo(Porte.PEQUENO));
     }
