@@ -33,6 +33,10 @@ public class Usuario implements Serializable {
     private String senha;
 
 
+    public Usuario(){
+
+    }
+
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_localizacao")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
