@@ -56,7 +56,10 @@ public class Pet implements Serializable {
     @Convert(converter = CorConverter.class)
     private Set<Cor> cores = new HashSet<>();
 
-    @OneToMany(mappedBy = "pet")
+    @OneToMany(
+            mappedBy = "pet",
+            orphanRemoval = true
+    )
     private List<Registro> registros = new ArrayList<>();
 
     public Pet() {
@@ -153,9 +156,11 @@ public class Pet implements Serializable {
 
     public void setRegistros(List<Registro> registros) {
         this.registros = registros;
+        registros.forEach(registro -> registro.setPet(this));
     }
 
-    public boolean addRegistro(Registro registro) {
-        return this.registros.add(registro);
+    public void addRegistro(Registro registro) {
+        this.registros.add(registro);
+        registro.setPet(this);
     }
 }

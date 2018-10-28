@@ -13,10 +13,11 @@ import java.time.LocalDateTime;
 @Table(name = "registro")
 public class Registro implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "id_pet")
     @NotNull
     @JsonIgnore
     private Pet pet;
