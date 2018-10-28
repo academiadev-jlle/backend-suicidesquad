@@ -37,6 +37,10 @@ public class Pet implements Serializable {
     @Convert(converter = ComprimentoPeloConverter.class)
     private ComprimentoPelo comprimentoPelo;
 
+    @JsonProperty("sexo")
+    @Convert(converter = SexoConverter.class)
+    private Sexo sexo;
+
     @ManyToOne
     @JoinColumn(name = "id_localizacao")
     private Localizacao localizacao;
@@ -90,6 +94,14 @@ public class Pet implements Serializable {
 
     public void setComprimentoPelo(ComprimentoPelo comprimentoPelo) {
         this.comprimentoPelo = comprimentoPelo;
+    }
+
+    public Sexo getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(Sexo sexo) {
+        this.sexo = sexo;
     }
 
     public Localizacao getLocalizacao() {

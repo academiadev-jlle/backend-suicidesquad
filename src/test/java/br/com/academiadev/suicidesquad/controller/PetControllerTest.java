@@ -50,6 +50,7 @@ public class PetControllerTest {
         pet.addCor(Cor.MARROM);
         pet.addCor(Cor.BRANCO);
         pet.setComprimentoPelo(ComprimentoPelo.CURTO);
+        pet.setSexo(Sexo.MACHO);
         return pet;
     }
 
@@ -112,7 +113,8 @@ public class PetControllerTest {
                 .andExpect(jsonPath("$.porte", equalTo(pet.getPorte().toString())))
                 .andExpect(jsonPath("$.raca", equalTo(pet.getRaca().toString())))
                 .andExpect(jsonPath("$.cores", hasSize(pet.getCores().size())))
-                .andExpect(jsonPath("$.comprimento_pelo", equalTo(pet.getComprimentoPelo().toString())));
+                .andExpect(jsonPath("$.comprimento_pelo", equalTo(pet.getComprimentoPelo().toString())))
+                .andExpect(jsonPath("$.sexo", equalTo(pet.getSexo().toString())));
     }
 
     @Test
