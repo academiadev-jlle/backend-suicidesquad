@@ -41,6 +41,10 @@ public class Pet implements Serializable {
     @Convert(converter = SexoConverter.class)
     private Sexo sexo;
 
+    @JsonProperty("categoria")
+    @Convert(converter = CategoriaConverter.class)
+    private Categoria categoria;
+
     @ManyToOne
     @JoinColumn(name = "id_localizacao")
     private Localizacao localizacao;
@@ -53,12 +57,14 @@ public class Pet implements Serializable {
     public Pet() {
     }
 
-    public Pet(@NotNull Tipo tipo, @NotNull Porte porte) {
+    public Pet(Categoria categoria, @NotNull Tipo tipo, @NotNull Porte porte) {
+        this.categoria = categoria;
         this.tipo = tipo;
         this.porte = porte;
     }
 
-    public Pet(@NotNull Tipo tipo, @NotNull Porte porte, @NotNull Raca raca) {
+    public Pet(Categoria categoria, @NotNull Tipo tipo, @NotNull Porte porte, @NotNull Raca raca) {
+        this.categoria = categoria;
         this.tipo = tipo;
         this.porte = porte;
         this.raca = raca;
@@ -102,6 +108,14 @@ public class Pet implements Serializable {
 
     public void setSexo(Sexo sexo) {
         this.sexo = sexo;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
     public Localizacao getLocalizacao() {

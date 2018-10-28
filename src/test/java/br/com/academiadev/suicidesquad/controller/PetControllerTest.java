@@ -46,7 +46,7 @@ public class PetControllerTest {
     private PetService petService;
 
     private Pet buildPet() {
-        Pet pet = new Pet(Tipo.CACHORRO, Porte.PEQUENO, Raca.CACHORRO_SRD);
+        Pet pet = new Pet(Categoria.ACHADO, Tipo.CACHORRO, Porte.PEQUENO, Raca.CACHORRO_SRD);
         pet.addCor(Cor.MARROM);
         pet.addCor(Cor.BRANCO);
         pet.setComprimentoPelo(ComprimentoPelo.CURTO);
@@ -55,11 +55,11 @@ public class PetControllerTest {
     }
 
     private List<Pet> buildPets() {
-        Pet petSemRaca = new Pet(Tipo.GATO, Porte.MEDIO);
+        Pet petSemRaca = new Pet(Categoria.ACHADO, Tipo.GATO, Porte.MEDIO);
 
-        Pet petComRaca = new Pet(Tipo.EQUINO, Porte.GRANDE, Raca.LUSITANO);
+        Pet petComRaca = new Pet(Categoria.PERDIDO, Tipo.EQUINO, Porte.GRANDE, Raca.LUSITANO);
 
-        Pet petComCor = new Pet(Tipo.CACHORRO, Porte.PEQUENO, Raca.LABRADOR);
+        Pet petComCor = new Pet(Categoria.PARA_ADOCAO, Tipo.CACHORRO, Porte.PEQUENO, Raca.LABRADOR);
         petComCor.addCor(Cor.BRANCO);
 
         return Arrays.asList(
@@ -81,6 +81,7 @@ public class PetControllerTest {
 
         int idx = 0;
         for (Pet pet : pets) {
+            result = result.andExpect(jsonPath(String.format("$.content[%d].categoria", idx), equalTo(pet.getCategoria().toString())));
             result = result.andExpect(jsonPath(String.format("$.content[%d].tipo", idx), equalTo(pet.getTipo().toString())));
             result = result.andExpect(jsonPath(String.format("$.content[%d].porte", idx), equalTo(pet.getPorte().toString())));
             if (pet.getRaca() != null) {
@@ -109,6 +110,7 @@ public class PetControllerTest {
 
         this.mvc.perform(get("/pets/1"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.categoria", equalTo(pet.getCategoria().toString())))
                 .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
                 .andExpect(jsonPath("$.porte", equalTo(pet.getPorte().toString())))
                 .andExpect(jsonPath("$.raca", equalTo(pet.getRaca().toString())))
@@ -128,6 +130,7 @@ public class PetControllerTest {
     @Test
     public void createPet_Valido() throws Exception {
         JSONObject petJson = new JSONObject();
+        petJson.put("categoria", "ACHADO");
         petJson.put("tipo", "CACHORRO");
         petJson.put("porte", "PEQUENO");
         petJson.put("raca", "CACHORRO_SRD");
@@ -142,6 +145,7 @@ public class PetControllerTest {
         ArgumentCaptor<Pet> argument = ArgumentCaptor.forClass(Pet.class);
         verify(petService, times(1)).save(argument.capture());
 
+        assertThat(argument.getValue().getCategoria(), equalTo(Categoria.valueOf(petJson.getString("categoria"))));
         assertThat(argument.getValue().getTipo(), equalTo(Tipo.valueOf(petJson.getString("tipo"))));
         assertThat(argument.getValue().getPorte(), equalTo(Porte.valueOf(petJson.getString("porte"))));
         assertThat(argument.getValue().getRaca(), equalTo(Raca.valueOf(petJson.getString("raca"))));
