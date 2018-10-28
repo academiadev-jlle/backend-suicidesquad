@@ -2,8 +2,10 @@ package br.com.academiadev.suicidesquad.controller;
 
 import br.com.academiadev.suicidesquad.entity.Pet;
 import br.com.academiadev.suicidesquad.enums.Porte;
+import br.com.academiadev.suicidesquad.enums.Raca;
 import br.com.academiadev.suicidesquad.enums.Tipo;
 import br.com.academiadev.suicidesquad.service.PetService;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -17,13 +19,15 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,55 +46,99 @@ public class PetControllerTest {
     @MockBean
     private PetService petService;
 
+    private Pet buildPet() {
+        return new Pet(Tipo.CACHORRO, Porte.PEQUENO, Raca.CACHORRO_SRD);
+    }
+
+    private List<Pet> buildPets() {
+        return Arrays.asList(
+                new Pet(Tipo.CACHORRO, Porte.PEQUENO, Raca.LABRADOR),
+                new Pet(Tipo.GATO, Porte.MEDIO, Raca.SIAMES),
+                new Pet(Tipo.EQUINO, Porte.GRANDE, Raca.LUSITANO)
+        );
+    }
+
     @Test
-    public void getPets() throws Exception {
-        Pet pet1 = new Pet();
-        pet1.setTipo(Tipo.CACHORRO);
-        pet1.setPorte(Porte.MEDIO);
-        Pet pet2 = new Pet();
-        pet2.setTipo(Tipo.EQUINO);
-        pet2.setPorte(Porte.GRANDE);
+    public void getPets_ComPets() throws Exception {
+        List<Pet> pets = buildPets();
 
-        List<Pet> allPets = new ArrayList<>();
-        allPets.add(pet1);
-        allPets.add(pet2);
+        Page<Pet> pagedResponse = new PageImpl<>(pets);
+        when(petService.findAll(any(Pageable.class))).thenReturn(pagedResponse);
 
-        Page<Pet> pagedResponse = new PageImpl<>(allPets);
+        ResultActions result = this.mvc.perform(get("/pets"))
+                .andExpect(status().isOk());
+
+        int idx = 0;
+        for (Pet pet : pets) {
+            result = result.andExpect(jsonPath(String.format("$.content[%d].tipo", idx), equalTo(pet.getTipo().toString())));
+            result = result.andExpect(jsonPath(String.format("$.content[%d].porte", idx), equalTo(pet.getPorte().toString())));
+            result = result.andExpect(jsonPath(String.format("$.content[%d].raca", idx), equalTo(pet.getRaca().toString())));
+            idx++;
+        }
+    }
+
+    @Test
+    public void getPets_SemPets() throws Exception {
+        Page<Pet> pagedResponse = new PageImpl<>(new ArrayList<>());
         when(petService.findAll(any(Pageable.class))).thenReturn(pagedResponse);
 
         this.mvc.perform(get("/pets"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].tipo", is("CACHORRO")))
-                .andExpect(jsonPath("$.content[0].porte", is("MEDIO")))
-                .andExpect(jsonPath("$.content[1].tipo", is("EQUINO")));
+                .andExpect(jsonPath("$.content", hasSize(0)));
     }
 
     @Test
-    public void getPet() throws Exception {
-        Pet pet = new Pet();
-        pet.setTipo(Tipo.CACHORRO);
-        pet.setPorte(Porte.PEQUENO);
+    public void getPet_Existente() throws Exception {
+        Pet pet = buildPet();
 
-        when(petService.findById(1L)).thenReturn(java.util.Optional.of(pet));
+        when(petService.findById(1L)).thenReturn(Optional.of(pet));
 
         this.mvc.perform(get("/pets/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.tipo", is("CACHORRO")))
-                .andExpect(jsonPath("$.porte", is("PEQUENO")));
+                .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
+                .andExpect(jsonPath("$.porte", equalTo(pet.getPorte().toString())))
+                .andExpect(jsonPath("$.raca", equalTo(pet.getRaca().toString())));
     }
 
     @Test
-    public void createPet() throws Exception {
+    public void getPet_Inexistente() throws Exception {
+        when(petService.findById(1L)).thenReturn(Optional.empty());
+
+        this.mvc.perform(get("/pets/1"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void createPet_Valido() throws Exception {
+        JSONObject petJson = new JSONObject();
+        petJson.put("tipo", "CACHORRO");
+        petJson.put("porte", "PEQUENO");
+        petJson.put("raca", "CACHORRO_SRD");
+
         this.mvc
             .perform(post("/pets")
-                    .content("{\"tipo\": \"CACHORRO\",  \"porte\": \"PEQUENO\"}")
+                    .content(petJson.toString())
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .accept(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
         ArgumentCaptor<Pet> argument = ArgumentCaptor.forClass(Pet.class);
         verify(petService, times(1)).save(argument.capture());
-        assertThat(argument.getValue().getTipo(), equalTo(Tipo.CACHORRO));
-        assertThat(argument.getValue().getPorte(), equalTo(Porte.PEQUENO));
+
+        assertThat(argument.getValue().getTipo(), equalTo(Tipo.valueOf(petJson.getString("tipo"))));
+        assertThat(argument.getValue().getPorte(), equalTo(Porte.valueOf(petJson.getString("porte"))));
+        assertThat(argument.getValue().getRaca(), equalTo(Raca.valueOf(petJson.getString("raca"))));
+    }
+
+    @Test
+    public void createPet_Invalido() throws Exception {
+        this.mvc
+                .perform(post("/pets")
+                         .content("{}")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest());
+
+        verify(petService, never()).save(any(Pet.class));
     }
 }

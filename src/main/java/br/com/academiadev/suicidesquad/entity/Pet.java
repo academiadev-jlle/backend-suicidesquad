@@ -1,8 +1,10 @@
 package br.com.academiadev.suicidesquad.entity;
 
 import br.com.academiadev.suicidesquad.converter.PorteConverter;
+import br.com.academiadev.suicidesquad.converter.RacaConverter;
 import br.com.academiadev.suicidesquad.converter.TipoConverter;
 import br.com.academiadev.suicidesquad.enums.Porte;
+import br.com.academiadev.suicidesquad.enums.Raca;
 import br.com.academiadev.suicidesquad.enums.Tipo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,8 +12,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "pet")
@@ -31,35 +31,27 @@ public class Pet implements Serializable {
     @NotNull
     private Porte porte;
 
-    @ManyToOne
-    @JoinColumn(name = "id_raca")
+    @JsonProperty("raca")
+    @Convert(converter = RacaConverter.class)
     private Raca raca;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cor")
-    private Cor cor;
-
-    @ManyToOne
-    @JoinColumn(name = "id_comprimento_pelo")
-    private ComprimentoPelo comprimentoPelo;
 
     @ManyToOne
     @JoinColumn(name = "id_localizacao")
     private Localizacao localizacao;
 
-    @ManyToMany
-    @JoinTable(
-            name = "situacao_pet",
-            joinColumns = @JoinColumn(name = "id_pet"),
-            inverseJoinColumns = @JoinColumn(name = "id_situacao")
-    )
-    private List<Situacao> situacoes = new ArrayList<>();
+    public Pet() {
+    }
 
-    @OneToMany(orphanRemoval = true)
-    private List<Email> emails  = new ArrayList<>();
+    public Pet(@NotNull Tipo tipo, @NotNull Porte porte) {
+        this.tipo = tipo;
+        this.porte = porte;
+    }
 
-    @OneToMany(orphanRemoval = true)
-    private List<Telefone> telefones = new ArrayList<>();
+    public Pet(@NotNull Tipo tipo, @NotNull Porte porte, @NotNull Raca raca) {
+        this.tipo = tipo;
+        this.porte = porte;
+        this.raca = raca;
+    }
 
     public Tipo getTipo() {
         return tipo;
@@ -85,22 +77,6 @@ public class Pet implements Serializable {
         this.raca = raca;
     }
 
-    public Cor getCor() {
-        return cor;
-    }
-
-    public void setCor(Cor cor) {
-        this.cor = cor;
-    }
-
-    public ComprimentoPelo getComprimentoPelo() {
-        return comprimentoPelo;
-    }
-
-    public void setComprimentoPelo(ComprimentoPelo comprimentoPelo) {
-        this.comprimentoPelo = comprimentoPelo;
-    }
-
     public Localizacao getLocalizacao() {
         return localizacao;
     }
@@ -109,15 +85,4 @@ public class Pet implements Serializable {
         this.localizacao = localizacao;
     }
 
-    public List<Situacao> getSituacoes() {
-        return situacoes;
-    }
-
-    public List<Email> getEmails() {
-        return emails;
-    }
-
-    public List<Telefone> getTelefones() {
-        return telefones;
-    }
 }
