@@ -1,8 +1,10 @@
 package br.com.academiadev.suicidesquad.entity;
 
+import br.com.academiadev.suicidesquad.converter.CorConverter;
 import br.com.academiadev.suicidesquad.converter.PorteConverter;
 import br.com.academiadev.suicidesquad.converter.RacaConverter;
 import br.com.academiadev.suicidesquad.converter.TipoConverter;
+import br.com.academiadev.suicidesquad.enums.Cor;
 import br.com.academiadev.suicidesquad.enums.Porte;
 import br.com.academiadev.suicidesquad.enums.Raca;
 import br.com.academiadev.suicidesquad.enums.Tipo;
@@ -12,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "pet")
@@ -38,6 +42,11 @@ public class Pet implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_localizacao")
     private Localizacao localizacao;
+
+    @ElementCollection(targetClass = Cor.class)
+    @CollectionTable(name = "pet_cor")
+    @Convert(converter = CorConverter.class)
+    private Set<Cor> cores = new HashSet<>();
 
     public Pet() {
     }
@@ -85,4 +94,19 @@ public class Pet implements Serializable {
         this.localizacao = localizacao;
     }
 
+    public Set<Cor> getCores() {
+        return cores;
+    }
+
+    public void setCores(Set<Cor> cores) {
+        this.cores = cores;
+    }
+
+    public boolean addCor(Cor cor)  {
+        return this.cores.add(cor);
+    }
+
+    public boolean removeCor(Cor cor) {
+        return this.cores.remove(cor);
+    }
 }

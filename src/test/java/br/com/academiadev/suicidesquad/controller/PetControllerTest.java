@@ -1,6 +1,7 @@
 package br.com.academiadev.suicidesquad.controller;
 
 import br.com.academiadev.suicidesquad.entity.Pet;
+import br.com.academiadev.suicidesquad.enums.Cor;
 import br.com.academiadev.suicidesquad.enums.Porte;
 import br.com.academiadev.suicidesquad.enums.Raca;
 import br.com.academiadev.suicidesquad.enums.Tipo;
@@ -47,14 +48,24 @@ public class PetControllerTest {
     private PetService petService;
 
     private Pet buildPet() {
-        return new Pet(Tipo.CACHORRO, Porte.PEQUENO, Raca.CACHORRO_SRD);
+        Pet pet = new Pet(Tipo.CACHORRO, Porte.PEQUENO, Raca.CACHORRO_SRD);
+        pet.addCor(Cor.MARROM);
+        pet.addCor(Cor.BRANCO);
+        return pet;
     }
 
     private List<Pet> buildPets() {
+        Pet petSemRaca = new Pet(Tipo.GATO, Porte.MEDIO);
+
+        Pet petComRaca = new Pet(Tipo.EQUINO, Porte.GRANDE, Raca.LUSITANO);
+
+        Pet petComCor = new Pet(Tipo.CACHORRO, Porte.PEQUENO, Raca.LABRADOR);
+        petComCor.addCor(Cor.BRANCO);
+
         return Arrays.asList(
-                new Pet(Tipo.CACHORRO, Porte.PEQUENO, Raca.LABRADOR),
-                new Pet(Tipo.GATO, Porte.MEDIO, Raca.SIAMES),
-                new Pet(Tipo.EQUINO, Porte.GRANDE, Raca.LUSITANO)
+                petSemRaca,
+                petComRaca,
+                petComCor
         );
     }
 
@@ -72,7 +83,10 @@ public class PetControllerTest {
         for (Pet pet : pets) {
             result = result.andExpect(jsonPath(String.format("$.content[%d].tipo", idx), equalTo(pet.getTipo().toString())));
             result = result.andExpect(jsonPath(String.format("$.content[%d].porte", idx), equalTo(pet.getPorte().toString())));
-            result = result.andExpect(jsonPath(String.format("$.content[%d].raca", idx), equalTo(pet.getRaca().toString())));
+            if (pet.getRaca() != null) {
+                result = result.andExpect(jsonPath(String.format("$.content[%d].raca", idx), equalTo(pet.getRaca().toString())));
+            }
+            result = result.andExpect(jsonPath(String.format("$.content[%d].cores", idx), hasSize(pet.getCores().size())));
             idx++;
         }
     }
@@ -97,7 +111,8 @@ public class PetControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
                 .andExpect(jsonPath("$.porte", equalTo(pet.getPorte().toString())))
-                .andExpect(jsonPath("$.raca", equalTo(pet.getRaca().toString())));
+                .andExpect(jsonPath("$.raca", equalTo(pet.getRaca().toString())))
+                .andExpect(jsonPath("$.cores", hasSize(pet.getCores().size())));
     }
 
     @Test
