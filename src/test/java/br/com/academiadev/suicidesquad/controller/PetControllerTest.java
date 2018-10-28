@@ -1,6 +1,7 @@
 package br.com.academiadev.suicidesquad.controller;
 
 import br.com.academiadev.suicidesquad.entity.Pet;
+import br.com.academiadev.suicidesquad.entity.Registro;
 import br.com.academiadev.suicidesquad.enums.*;
 import br.com.academiadev.suicidesquad.service.PetService;
 import org.json.JSONObject;
@@ -51,6 +52,7 @@ public class PetControllerTest {
         pet.addCor(Cor.BRANCO);
         pet.setComprimentoPelo(ComprimentoPelo.CURTO);
         pet.setSexo(Sexo.MACHO);
+        pet.addRegistro(new Registro(pet, Situacao.PROCURANDO));
         return pet;
     }
 
@@ -116,7 +118,8 @@ public class PetControllerTest {
                 .andExpect(jsonPath("$.raca", equalTo(pet.getRaca().toString())))
                 .andExpect(jsonPath("$.cores", hasSize(pet.getCores().size())))
                 .andExpect(jsonPath("$.comprimento_pelo", equalTo(pet.getComprimentoPelo().toString())))
-                .andExpect(jsonPath("$.sexo", equalTo(pet.getSexo().toString())));
+                .andExpect(jsonPath("$.sexo", equalTo(pet.getSexo().toString())))
+                .andExpect(jsonPath("$.registros[0].situacao", equalTo(pet.getRegistros().get(0).getSituacao().toString())));
     }
 
     @Test

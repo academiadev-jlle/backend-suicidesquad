@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -53,6 +55,9 @@ public class Pet implements Serializable {
     @CollectionTable(name = "pet_cor")
     @Convert(converter = CorConverter.class)
     private Set<Cor> cores = new HashSet<>();
+
+    @OneToMany(mappedBy = "pet")
+    private List<Registro> registros = new ArrayList<>();
 
     public Pet() {
     }
@@ -140,5 +145,17 @@ public class Pet implements Serializable {
 
     public boolean removeCor(Cor cor) {
         return this.cores.remove(cor);
+    }
+
+    public List<Registro> getRegistros() {
+        return registros;
+    }
+
+    public void setRegistros(List<Registro> registros) {
+        this.registros = registros;
+    }
+
+    public boolean addRegistro(Registro registro) {
+        return this.registros.add(registro);
     }
 }
