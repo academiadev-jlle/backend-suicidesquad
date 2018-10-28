@@ -1,10 +1,7 @@
 package br.com.academiadev.suicidesquad.controller;
 
 import br.com.academiadev.suicidesquad.entity.Pet;
-import br.com.academiadev.suicidesquad.enums.Cor;
-import br.com.academiadev.suicidesquad.enums.Porte;
-import br.com.academiadev.suicidesquad.enums.Raca;
-import br.com.academiadev.suicidesquad.enums.Tipo;
+import br.com.academiadev.suicidesquad.enums.*;
 import br.com.academiadev.suicidesquad.service.PetService;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -28,7 +25,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -51,6 +49,7 @@ public class PetControllerTest {
         Pet pet = new Pet(Tipo.CACHORRO, Porte.PEQUENO, Raca.CACHORRO_SRD);
         pet.addCor(Cor.MARROM);
         pet.addCor(Cor.BRANCO);
+        pet.setComprimentoPelo(ComprimentoPelo.CURTO);
         return pet;
     }
 
@@ -112,7 +111,8 @@ public class PetControllerTest {
                 .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
                 .andExpect(jsonPath("$.porte", equalTo(pet.getPorte().toString())))
                 .andExpect(jsonPath("$.raca", equalTo(pet.getRaca().toString())))
-                .andExpect(jsonPath("$.cores", hasSize(pet.getCores().size())));
+                .andExpect(jsonPath("$.cores", hasSize(pet.getCores().size())))
+                .andExpect(jsonPath("$.comprimento_pelo", equalTo(pet.getComprimentoPelo().toString())));
     }
 
     @Test

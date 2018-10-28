@@ -1,13 +1,7 @@
 package br.com.academiadev.suicidesquad.entity;
 
-import br.com.academiadev.suicidesquad.converter.CorConverter;
-import br.com.academiadev.suicidesquad.converter.PorteConverter;
-import br.com.academiadev.suicidesquad.converter.RacaConverter;
-import br.com.academiadev.suicidesquad.converter.TipoConverter;
-import br.com.academiadev.suicidesquad.enums.Cor;
-import br.com.academiadev.suicidesquad.enums.Porte;
-import br.com.academiadev.suicidesquad.enums.Raca;
-import br.com.academiadev.suicidesquad.enums.Tipo;
+import br.com.academiadev.suicidesquad.converter.*;
+import br.com.academiadev.suicidesquad.enums.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -38,6 +32,10 @@ public class Pet implements Serializable {
     @JsonProperty("raca")
     @Convert(converter = RacaConverter.class)
     private Raca raca;
+
+    @JsonProperty("comprimento_pelo")
+    @Convert(converter = ComprimentoPeloConverter.class)
+    private ComprimentoPelo comprimentoPelo;
 
     @ManyToOne
     @JoinColumn(name = "id_localizacao")
@@ -84,6 +82,14 @@ public class Pet implements Serializable {
 
     public void setRaca(Raca raca) {
         this.raca = raca;
+    }
+
+    public ComprimentoPelo getComprimentoPelo() {
+        return comprimentoPelo;
+    }
+
+    public void setComprimentoPelo(ComprimentoPelo comprimentoPelo) {
+        this.comprimentoPelo = comprimentoPelo;
     }
 
     public Localizacao getLocalizacao() {
