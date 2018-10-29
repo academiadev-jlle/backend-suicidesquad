@@ -24,7 +24,8 @@ public class PetController {
         return petService.findAll(pageable);
     }
 
-    @PostMapping Pet createPet(@Valid @RequestBody Pet pet) {
+    @PostMapping("/pets")
+    Pet createPet(@Valid @RequestBody Pet pet) {
         return petService.save(pet);
     }
 
