@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/academiadev-jlle/backend-suicidesquad/tree/master.svg?style=shield)](https://circleci.com/gh/academiadev-jlle/backend-suicidesquad/tree/master) [![Waffle.io - Columns and their card count](https://badge.waffle.io/academiadev-joinville/projeto-wiki-suicidesquad.svg?columns=all)](https://waffle.io/academiadev-joinville/projeto-wiki-suicidesquad)
+[![CircleCI](https://circleci.com/gh/academiadev-jlle/backend-suicidesquad/tree/master.svg?style=shield)](https://circleci.com/gh/academiadev-jlle/backend-suicidesquad/tree/master) [![Waffle.io - Columns and their card count](https://badge.waffle.io/academiadev-jlle/wiki-suicidesquad.svg?columns=all)](https://waffle.io/academiadev-jlle/wiki-suicidesquad)
 # AcademiaDev Joinville - projeto PetCodes
 
 Projeto da aplicação para gerenciador de animais achados, perdidos e para adoção.
