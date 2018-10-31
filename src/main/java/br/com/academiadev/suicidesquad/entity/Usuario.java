@@ -1,5 +1,7 @@
 package br.com.academiadev.suicidesquad.entity;
 
+import br.com.academiadev.suicidesquad.converter.SexoConverter;
+import br.com.academiadev.suicidesquad.enums.Sexo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -11,13 +13,14 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 
+
 @Entity
-@Table(name = "usuario")
+@Table(name = "pet")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Usuario implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 
@@ -33,14 +36,26 @@ public class Usuario implements Serializable {
     private String senha;
 
 
-    public Usuario(){
+    public Usuario() {
 
     }
+
+    @NotNull
+    @Convert(converter = SexoConverter.class)
+    private Sexo sexo;
+
+    @NotNull
+    private Long idade;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_localizacao")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Localizacao localizacao;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "id_telefone")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private Telefone telefone;
 
     public Long getId() {
         return id;
@@ -82,4 +97,35 @@ public class Usuario implements Serializable {
         this.localizacao = localizacao;
     }
 
+    public Telefone getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(Telefone telefone) {
+        this.telefone = telefone;
+    }
+
+    public Sexo getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(Sexo sexo) {
+        this.sexo = sexo;
+    }
+
+    public Long getIdade() {
+        return idade;
+    }
+
+    public void setIdade(Long idade) {
+        this.idade = idade;
+    }
+
+    public Usuario(@NotNull String nome, @NotNull String email, @NotNull String senha, @NotNull Sexo sexo, @NotNull Long idade) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.sexo = sexo;
+        this.idade = idade;
+    }
 }
