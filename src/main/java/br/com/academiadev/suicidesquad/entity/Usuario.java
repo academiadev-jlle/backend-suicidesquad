@@ -5,13 +5,14 @@ import br.com.academiadev.suicidesquad.enums.Sexo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-
+import java.time.LocalDate;
 
 
 @Entity
@@ -45,7 +46,7 @@ public class Usuario implements Serializable {
     private Sexo sexo;
 
     @NotNull
-    private Long idade;
+    private LocalDate dataNascimento;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_localizacao")
@@ -113,19 +114,19 @@ public class Usuario implements Serializable {
         this.sexo = sexo;
     }
 
-    public Long getIdade() {
-        return idade;
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
 
-    public void setIdade(Long idade) {
-        this.idade = idade;
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 
-    public Usuario(@NotNull String nome, @NotNull String email, @NotNull String senha, @NotNull Sexo sexo, @NotNull Long idade) {
+    public Usuario(@NotNull String nome, @NotNull String email, @NotNull String senha, @NotNull Sexo sexo, @NotNull LocalDate dataNascimento) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.sexo = sexo;
-        this.idade = idade;
+        this.dataNascimento = dataNascimento;
     }
 }

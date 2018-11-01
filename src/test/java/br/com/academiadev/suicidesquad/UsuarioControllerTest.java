@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,6 +66,7 @@ public class UsuarioControllerTest {
         usuario1.setId(1l);
         usuario1.setTelefone(telefone);
         usuario1.setLocalizacao(new Localizacao());
+        usuario1.setDataNascimento(LocalDate.of(2000, 5, 22));
         return usuario1;
     }
 
@@ -80,14 +82,16 @@ public class UsuarioControllerTest {
         usuario1.setId(1l);
         usuario1.setTelefone(telefone);
         usuario1.setLocalizacao(new Localizacao());
+        usuario1.setDataNascimento(LocalDate.of(1965, 5, 16));
 
         Usuario usuario2 = new Usuario();
         usuario2.setEmail("segundoemail@gmail.com");
         usuario2.setNome("Salvador Di Bernardi");
         usuario2.setId(2l);
         usuario2.setSenha("senha2");
-        usuario1.setTelefone(telefone);
-        usuario1.setLocalizacao(new Localizacao());
+        usuario2.setTelefone(telefone);
+        usuario2.setLocalizacao(new Localizacao());
+        usuario2.setDataNascimento(LocalDate.of(1983, 11, 28));
 
         return Arrays.asList(usuario1,
                 usuario2);
@@ -149,7 +153,7 @@ public class UsuarioControllerTest {
         usuarioJson.put("email", "primeiroemail@gmail.com");
         usuarioJson.put("senha", "senha1");
         usuarioJson.put("sexo", "MASCULINO");
-        usuarioJson.put("idade", 26);
+        usuarioJson.put("dataNascimento", LocalDate.of(1990, 10, 8));
 
 
 
