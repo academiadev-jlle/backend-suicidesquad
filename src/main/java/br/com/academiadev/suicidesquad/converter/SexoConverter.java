@@ -1,4 +1,3 @@
-
 package br.com.academiadev.suicidesquad.converter;
 
 import br.com.academiadev.suicidesquad.enums.Sexo;

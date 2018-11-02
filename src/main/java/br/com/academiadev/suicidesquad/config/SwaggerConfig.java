@@ -1,6 +1,5 @@
 package br.com.academiadev.suicidesquad.config;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -21,20 +20,25 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("br.com.academiadev.suicidesquad"))
-                .paths(PathSelectors.any()).build()
-                .apiInfo(apiInfo()
-                ).useDefaultResponseMessages(false);
+
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(apiInfo())
+                .useDefaultResponseMessages(false);
+
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfo(
-                "PetCode",
-                "API Rest PetCode",
-                "1.0.0",
-                "Termos de licensa de uso de software",
+
+                "Backend SuicideSquad",
+                "API REST",
+                "1.0",
+                "N/A",
                 null,
-                "https://github.com/academiadev-jlle/wiki-suicidesquad",
-                "/",
-                new ArrayList<>());
+                "MIT",
+                "N/A",
+                new ArrayList<>()
+        );
     }
 }

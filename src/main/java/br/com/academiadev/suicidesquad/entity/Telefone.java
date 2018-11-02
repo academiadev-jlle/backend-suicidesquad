@@ -11,13 +11,13 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "telefone")
-
 public class Telefone implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false)
+
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonIgnore
     private Usuario usuario;
@@ -43,5 +43,4 @@ public class Telefone implements Serializable {
     public void setWhatsapp(Boolean whatsapp) {
         this.whatsapp = whatsapp;
     }
-
 }

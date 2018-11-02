@@ -5,8 +5,7 @@ public enum Sexo {
     FEMEA(2),
     MASCULINO(3),
     FEMININO(4);
-
-
+  
     private Integer id;
 
     Sexo(Integer id) {
