@@ -9,11 +9,11 @@ import javax.persistence.Converter;
 public class TipoConverter implements AttributeConverter<Tipo, Integer> {
     @Override
     public Integer convertToDatabaseColumn(Tipo tipo) {
-        return tipo.getId();
+        return tipo == null ? null : tipo.getId();
     }
 
     @Override
     public Tipo convertToEntityAttribute(Integer dbData) {
-        return Tipo.findById(dbData);
+        return dbData == null ? null : Tipo.findById(dbData);
     }
 }

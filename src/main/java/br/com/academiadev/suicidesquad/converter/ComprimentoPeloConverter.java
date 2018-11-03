@@ -9,11 +9,11 @@ import javax.persistence.Converter;
 public class ComprimentoPeloConverter implements AttributeConverter<ComprimentoPelo, Integer> {
     @Override
     public Integer convertToDatabaseColumn(ComprimentoPelo comprimentoPelo) {
-        return comprimentoPelo.getId();
+        return comprimentoPelo == null ? null : comprimentoPelo.getId();
     }
 
     @Override
     public ComprimentoPelo convertToEntityAttribute(Integer dbData) {
-        return ComprimentoPelo.findById(dbData);
+        return dbData == null ? null : ComprimentoPelo.findById(dbData);
     }
 }

@@ -9,17 +9,11 @@ import javax.persistence.Converter;
 public class RacaConverter implements AttributeConverter<Raca, Integer> {
     @Override
     public Integer convertToDatabaseColumn(Raca raca) {
-        if (raca == null) {
-            return null;
-        }
-        return raca.getId();
+        return raca == null ? null : raca.getId();
     }
 
     @Override
     public Raca convertToEntityAttribute(Integer dbData) {
-        if (dbData == null) {
-            return null;
-        }
-        return Raca.findById(dbData);
+        return dbData == null ? null : Raca.findById(dbData);
     }
 }
