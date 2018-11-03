@@ -51,7 +51,7 @@ public class PetControllerTest {
         pet.addCor(Cor.MARROM);
         pet.addCor(Cor.BRANCO);
         pet.setComprimentoPelo(ComprimentoPelo.CURTO);
-        pet.setSexo(Sexo.MACHO);
+        pet.setSexo(SexoPet.MACHO);
         pet.addRegistro(new Registro(pet, Situacao.PROCURANDO));
         return pet;
     }

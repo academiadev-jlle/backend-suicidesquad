@@ -40,8 +40,8 @@ public class Pet implements Serializable {
 	private ComprimentoPelo comprimentoPelo;
 
 	@JsonProperty("sexo")
-	@Convert(converter = SexoConverter.class)
-	private Sexo sexo;
+	@Convert(converter = SexoPetConverter.class)
+	private SexoPet sexo;
 
 	@JsonProperty("categoria")
 	@Convert(converter = CategoriaConverter.class)
@@ -115,11 +115,11 @@ public class Pet implements Serializable {
 		this.comprimentoPelo = comprimentoPelo;
 	}
 
-	public Sexo getSexo() {
+	public SexoPet getSexo() {
 		return sexo;
 	}
 
-	public void setSexo(Sexo sexo) {
+	public void setSexo(SexoPet sexo) {
 		this.sexo = sexo;
 	}
 

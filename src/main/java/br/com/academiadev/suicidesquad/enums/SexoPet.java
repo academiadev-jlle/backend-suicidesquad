@@ -1,14 +1,12 @@
 package br.com.academiadev.suicidesquad.enums;
 
-public enum Sexo {
+public enum SexoPet {
     MACHO(1),
-    FEMEA(2),
-    MASCULINO(3),
-    FEMININO(4);
-  
+    FEMEA(2);
+
     private Integer id;
 
-    Sexo(Integer id) {
+    SexoPet(Integer id) {
         this.id = id;
     }
 
@@ -16,12 +14,12 @@ public enum Sexo {
         return id;
     }
 
-    public static Sexo findById(Integer id) {
-        for (Sexo sexo: values()) {
+    public static SexoPet findById(Integer id) {
+        for (SexoPet sexo: values()) {
             if (sexo.getId().equals(id)) {
                 return sexo;
             }
         }
-        throw new IllegalArgumentException("Nenhum Sexo com o id " + id);
+        throw new IllegalArgumentException("Nenhum SexoPet com o id " + id);
     }
 }

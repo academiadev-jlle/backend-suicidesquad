@@ -1,11 +1,10 @@
 package br.com.academiadev.suicidesquad.entity;
 
-import br.com.academiadev.suicidesquad.converter.SexoConverter;
-import br.com.academiadev.suicidesquad.enums.Sexo;
+import br.com.academiadev.suicidesquad.converter.SexoUsuarioConverter;
+import br.com.academiadev.suicidesquad.enums.SexoUsuario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -42,8 +41,8 @@ public class Usuario implements Serializable {
     }
 
     @NotNull
-    @Convert(converter = SexoConverter.class)
-    private Sexo sexo;
+    @Convert(converter = SexoUsuarioConverter.class)
+    private SexoUsuario sexo;
 
     @NotNull
     private LocalDate dataNascimento;
@@ -106,11 +105,11 @@ public class Usuario implements Serializable {
         this.telefone = telefone;
     }
 
-    public Sexo getSexo() {
+    public SexoUsuario getSexo() {
         return sexo;
     }
 
-    public void setSexo(Sexo sexo) {
+    public void setSexo(SexoUsuario sexo) {
         this.sexo = sexo;
     }
 
@@ -122,7 +121,7 @@ public class Usuario implements Serializable {
         this.dataNascimento = dataNascimento;
     }
 
-    public Usuario(@NotNull String nome, @NotNull String email, @NotNull String senha, @NotNull Sexo sexo, @NotNull LocalDate dataNascimento) {
+    public Usuario(@NotNull String nome, @NotNull String email, @NotNull String senha, @NotNull SexoUsuario sexo, @NotNull LocalDate dataNascimento) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
