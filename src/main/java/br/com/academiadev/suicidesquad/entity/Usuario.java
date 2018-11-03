@@ -12,6 +12,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -52,10 +54,8 @@ public class Usuario implements Serializable {
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Localizacao localizacao;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id_telefone")
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    private Telefone telefone;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Telefone> telefones = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -97,12 +97,12 @@ public class Usuario implements Serializable {
         this.localizacao = localizacao;
     }
 
-    public Telefone getTelefone() {
-        return telefone;
+    public List<Telefone> getTelefones() {
+        return telefones;
     }
 
-    public void setTelefone(Telefone telefone) {
-        this.telefone = telefone;
+    public void addTelefone(Telefone telefone) {
+        this.telefones.add(telefone);
     }
 
     public SexoUsuario getSexo() {

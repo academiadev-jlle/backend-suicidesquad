@@ -5,6 +5,7 @@ import br.com.academiadev.suicidesquad.entity.Localizacao;
 import br.com.academiadev.suicidesquad.entity.Telefone;
 import br.com.academiadev.suicidesquad.entity.Usuario;
 import br.com.academiadev.suicidesquad.service.UsuarioService;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +59,7 @@ public class UsuarioControllerTest {
         usuario1.setNome("Nelson Nunes Guimarães");
         usuario1.setSenha("senha1");
         usuario1.setId(1l);
-        usuario1.setTelefone(telefone);
+        usuario1.addTelefone(telefone);
         usuario1.setLocalizacao(new Localizacao());
         usuario1.setDataNascimento(LocalDate.of(2000, 5, 22));
         return usuario1;
@@ -74,7 +75,7 @@ public class UsuarioControllerTest {
         usuario1.setNome("Nelson Nunes Guimarães");
         usuario1.setSenha("senha1");
         usuario1.setId(1l);
-        usuario1.setTelefone(telefone);
+        usuario1.addTelefone(telefone);
         usuario1.setLocalizacao(new Localizacao());
         usuario1.setDataNascimento(LocalDate.of(1965, 5, 16));
 
@@ -83,7 +84,7 @@ public class UsuarioControllerTest {
         usuario2.setNome("Salvador Di Bernardi");
         usuario2.setId(2l);
         usuario2.setSenha("senha2");
-        usuario2.setTelefone(telefone);
+        usuario2.addTelefone(telefone);
         usuario2.setLocalizacao(new Localizacao());
         usuario2.setDataNascimento(LocalDate.of(1983, 11, 28));
 
@@ -149,6 +150,14 @@ public class UsuarioControllerTest {
         usuarioJson.put("sexo", "MASCULINO");
         usuarioJson.put("dataNascimento", LocalDate.of(1990, 10, 8));
 
+        JSONArray telefonesJson = new JSONArray();
+        JSONObject telefoneJson = new JSONObject();
+        telefoneJson.put("numero", "9999999");
+        telefoneJson.put("whatsapp", false);
+        telefonesJson.put(telefoneJson);
+
+        usuarioJson.put("telefones", telefonesJson);
+
 
         this.mvc.perform(post("/usuarios")
                 .content(usuarioJson.toString())
@@ -163,7 +172,7 @@ public class UsuarioControllerTest {
         assertThat(argumentCaptor.getValue().getNome(), equalTo(usuarioJson.getString("nome")));
         assertThat(argumentCaptor.getValue().getSenha(), equalTo(usuarioJson.getString("senha")));
         assertThat(argumentCaptor.getValue().getEmail(), equalTo(usuarioJson.getString("email")));
-        //assertThat(argumentCaptor.getValue().getTelefone(), equalTo(usuarioJson.getString("telefone")));
+        assertThat(argumentCaptor.getValue().getTelefones().get(0).getNumero(), equalTo(telefoneJson.getString("numero")));
 
     }
 
