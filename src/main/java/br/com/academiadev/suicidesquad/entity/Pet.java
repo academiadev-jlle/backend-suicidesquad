@@ -37,23 +37,27 @@ public class Pet implements Serializable {
 
     @JsonProperty("comprimento_pelo")
     @Convert(converter = ComprimentoPeloConverter.class)
+    @NotNull
     private ComprimentoPelo comprimentoPelo;
 
     @JsonProperty("sexo")
     @Convert(converter = SexoPetConverter.class)
-    private SexoPet sexo;
+    private SexoPet sexo = SexoPet.NAO_INFORMADO;
 
     @JsonProperty("categoria")
     @Convert(converter = CategoriaConverter.class)
+    @NotNull
     private Categoria categoria;
 
     @JsonProperty("vacinacao")
     @Convert(converter = VacinacaoConverter.class)
-    private Vacinacao vacinacao;
+    @NotNull
+    private Vacinacao vacinacao = Vacinacao.NAO_INFORMADO;
 
     @JsonProperty("castracao")
     @Convert(converter = CastracaoConverter.class)
-    private Castracao castracao;
+    @NotNull
+    private Castracao castracao = Castracao.NAO_INFORMADO;
 
     @ManyToOne
     @JoinColumn(name = "id_localizacao")

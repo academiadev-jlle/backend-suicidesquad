@@ -137,6 +137,7 @@ public class PetControllerTest {
         petJson.put("tipo", "CACHORRO");
         petJson.put("porte", "PEQUENO");
         petJson.put("raca", "CACHORRO_SRD");
+        petJson.put("comprimento_pelo", "CURTO");
 
         this.mvc
                 .perform(post("/pets")

@@ -2,7 +2,8 @@ package br.com.academiadev.suicidesquad.enums;
 
 public enum SexoPet {
     MACHO(1),
-    FEMEA(2);
+    FEMEA(2),
+    NAO_INFORMADO(3);
 
     private Integer id;
 
