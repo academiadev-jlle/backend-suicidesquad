@@ -15,173 +15,173 @@ import java.util.Set;
 
 @Entity
 @Table(name = "pet")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Pet implements Serializable {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@JsonProperty("tipo")
-	@Convert(converter = TipoConverter.class)
-	@NotNull
-	private Tipo tipo;
+    @JsonProperty("tipo")
+    @Convert(converter = TipoConverter.class)
+    @NotNull
+    private Tipo tipo;
 
-	@JsonProperty("porte")
-	@Convert(converter = PorteConverter.class)
-	@NotNull
-	private Porte porte;
+    @JsonProperty("porte")
+    @Convert(converter = PorteConverter.class)
+    @NotNull
+    private Porte porte;
 
-	@JsonProperty("raca")
-	@Convert(converter = RacaConverter.class)
-	private Raca raca;
+    @JsonProperty("raca")
+    @Convert(converter = RacaConverter.class)
+    private Raca raca;
 
-	@JsonProperty("comprimento_pelo")
-	@Convert(converter = ComprimentoPeloConverter.class)
-	private ComprimentoPelo comprimentoPelo;
+    @JsonProperty("comprimento_pelo")
+    @Convert(converter = ComprimentoPeloConverter.class)
+    private ComprimentoPelo comprimentoPelo;
 
-	@JsonProperty("sexo")
-	@Convert(converter = SexoPetConverter.class)
-	private SexoPet sexo;
+    @JsonProperty("sexo")
+    @Convert(converter = SexoPetConverter.class)
+    private SexoPet sexo;
 
-	@JsonProperty("categoria")
-	@Convert(converter = CategoriaConverter.class)
-	private Categoria categoria;
+    @JsonProperty("categoria")
+    @Convert(converter = CategoriaConverter.class)
+    private Categoria categoria;
 
-	@JsonProperty("vacinacao")
-	@Convert(converter = VacinacaoConverter.class)
-	private Vacinacao vacinacao;
-	
-	@JsonProperty("castracao")
-	@Convert(converter = CastracaoConverter.class)
-	private Castracao castracao;
+    @JsonProperty("vacinacao")
+    @Convert(converter = VacinacaoConverter.class)
+    private Vacinacao vacinacao;
 
-	@ManyToOne
-	@JoinColumn(name = "id_localizacao")
-	private Localizacao localizacao;
+    @JsonProperty("castracao")
+    @Convert(converter = CastracaoConverter.class)
+    private Castracao castracao;
 
-	@ElementCollection(targetClass = Cor.class)
-	@CollectionTable(name = "pet_cor")
-	@Convert(converter = CorConverter.class)
-	private Set<Cor> cores = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "id_localizacao")
+    private Localizacao localizacao;
 
-	@OneToMany(mappedBy = "pet", orphanRemoval = true)
-	private List<Registro> registros = new ArrayList<>();
+    @ElementCollection(targetClass = Cor.class)
+    @CollectionTable(name = "pet_cor")
+    @Convert(converter = CorConverter.class)
+    private Set<Cor> cores = new HashSet<>();
 
-	public Pet() {
-	}
+    @OneToMany(mappedBy = "pet", orphanRemoval = true)
+    private List<Registro> registros = new ArrayList<>();
 
-	public Pet(Categoria categoria, @NotNull Tipo tipo, @NotNull Porte porte) {
-		this.categoria = categoria;
-		this.tipo = tipo;
-		this.porte = porte;
-	}
+    public Pet() {
+    }
 
-	public Pet(Categoria categoria, @NotNull Tipo tipo, @NotNull Porte porte, @NotNull Raca raca) {
-		this.categoria = categoria;
-		this.tipo = tipo;
-		this.porte = porte;
-		this.raca = raca;
-	}
+    public Pet(Categoria categoria, @NotNull Tipo tipo, @NotNull Porte porte) {
+        this.categoria = categoria;
+        this.tipo = tipo;
+        this.porte = porte;
+    }
 
-	public Tipo getTipo() {
-		return tipo;
-	}
+    public Pet(Categoria categoria, @NotNull Tipo tipo, @NotNull Porte porte, @NotNull Raca raca) {
+        this.categoria = categoria;
+        this.tipo = tipo;
+        this.porte = porte;
+        this.raca = raca;
+    }
 
-	public void setTipo(Tipo tipo) {
-		this.tipo = tipo;
-	}
+    public Tipo getTipo() {
+        return tipo;
+    }
 
-	public Porte getPorte() {
-		return porte;
-	}
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
+    }
 
-	public void setPorte(Porte porte) {
-		this.porte = porte;
-	}
+    public Porte getPorte() {
+        return porte;
+    }
 
-	public Raca getRaca() {
-		return raca;
-	}
+    public void setPorte(Porte porte) {
+        this.porte = porte;
+    }
 
-	public void setRaca(Raca raca) {
-		this.raca = raca;
-	}
+    public Raca getRaca() {
+        return raca;
+    }
 
-	public ComprimentoPelo getComprimentoPelo() {
-		return comprimentoPelo;
-	}
+    public void setRaca(Raca raca) {
+        this.raca = raca;
+    }
 
-	public void setComprimentoPelo(ComprimentoPelo comprimentoPelo) {
-		this.comprimentoPelo = comprimentoPelo;
-	}
+    public ComprimentoPelo getComprimentoPelo() {
+        return comprimentoPelo;
+    }
 
-	public SexoPet getSexo() {
-		return sexo;
-	}
+    public void setComprimentoPelo(ComprimentoPelo comprimentoPelo) {
+        this.comprimentoPelo = comprimentoPelo;
+    }
 
-	public void setSexo(SexoPet sexo) {
-		this.sexo = sexo;
-	}
+    public SexoPet getSexo() {
+        return sexo;
+    }
 
-	public Categoria getCategoria() {
-		return categoria;
-	}
+    public void setSexo(SexoPet sexo) {
+        this.sexo = sexo;
+    }
 
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
+    public Categoria getCategoria() {
+        return categoria;
+    }
 
-	public Vacinacao getVacinacao() {
-		return vacinacao;
-	}
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
 
-	public void setVacinacao(Vacinacao vacinacao) {
-		this.vacinacao = vacinacao;
-	}
-	
-	public Castracao getCastracao() {
-		return castracao;
-	}
-	
-	public void setCastracao(Castracao castracao) {
-		this.castracao = castracao;
-	}
+    public Vacinacao getVacinacao() {
+        return vacinacao;
+    }
 
-	public Localizacao getLocalizacao() {
-		return localizacao;
-	}
+    public void setVacinacao(Vacinacao vacinacao) {
+        this.vacinacao = vacinacao;
+    }
 
-	public void setLocalizacao(Localizacao localizacao) {
-		this.localizacao = localizacao;
-	}
+    public Castracao getCastracao() {
+        return castracao;
+    }
 
-	public Set<Cor> getCores() {
-		return cores;
-	}
+    public void setCastracao(Castracao castracao) {
+        this.castracao = castracao;
+    }
 
-	public void setCores(Set<Cor> cores) {
-		this.cores = cores;
-	}
+    public Localizacao getLocalizacao() {
+        return localizacao;
+    }
 
-	public boolean addCor(Cor cor) {
-		return this.cores.add(cor);
-	}
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
+    }
 
-	public boolean removeCor(Cor cor) {
-		return this.cores.remove(cor);
-	}
+    public Set<Cor> getCores() {
+        return cores;
+    }
 
-	public List<Registro> getRegistros() {
-		return registros;
-	}
+    public void setCores(Set<Cor> cores) {
+        this.cores = cores;
+    }
 
-	public void setRegistros(List<Registro> registros) {
-		this.registros = registros;
-		registros.forEach(registro -> registro.setPet(this));
-	}
+    public boolean addCor(Cor cor) {
+        return this.cores.add(cor);
+    }
 
-	public void addRegistro(Registro registro) {
-		this.registros.add(registro);
-		registro.setPet(this);
-	}
+    public boolean removeCor(Cor cor) {
+        return this.cores.remove(cor);
+    }
+
+    public List<Registro> getRegistros() {
+        return registros;
+    }
+
+    public void setRegistros(List<Registro> registros) {
+        this.registros = registros;
+        registros.forEach(registro -> registro.setPet(this));
+    }
+
+    public void addRegistro(Registro registro) {
+        this.registros.add(registro);
+        registro.setPet(this);
+    }
 }

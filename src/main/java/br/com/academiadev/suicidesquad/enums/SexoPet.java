@@ -15,7 +15,7 @@ public enum SexoPet {
     }
 
     public static SexoPet findById(Integer id) {
-        for (SexoPet sexo: values()) {
+        for (SexoPet sexo : values()) {
             if (sexo.getId().equals(id)) {
                 return sexo;
             }

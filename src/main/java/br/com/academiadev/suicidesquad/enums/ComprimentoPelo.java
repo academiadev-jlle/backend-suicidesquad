@@ -17,7 +17,7 @@ public enum ComprimentoPelo {
     }
 
     public static ComprimentoPelo findById(Integer id) {
-        for (ComprimentoPelo comprimentoPelo: values()) {
+        for (ComprimentoPelo comprimentoPelo : values()) {
             if (comprimentoPelo.getId().equals(id)) {
                 return comprimentoPelo;
             }

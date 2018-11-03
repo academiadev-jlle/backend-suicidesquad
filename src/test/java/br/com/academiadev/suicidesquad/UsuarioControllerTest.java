@@ -41,7 +41,6 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
 
-
 @RunWith(SpringRunner.class)
 @WebMvcTest(UsuarioController.class)
 @EnableSpringDataWebSupport
@@ -156,7 +155,6 @@ public class UsuarioControllerTest {
         usuarioJson.put("dataNascimento", LocalDate.of(1990, 10, 8));
 
 
-
         this.mvc.perform(post("/usuarios")
                 .content(usuarioJson.toString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -175,11 +173,11 @@ public class UsuarioControllerTest {
     }
 
     @Test
-    public void dadoCriarUsuario_quandoUsuarioInexistente_entaoUsuarioNaoCriado() throws Exception{
+    public void dadoCriarUsuario_quandoUsuarioInexistente_entaoUsuarioNaoCriado() throws Exception {
         this.mvc.perform(post("/usuarios")
-        .content("{}")
-        .contentType(MediaType.APPLICATION_JSON_UTF8)
-        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .content("{}")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest());
 
         verify(usuarioService, never()).save(any(Usuario.class));

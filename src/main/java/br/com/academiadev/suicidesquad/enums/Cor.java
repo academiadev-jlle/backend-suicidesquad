@@ -15,8 +15,8 @@ public enum Cor {
         return id;
     }
 
-    public static Cor findById(Integer id){
-        for(Cor cor: values()) {
+    public static Cor findById(Integer id) {
+        for (Cor cor : values()) {
             if (cor.getId().equals(id)) {
                 return cor;
             }

@@ -16,7 +16,7 @@ public enum Porte {
     }
 
     public static Porte findById(Integer id) {
-        for (Porte porte: values()) {
+        for (Porte porte : values()) {
             if (porte.getId().equals(id)) {
                 return porte;
             }

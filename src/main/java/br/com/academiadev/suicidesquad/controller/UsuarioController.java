@@ -47,6 +47,7 @@ public class UsuarioController {
         return usuarioService.findById(idUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário com o id" + idUsuario + " não foi encontrado"));
     }
+
     @ApiOperation(value = "Cria o usuário")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Usuário criado com sucesso")

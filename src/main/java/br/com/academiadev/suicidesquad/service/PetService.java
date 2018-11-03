@@ -19,7 +19,7 @@ public class PetService {
         this.petRepository = petRepository;
     }
 
-    public Optional<Pet> findById(Long idPet){
+    public Optional<Pet> findById(Long idPet) {
         return petRepository.findById(idPet);
     }
 
@@ -27,7 +27,7 @@ public class PetService {
         return petRepository.findAll(pageable);
     }
 
-    public Pet save(Pet pet){
+    public Pet save(Pet pet) {
         return petRepository.save(pet);
     }
 }

@@ -16,7 +16,7 @@ public enum Situacao {
     }
 
     public static Situacao findById(Integer id) {
-        for (Situacao situacao: values()) {
+        for (Situacao situacao : values()) {
             if (situacao.getId().equals(id)) {
                 return situacao;
             }

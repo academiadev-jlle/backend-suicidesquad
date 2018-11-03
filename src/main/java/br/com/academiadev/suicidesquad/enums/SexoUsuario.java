@@ -16,7 +16,7 @@ public enum SexoUsuario {
     }
 
     public static SexoUsuario findById(Integer id) {
-        for (SexoUsuario sexo: values()) {
+        for (SexoUsuario sexo : values()) {
             if (sexo.getId().equals(id)) {
                 return sexo;
             }
