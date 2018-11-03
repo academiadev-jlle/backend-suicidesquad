@@ -16,7 +16,7 @@ import java.time.LocalDate;
 
 
 @Entity
-@Table(name = "pet")
+@Table(name = "usuario")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Usuario implements Serializable {
 
