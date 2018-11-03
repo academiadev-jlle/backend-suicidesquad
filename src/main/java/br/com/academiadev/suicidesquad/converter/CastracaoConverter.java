@@ -1,8 +1,8 @@
 package br.com.academiadev.suicidesquad.converter;
 
-import javax.persistence.AttributeConverter;
-
 import br.com.academiadev.suicidesquad.enums.Castracao;
+
+import javax.persistence.AttributeConverter;
 
 public class CastracaoConverter implements AttributeConverter<Castracao, Integer> {
 
