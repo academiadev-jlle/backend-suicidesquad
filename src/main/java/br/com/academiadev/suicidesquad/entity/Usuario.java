@@ -31,6 +31,7 @@ public class Usuario implements Serializable {
     private String nome;
 
     @NotNull
+    @Column(unique = true)
     @Email
     private String email;
 
