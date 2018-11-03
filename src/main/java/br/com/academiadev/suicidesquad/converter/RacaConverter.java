@@ -9,7 +9,7 @@ import javax.persistence.Converter;
 public class RacaConverter implements AttributeConverter<Raca, Integer> {
     @Override
     public Integer convertToDatabaseColumn(Raca raca) {
-        if (raca == null ) {
+        if (raca == null) {
             return null;
         }
         return raca.getId();

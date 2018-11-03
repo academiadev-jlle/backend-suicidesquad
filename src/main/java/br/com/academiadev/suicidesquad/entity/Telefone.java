@@ -17,10 +17,10 @@ public class Telefone implements Serializable {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id_pet", nullable = false)
+
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonIgnore
-    private Pet pet;
+    private Usuario usuario;
 
     @NotBlank
     private String numero;

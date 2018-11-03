@@ -16,7 +16,7 @@ public enum Categoria {
     }
 
     public static Categoria findById(Integer id) {
-        for (Categoria categoria: values()) {
+        for (Categoria categoria : values()) {
             if (categoria.getId().equals(id)) {
                 return categoria;
             }

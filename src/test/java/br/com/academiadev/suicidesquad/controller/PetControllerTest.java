@@ -51,7 +51,7 @@ public class PetControllerTest {
         pet.addCor(Cor.MARROM);
         pet.addCor(Cor.BRANCO);
         pet.setComprimentoPelo(ComprimentoPelo.CURTO);
-        pet.setSexo(Sexo.MACHO);
+        pet.setSexo(SexoPet.MACHO);
         pet.addRegistro(new Registro(pet, Situacao.PROCURANDO));
         return pet;
     }
@@ -139,11 +139,11 @@ public class PetControllerTest {
         petJson.put("raca", "CACHORRO_SRD");
 
         this.mvc
-            .perform(post("/pets")
-                    .content(petJson.toString())
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .accept(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
+                .perform(post("/pets")
+                        .content(petJson.toString())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
 
         ArgumentCaptor<Pet> argument = ArgumentCaptor.forClass(Pet.class);
         verify(petService, times(1)).save(argument.capture());
@@ -158,7 +158,7 @@ public class PetControllerTest {
     public void createPet_Invalido() throws Exception {
         this.mvc
                 .perform(post("/pets")
-                         .content("{}")
+                        .content("{}")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest());
