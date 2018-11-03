@@ -41,8 +41,10 @@ jobs:
       # run tests!
       - run: gradle test
 
+      - run: gradle jacocoTestReport
+
       - run:
-          name: Save test results
+          name: Save test report
           command: |
             mkdir -p ~/jacoco
             find . -type f -regex ".*/build/test-results/.*.xml" -exec cp {} ~/jacoco \;
@@ -53,6 +55,6 @@ jobs:
           path: ~/jacoco
 
       - run:
-          name: Upload test results
+          name: Upload test report
           command: bash <(curl -s https://codecov.io/bash)
           when: always
