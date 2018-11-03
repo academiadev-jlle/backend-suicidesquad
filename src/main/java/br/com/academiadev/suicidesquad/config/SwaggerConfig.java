@@ -14,23 +14,19 @@ import java.util.ArrayList;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-
     @Bean
     public Docket apis() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("br.com.academiadev.suicidesquad"))
-
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo())
                 .useDefaultResponseMessages(false);
-
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfo(
-
                 "Backend SuicideSquad",
                 "API REST",
                 "1.0",
