@@ -9,11 +9,11 @@ import javax.persistence.Converter;
 public class PorteConverter implements AttributeConverter<Porte, Integer> {
     @Override
     public Integer convertToDatabaseColumn(Porte porte) {
-        return porte.getId();
+        return porte == null ? null : porte.getId();
     }
 
     @Override
     public Porte convertToEntityAttribute(Integer dbData) {
-        return Porte.findById(dbData);
+        return dbData == null ? null : Porte.findById(dbData);
     }
 }

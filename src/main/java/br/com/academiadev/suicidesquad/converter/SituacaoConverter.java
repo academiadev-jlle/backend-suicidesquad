@@ -7,11 +7,11 @@ import javax.persistence.AttributeConverter;
 public class SituacaoConverter implements AttributeConverter<Situacao, Integer> {
     @Override
     public Integer convertToDatabaseColumn(Situacao situacao) {
-        return situacao.getId();
+        return situacao == null ? null : situacao.getId();
     }
 
     @Override
     public Situacao convertToEntityAttribute(Integer dbData) {
-        return Situacao.findById(dbData);
+        return dbData == null ? null : Situacao.findById(dbData);
     }
 }

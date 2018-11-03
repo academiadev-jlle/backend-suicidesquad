@@ -9,11 +9,11 @@ import javax.persistence.Converter;
 public class CorConverter implements AttributeConverter<Cor, Integer> {
     @Override
     public Integer convertToDatabaseColumn(Cor cor) {
-        return cor.getId();
+        return cor == null ? null : cor.getId();
     }
 
     @Override
     public Cor convertToEntityAttribute(Integer dbData) {
-        return Cor.findById(dbData);
+        return dbData == null ? null : Cor.findById(dbData);
     }
 }
