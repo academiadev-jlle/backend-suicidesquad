@@ -4,8 +4,10 @@ import br.com.academiadev.suicidesquad.converter.SexoUsuarioConverter;
 import br.com.academiadev.suicidesquad.enums.SexoUsuario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Singular;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -29,7 +31,6 @@ public class Usuario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @NotNull
     @Size(min = 1, max = 120)
@@ -59,16 +60,23 @@ public class Usuario implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Telefone> telefones = new ArrayList<>();
 
-    public Usuario(@NotNull String nome, @NotNull String email, @NotNull String senha, @NotNull SexoUsuario sexo, @NotNull LocalDate dataNascimento) {
+    @Builder
+    public Usuario(@NotNull @Size(min = 1, max = 120) String nome, @NotNull @Email String email, @NotNull String senha, @NotNull SexoUsuario sexo, @NotNull LocalDate dataNascimento, Localizacao localizacao, @Singular List<Telefone> telefones) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.sexo = sexo;
         this.dataNascimento = dataNascimento;
+        this.localizacao = localizacao;
+        this.setTelefones(telefones);
     }
 
     public void addTelefone(Telefone telefone) {
         this.telefones.add(telefone);
         telefone.setUsuario(this);
+    }
+
+    private void setTelefones(List<Telefone> telefones) {
+        telefones.forEach(this::addTelefone);
     }
 }
