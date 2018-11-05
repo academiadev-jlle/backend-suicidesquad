@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class Telefone extends BaseEntity {
+public class Telefone extends BaseEntity<Long> {
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonIgnore

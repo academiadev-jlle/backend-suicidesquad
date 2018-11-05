@@ -10,8 +10,8 @@ import java.io.Serializable;
 
 @MappedSuperclass
 @Data
-class BaseEntity implements Serializable {
+class BaseEntity<PK> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private PK id;
 }

@@ -21,7 +21,7 @@ import java.util.Set;
 @Entity
 @Table(name = "pet")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Pet extends BaseEntity {
+public class Pet extends BaseEntity<Long> {
     @JsonProperty("tipo")
     @Convert(converter = TipoConverter.class)
     @NotNull

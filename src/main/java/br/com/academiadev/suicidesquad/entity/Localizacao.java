@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Table(name = "localizacao")
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Localizacao extends BaseEntity {
+public class Localizacao extends BaseEntity<Long> {
     @NotBlank
     private String bairro;
 

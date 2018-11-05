@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class Registro extends BaseEntity {
+public class Registro extends BaseEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "id_pet")
     @NotNull
