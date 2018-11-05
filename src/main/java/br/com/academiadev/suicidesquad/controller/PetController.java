@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.academiadev.suicidesquad.entity.Pet;
-import br.com.academiadev.suicidesquad.enums.Tipo;
 import br.com.academiadev.suicidesquad.exception.ResourceNotFoundException;
 import br.com.academiadev.suicidesquad.service.PetService;
 
