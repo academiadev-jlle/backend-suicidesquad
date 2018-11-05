@@ -29,7 +29,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -95,14 +96,14 @@ public class UsuarioControllerTest {
                 .andExpect(status().isOk());
 
         int idx = 0;
-        for (Usuario usuario: allUsuarios) {
-                results = results.andExpect(jsonPath(String.format("$.content[%d].email", idx), equalTo(usuario.getEmail())));
-                results = results.andExpect(jsonPath(String.format("$.content[%d].nome", idx), equalTo(usuario.getNome())));
-                if (!usuario.getTelefones().isEmpty()) {
-                    results = results.andExpect(jsonPath(String.format("$.content[%d].telefones[0].numero", idx), equalTo(usuario.getTelefones().get(0).getNumero())));
-                }
-                results = results.andExpect(jsonPath(String.format("$.content[%d].data_nascimento", idx), equalTo(usuario.getDataNascimento().toString())));
-                idx++;
+        for (Usuario usuario : allUsuarios) {
+            results = results.andExpect(jsonPath(String.format("$.content[%d].email", idx), equalTo(usuario.getEmail())));
+            results = results.andExpect(jsonPath(String.format("$.content[%d].nome", idx), equalTo(usuario.getNome())));
+            if (!usuario.getTelefones().isEmpty()) {
+                results = results.andExpect(jsonPath(String.format("$.content[%d].telefones[0].numero", idx), equalTo(usuario.getTelefones().get(0).getNumero())));
+            }
+            results = results.andExpect(jsonPath(String.format("$.content[%d].data_nascimento", idx), equalTo(usuario.getDataNascimento().toString())));
+            idx++;
         }
     }
 
