@@ -173,6 +173,7 @@ public class UsuarioControllerTest {
         assertThat(argumentCaptor.getValue().getSenha(), equalTo(usuarioJson.getString("senha")));
         assertThat(argumentCaptor.getValue().getEmail(), equalTo(usuarioJson.getString("email")));
         assertThat(argumentCaptor.getValue().getTelefones().get(0).getNumero(), equalTo(telefoneJson.getString("numero")));
+        assertThat(argumentCaptor.getValue().getTelefones().get(0).isWhatsapp(), equalTo(telefoneJson.getBoolean("whatsapp")));
 
     }
 

@@ -3,6 +3,8 @@ package br.com.academiadev.suicidesquad.entity;
 import br.com.academiadev.suicidesquad.converter.SexoUsuarioConverter;
 import br.com.academiadev.suicidesquad.enums.SexoUsuario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -18,6 +20,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "usuario")
+@Data
+@NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Usuario implements Serializable {
 
@@ -38,11 +42,6 @@ public class Usuario implements Serializable {
     @NotNull
     private String senha;
 
-
-    public Usuario() {
-
-    }
-
     @NotNull
     @Convert(converter = SexoUsuarioConverter.class)
     private SexoUsuario sexo;
@@ -58,75 +57,16 @@ public class Usuario implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Telefone> telefones = new ArrayList<>();
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public Localizacao getLocalizacao() {
-        return localizacao;
-    }
-
-    public void setLocalizacao(Localizacao localizacao) {
-        this.localizacao = localizacao;
-    }
-
-    public List<Telefone> getTelefones() {
-        return telefones;
-    }
-
-    public void addTelefone(Telefone telefone) {
-        this.telefones.add(telefone);
-    }
-
-    public SexoUsuario getSexo() {
-        return sexo;
-    }
-
-    public void setSexo(SexoUsuario sexo) {
-        this.sexo = sexo;
-    }
-
-    public LocalDate getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public void setDataNascimento(LocalDate dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
-
     public Usuario(@NotNull String nome, @NotNull String email, @NotNull String senha, @NotNull SexoUsuario sexo, @NotNull LocalDate dataNascimento) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.sexo = sexo;
         this.dataNascimento = dataNascimento;
+    }
+
+    public void addTelefone(Telefone telefone) {
+        this.telefones.add(telefone);
+        telefone.setUsuario(this);
     }
 }
