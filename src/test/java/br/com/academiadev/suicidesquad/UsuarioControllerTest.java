@@ -20,6 +20,7 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -50,43 +51,32 @@ public class UsuarioControllerTest {
 
 
     private Usuario buildUsuario() {
-        Telefone telefone = new Telefone();
-        telefone.setNumero("47988271821");
-        telefone.setWhatsapp(true);
-
-        Usuario usuario1 = new Usuario();
-        usuario1.setEmail("primeiroemail@gmail.com");
-        usuario1.setNome("Nelson Nunes Guimarães");
-        usuario1.setSenha("senha1");
-        usuario1.setId(1l);
-        usuario1.addTelefone(telefone);
-        usuario1.setLocalizacao(new Localizacao());
-        usuario1.setDataNascimento(LocalDate.of(2000, 5, 22));
-        return usuario1;
+        return Usuario.builder()
+                .email("nelson@example.com")
+                .nome("Nelson Nunes Guimarães")
+                .senha("senha1")
+                .telefone(new Telefone("47988271821"))
+                .localizacao(new Localizacao())
+                .dataNascimento(LocalDate.of(2000, 5, 22))
+                .build();
     }
 
     private List<Usuario> buildUsuarios() {
-        Telefone telefone = new Telefone();
-        telefone.setNumero("47988271821");
-        telefone.setWhatsapp(true);
+        Usuario usuario1 = Usuario.builder()
+                .email("nelson@example.com")
+                .nome("Nelson Nunes Guimarães")
+                .senha("senha1")
+                .dataNascimento(LocalDate.of(1965, 5, 16))
+                .build();
 
-        Usuario usuario1 = new Usuario();
-        usuario1.setEmail("primeiroemail@gmail.com");
-        usuario1.setNome("Nelson Nunes Guimarães");
-        usuario1.setSenha("senha1");
-        usuario1.setId(1l);
-        usuario1.addTelefone(telefone);
-        usuario1.setLocalizacao(new Localizacao());
-        usuario1.setDataNascimento(LocalDate.of(1965, 5, 16));
-
-        Usuario usuario2 = new Usuario();
-        usuario2.setEmail("segundoemail@gmail.com");
-        usuario2.setNome("Salvador Di Bernardi");
-        usuario2.setId(2l);
-        usuario2.setSenha("senha2");
-        usuario2.addTelefone(telefone);
-        usuario2.setLocalizacao(new Localizacao());
-        usuario2.setDataNascimento(LocalDate.of(1983, 11, 28));
+        Usuario usuario2 = Usuario.builder()
+                .email("salvador@example.com")
+                .nome("Salvador Di Bernardi")
+                .senha("senha2")
+                .telefone(new Telefone("47988271821"))
+                .localizacao(new Localizacao())
+                .dataNascimento(LocalDate.of(1983, 11, 28))
+                .build();
 
         return Arrays.asList(usuario1,
                 usuario2);
@@ -101,11 +91,19 @@ public class UsuarioControllerTest {
 
         when(usuarioService.findAll(any(Pageable.class))).thenReturn(pagedResponse);
 
-        this.mvc.perform(get("/usuarios"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].email", is("primeiroemail@gmail.com")))
-                .andExpect(jsonPath("$.content[0].nome", is("Nelson Nunes Guimarães")))
-                .andExpect(jsonPath("$.content[1].nome", is("Salvador Di Bernardi")));
+        ResultActions results = this.mvc.perform(get("/usuarios"))
+                .andExpect(status().isOk());
+
+        int idx = 0;
+        for (Usuario usuario: allUsuarios) {
+                results = results.andExpect(jsonPath(String.format("$.content[%d].email", idx), equalTo(usuario.getEmail())));
+                results = results.andExpect(jsonPath(String.format("$.content[%d].nome", idx), equalTo(usuario.getNome())));
+                if (!usuario.getTelefones().isEmpty()) {
+                    results = results.andExpect(jsonPath(String.format("$.content[%d].telefones[0].numero", idx), equalTo(usuario.getTelefones().get(0).getNumero())));
+                }
+                results = results.andExpect(jsonPath(String.format("$.content[%d].data_nascimento", idx), equalTo(usuario.getDataNascimento().toString())));
+                idx++;
+        }
     }
 
     @Test
@@ -116,7 +114,7 @@ public class UsuarioControllerTest {
 
         this.mvc.perform(get("/usuarios/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nome", is("Nelson Nunes Guimarães")));
+                .andExpect(jsonPath("$.nome", equalTo(usuario.getNome())));
 
 
     }
@@ -145,7 +143,7 @@ public class UsuarioControllerTest {
 
         JSONObject usuarioJson = new JSONObject();
         usuarioJson.put("nome", "Nelson Nunes Guimarães");
-        usuarioJson.put("email", "primeiroemail@gmail.com");
+        usuarioJson.put("email", "nelson@example.com");
         usuarioJson.put("senha", "senha1");
         usuarioJson.put("sexo", "MASCULINO");
         usuarioJson.put("data_nascimento", LocalDate.of(1990, 10, 8));
