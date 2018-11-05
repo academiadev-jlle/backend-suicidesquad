@@ -1,23 +1,25 @@
 package br.com.academiadev.suicidesquad.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "telefone")
-public class Telefone implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+public class Telefone extends BaseEntity<Long> {
     @ManyToOne(optional = false)
-
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonIgnore
     private Usuario usuario;
@@ -26,21 +28,9 @@ public class Telefone implements Serializable {
     private String numero;
 
     @NotNull
-    private Boolean whatsapp;
+    private boolean isWhatsapp;
 
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
+    public Telefone(@NotBlank String numero) {
         this.numero = numero;
-    }
-
-    public Boolean getWhatsapp() {
-        return whatsapp;
-    }
-
-    public void setWhatsapp(Boolean whatsapp) {
-        this.whatsapp = whatsapp;
     }
 }
