@@ -2,6 +2,7 @@ package br.com.academiadev.suicidesquad.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "telefone")
 @Data
+@NoArgsConstructor
 public class Telefone implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,4 +31,8 @@ public class Telefone implements Serializable {
 
     @NotNull
     private boolean isWhatsapp;
+
+    public Telefone(@NotBlank String numero) {
+        this.numero = numero;
+    }
 }
