@@ -12,12 +12,12 @@ buildscript {
 	}
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'jacoco'
-
 plugins {
+	id 'java'
 	id 'io.franzbecker.gradle-lombok' version '1.14'
+	id 'eclipse'
+	id 'idea'
+	id 'jacoco'
 }
 
 apply plugin: 'org.springframework.boot'
