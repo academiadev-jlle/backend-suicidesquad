@@ -4,26 +4,24 @@ import br.com.academiadev.suicidesquad.converter.*;
 import br.com.academiadev.suicidesquad.enums.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Singular;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+@Data
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "pet")
-@Data
-@NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Pet implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Pet extends BaseEntity {
     @JsonProperty("tipo")
     @Convert(converter = TipoConverter.class)
     @NotNull
@@ -45,6 +43,7 @@ public class Pet implements Serializable {
 
     @JsonProperty("sexo")
     @Convert(converter = SexoPetConverter.class)
+    @Builder.Default
     private SexoPet sexo = SexoPet.NAO_INFORMADO;
 
     @JsonProperty("categoria")
@@ -55,11 +54,13 @@ public class Pet implements Serializable {
     @JsonProperty("vacinacao")
     @Convert(converter = VacinacaoConverter.class)
     @NotNull
+    @Builder.Default
     private Vacinacao vacinacao = Vacinacao.NAO_INFORMADO;
 
     @JsonProperty("castracao")
     @Convert(converter = CastracaoConverter.class)
     @NotNull
+    @Builder.Default
     private Castracao castracao = Castracao.NAO_INFORMADO;
 
     @ManyToOne
@@ -69,26 +70,12 @@ public class Pet implements Serializable {
     @ElementCollection(targetClass = Cor.class)
     @CollectionTable(name = "pet_cor")
     @Convert(converter = CorConverter.class)
+    @Singular("cor")
     private Set<Cor> cores = new HashSet<>();
 
     @OneToMany(mappedBy = "pet", orphanRemoval = true)
+    @Singular
     private List<Registro> registros = new ArrayList<>();
-
-    @Builder
-    public Pet(Long id, @NotNull Tipo tipo, @NotNull Porte porte, Raca raca, @NotNull ComprimentoPelo comprimentoPelo, SexoPet sexo, @NotNull Categoria categoria, @NotNull Vacinacao vacinacao, @NotNull Castracao castracao, Localizacao localizacao, @Singular("cor") Set<Cor> cores, @Singular List<Registro> registros) {
-        this.id = id;
-        this.tipo = tipo;
-        this.porte = porte;
-        this.raca = raca;
-        this.comprimentoPelo = comprimentoPelo;
-        this.sexo = Optional.ofNullable(sexo).orElse(this.sexo);
-        this.categoria = categoria;
-        this.vacinacao = Optional.ofNullable(vacinacao).orElse(this.vacinacao);
-        this.castracao = Optional.ofNullable(castracao).orElse(this.castracao);
-        this.localizacao = localizacao;
-        this.cores = Optional.ofNullable(cores).orElse(this.cores);
-        this.registros = Optional.ofNullable(registros).orElse(this.registros);
-    }
 
     public void addCor(Cor cor) {
         this.cores.add(cor);

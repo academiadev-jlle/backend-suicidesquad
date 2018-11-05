@@ -4,22 +4,19 @@ import br.com.academiadev.suicidesquad.converter.SituacaoConverter;
 import br.com.academiadev.suicidesquad.enums.Situacao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "registro")
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class Registro implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Registro extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "id_pet")
     @NotNull

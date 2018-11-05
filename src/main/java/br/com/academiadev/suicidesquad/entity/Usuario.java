@@ -4,10 +4,7 @@ import br.com.academiadev.suicidesquad.converter.SexoUsuarioConverter;
 import br.com.academiadev.suicidesquad.enums.SexoUsuario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Singular;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -15,23 +12,20 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 
+@Data
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "usuario")
-@Data
-@NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Usuario implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Usuario extends BaseEntity {
     @NotNull
     @Size(min = 1, max = 120)
     private String nome;
@@ -58,18 +52,8 @@ public class Usuario implements Serializable {
     private Localizacao localizacao;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Singular
     private List<Telefone> telefones = new ArrayList<>();
-
-    @Builder
-    public Usuario(@NotNull @Size(min = 1, max = 120) String nome, @NotNull @Email String email, @NotNull String senha, @NotNull SexoUsuario sexo, @NotNull LocalDate dataNascimento, Localizacao localizacao, @Singular List<Telefone> telefones) {
-        this.nome = nome;
-        this.email = email;
-        this.senha = senha;
-        this.sexo = sexo;
-        this.dataNascimento = dataNascimento;
-        this.localizacao = localizacao;
-        this.setTelefones(telefones);
-    }
 
     public void addTelefone(Telefone telefone) {
         this.telefones.add(telefone);
