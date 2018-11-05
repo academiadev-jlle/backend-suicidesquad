@@ -4,16 +4,15 @@ import br.com.academiadev.suicidesquad.converter.*;
 import br.com.academiadev.suicidesquad.enums.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Singular;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "pet")
@@ -75,17 +74,20 @@ public class Pet implements Serializable {
     @OneToMany(mappedBy = "pet", orphanRemoval = true)
     private List<Registro> registros = new ArrayList<>();
 
-    public Pet(Categoria categoria, @NotNull Tipo tipo, @NotNull Porte porte) {
-        this.categoria = categoria;
-        this.tipo = tipo;
-        this.porte = porte;
-    }
-
-    public Pet(Categoria categoria, @NotNull Tipo tipo, @NotNull Porte porte, @NotNull Raca raca) {
-        this.categoria = categoria;
+    @Builder
+    public Pet(Long id, @NotNull Tipo tipo, @NotNull Porte porte, Raca raca, @NotNull ComprimentoPelo comprimentoPelo, SexoPet sexo, @NotNull Categoria categoria, @NotNull Vacinacao vacinacao, @NotNull Castracao castracao, Localizacao localizacao, @Singular("cor") Set<Cor> cores, @Singular List<Registro> registros) {
+        this.id = id;
         this.tipo = tipo;
         this.porte = porte;
         this.raca = raca;
+        this.comprimentoPelo = comprimentoPelo;
+        this.sexo = Optional.ofNullable(sexo).orElse(this.sexo);
+        this.categoria = categoria;
+        this.vacinacao = Optional.ofNullable(vacinacao).orElse(this.vacinacao);
+        this.castracao = Optional.ofNullable(castracao).orElse(this.castracao);
+        this.localizacao = localizacao;
+        this.cores = Optional.ofNullable(cores).orElse(this.cores);
+        this.registros = Optional.ofNullable(registros).orElse(this.registros);
     }
 
     public void addCor(Cor cor) {
@@ -95,5 +97,9 @@ public class Pet implements Serializable {
     public void addRegistro(Registro registro) {
         this.registros.add(registro);
         registro.setPet(this);
+    }
+
+    public void setRegistros(List<Registro> registros) {
+        registros.forEach(this::addRegistro);
     }
 }

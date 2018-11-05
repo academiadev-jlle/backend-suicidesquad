@@ -37,4 +37,8 @@ public class Registro implements Serializable {
         this.situacao = situacao;
         this.data = LocalDateTime.now();
     }
+
+    public Registro(@NotNull Situacao situacao) {
+        this.situacao = situacao;
+    }
 }

@@ -47,22 +47,40 @@ public class PetControllerTest {
     private PetService petService;
 
     private Pet buildPet() {
-        Pet pet = new Pet(Categoria.ACHADO, Tipo.CACHORRO, Porte.PEQUENO, Raca.CACHORRO_SRD);
-        pet.addCor(Cor.MARROM);
-        pet.addCor(Cor.BRANCO);
-        pet.setComprimentoPelo(ComprimentoPelo.CURTO);
-        pet.setSexo(SexoPet.MACHO);
-        pet.addRegistro(new Registro(pet, Situacao.PROCURANDO));
-        return pet;
+        return Pet.builder()
+                .categoria(Categoria.ACHADO)
+                .tipo(Tipo.CACHORRO)
+                .porte(Porte.PEQUENO)
+                .raca(Raca.CACHORRO_SRD)
+                .cor(Cor.MARROM)
+                .cor(Cor.BRANCO)
+                .comprimentoPelo(ComprimentoPelo.CURTO)
+                .sexo(SexoPet.MACHO)
+                .registro(new Registro(Situacao.PROCURANDO))
+                .build();
     }
 
     private List<Pet> buildPets() {
-        Pet petSemRaca = new Pet(Categoria.ACHADO, Tipo.GATO, Porte.MEDIO);
+        Pet petSemRaca = Pet.builder()
+                .categoria(Categoria.ACHADO)
+                .tipo(Tipo.GATO)
+                .porte(Porte.MEDIO)
+                .build();
 
-        Pet petComRaca = new Pet(Categoria.PERDIDO, Tipo.EQUINO, Porte.GRANDE, Raca.LUSITANO);
+        Pet petComRaca = Pet.builder()
+                .categoria(Categoria.PERDIDO)
+                .tipo(Tipo.EQUINO)
+                .porte(Porte.GRANDE)
+                .raca(Raca.LUSITANO)
+                .build();
 
-        Pet petComCor = new Pet(Categoria.PARA_ADOCAO, Tipo.CACHORRO, Porte.PEQUENO, Raca.LABRADOR);
-        petComCor.addCor(Cor.BRANCO);
+        Pet petComCor = Pet.builder()
+                .categoria(Categoria.PARA_ADOCAO)
+                .tipo(Tipo.CACHORRO)
+                .porte(Porte.PEQUENO)
+                .raca(Raca.LABRADOR)
+                .cor(Cor.BRANCO)
+                .build();
 
         return Arrays.asList(
                 petSemRaca,
