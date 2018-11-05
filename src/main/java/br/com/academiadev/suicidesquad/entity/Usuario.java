@@ -3,6 +3,7 @@ package br.com.academiadev.suicidesquad.entity;
 import br.com.academiadev.suicidesquad.converter.SexoUsuarioConverter;
 import br.com.academiadev.suicidesquad.enums.SexoUsuario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -47,6 +48,7 @@ public class Usuario implements Serializable {
     private SexoUsuario sexo;
 
     @NotNull
+    @JsonProperty("data_nascimento")
     private LocalDate dataNascimento;
 
     @ManyToOne(cascade = CascadeType.PERSIST)

@@ -148,7 +148,7 @@ public class UsuarioControllerTest {
         usuarioJson.put("email", "primeiroemail@gmail.com");
         usuarioJson.put("senha", "senha1");
         usuarioJson.put("sexo", "MASCULINO");
-        usuarioJson.put("dataNascimento", LocalDate.of(1990, 10, 8));
+        usuarioJson.put("data_nascimento", LocalDate.of(1990, 10, 8));
 
         JSONArray telefonesJson = new JSONArray();
         JSONObject telefoneJson = new JSONObject();
