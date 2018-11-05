@@ -110,9 +110,9 @@ public class UsuarioControllerTest {
 
     @Test
     public void dadoBuscarUsuario_quandoUsuarioExiste_entaoUsuarioEncontrado() throws Exception {
-        Usuario usuario1 = buildUsuario();
+        Usuario usuario = buildUsuario();
 
-        when(usuarioService.findById(1l)).thenReturn(java.util.Optional.of(usuario1));
+        when(usuarioService.findById(1L)).thenReturn(java.util.Optional.of(usuario));
 
         this.mvc.perform(get("/usuarios/1"))
                 .andExpect(status().isOk())
@@ -134,7 +134,7 @@ public class UsuarioControllerTest {
 
     @Test
     public void dadoBuscarUsuario_quandoUsuarioNaoExiste_entaoUsuarioNaoEncontrado() throws Exception {
-        when(usuarioService.findById(1l)).thenReturn(Optional.empty());
+        when(usuarioService.findById(1L)).thenReturn(Optional.empty());
 
         this.mvc.perform(get("/usuarios/1"))
                 .andExpect(status().isNotFound());
