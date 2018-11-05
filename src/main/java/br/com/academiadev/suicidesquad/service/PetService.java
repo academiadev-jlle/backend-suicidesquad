@@ -31,7 +31,6 @@ public class PetService {
     }
 
     public Page<Pet> findAll(String customRequest, Pageable pageable) {
-    	System.out.println(customRequest);
     	return (new PageImpl<Pet>(em.createQuery(customRequest, Pet.class).getResultList()));
     }
 
