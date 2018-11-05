@@ -1,9 +1,23 @@
 package br.com.academiadev.suicidesquad.controller;
 
-import br.com.academiadev.suicidesquad.entity.Pet;
-import br.com.academiadev.suicidesquad.entity.Registro;
-import br.com.academiadev.suicidesquad.enums.*;
-import br.com.academiadev.suicidesquad.service.PetService;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,20 +34,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import br.com.academiadev.suicidesquad.entity.Pet;
+import br.com.academiadev.suicidesquad.entity.Registro;
+import br.com.academiadev.suicidesquad.enums.Categoria;
+import br.com.academiadev.suicidesquad.enums.Pelo;
+import br.com.academiadev.suicidesquad.enums.Cor;
+import br.com.academiadev.suicidesquad.enums.Porte;
+import br.com.academiadev.suicidesquad.enums.Raca;
+import br.com.academiadev.suicidesquad.enums.SexoPet;
+import br.com.academiadev.suicidesquad.enums.Situacao;
+import br.com.academiadev.suicidesquad.enums.Tipo;
+import br.com.academiadev.suicidesquad.service.PetService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(PetController.class)
@@ -50,7 +61,7 @@ public class PetControllerTest {
         Pet pet = new Pet(Categoria.ACHADO, Tipo.CACHORRO, Porte.PEQUENO, Raca.CACHORRO_SRD);
         pet.addCor(Cor.MARROM);
         pet.addCor(Cor.BRANCO);
-        pet.setComprimentoPelo(ComprimentoPelo.CURTO);
+        pet.setComprimentoPelo(Pelo.CURTO);
         pet.setSexo(SexoPet.MACHO);
         pet.addRegistro(new Registro(pet, Situacao.PROCURANDO));
         return pet;
@@ -70,15 +81,27 @@ public class PetControllerTest {
                 petComCor
         );
     }
+    
+    @Test
+    public void getPets_PorEspecie() throws Exception {
+    	List<Pet> pets = buildPets();
 
+        Page<Pet> pagedResponse = new PageImpl<>(pets);
+        when(petService.findAll(any(String.class), any(Pageable.class))).thenReturn(pagedResponse);
+
+        this.mvc.perform(get("/v1/pet/find?teste=cachorro"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath(String.format("$.content[%d].tipo", 0), equalTo(Tipo.CACHORRO.toString())));
+    }
+    
     @Test
     public void getPets_ComPets() throws Exception {
         List<Pet> pets = buildPets();
 
         Page<Pet> pagedResponse = new PageImpl<>(pets);
-        when(petService.findAll(any(Pageable.class))).thenReturn(pagedResponse);
+        when(petService.findAll(any(String.class), any(Pageable.class))).thenReturn(pagedResponse);
 
-        ResultActions result = this.mvc.perform(get("/pets"))
+        ResultActions result = this.mvc.perform(get("/v1/pet/find"))
                 .andExpect(status().isOk());
 
         int idx = 0;
@@ -93,13 +116,13 @@ public class PetControllerTest {
             idx++;
         }
     }
-
+    
     @Test
     public void getPets_SemPets() throws Exception {
         Page<Pet> pagedResponse = new PageImpl<>(new ArrayList<>());
-        when(petService.findAll(any(Pageable.class))).thenReturn(pagedResponse);
+        when(petService.findAll(any(String.class), any(Pageable.class))).thenReturn(pagedResponse);
 
-        this.mvc.perform(get("/pets"))
+        this.mvc.perform(get("/v1/pet/find"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(0)));
     }
@@ -110,7 +133,7 @@ public class PetControllerTest {
 
         when(petService.findById(1L)).thenReturn(Optional.of(pet));
 
-        this.mvc.perform(get("/pets/1"))
+        this.mvc.perform(get("/v1/pet/find/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.categoria", equalTo(pet.getCategoria().toString())))
                 .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
@@ -126,7 +149,7 @@ public class PetControllerTest {
     public void getPet_Inexistente() throws Exception {
         when(petService.findById(1L)).thenReturn(Optional.empty());
 
-        this.mvc.perform(get("/pets/1"))
+        this.mvc.perform(get("/v1/pet/find/1"))
                 .andExpect(status().isNotFound());
     }
 
@@ -140,7 +163,7 @@ public class PetControllerTest {
         petJson.put("comprimento_pelo", "CURTO");
 
         this.mvc
-                .perform(post("/pets")
+                .perform(post("/v1/pet/add")
                         .content(petJson.toString())
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -158,7 +181,7 @@ public class PetControllerTest {
     @Test
     public void createPet_Invalido() throws Exception {
         this.mvc
-                .perform(post("/pets")
+                .perform(post("/v1/pet/add")
                         .content("{}")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))

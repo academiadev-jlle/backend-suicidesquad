@@ -1,6 +1,6 @@
 package br.com.academiadev.suicidesquad.enums;
 
-public enum ComprimentoPelo {
+public enum Pelo {
     SEM_PELO(1),
     CURTO(2),
     MEDIO(3),
@@ -8,7 +8,7 @@ public enum ComprimentoPelo {
 
     private Integer id;
 
-    ComprimentoPelo(Integer id) {
+    Pelo(Integer id) {
         this.id = id;
     }
 
@@ -16,8 +16,8 @@ public enum ComprimentoPelo {
         return id;
     }
 
-    public static ComprimentoPelo findById(Integer id) {
-        for (ComprimentoPelo comprimentoPelo : values()) {
+    public static Pelo findById(Integer id) {
+        for (Pelo comprimentoPelo : values()) {
             if (comprimentoPelo.getId().equals(id)) {
                 return comprimentoPelo;
             }

@@ -24,8 +24,8 @@ public class Pet implements Serializable {
     @JsonProperty("tipo")
     @Convert(converter = TipoConverter.class)
     @NotNull
-    private Tipo tipo;
 
+    private Tipo tipo;
     @JsonProperty("porte")
     @Convert(converter = PorteConverter.class)
     @NotNull
@@ -36,9 +36,9 @@ public class Pet implements Serializable {
     private Raca raca;
 
     @JsonProperty("comprimento_pelo")
-    @Convert(converter = ComprimentoPeloConverter.class)
+    @Convert(converter = PeloConverter.class)
     @NotNull
-    private ComprimentoPelo comprimentoPelo;
+    private Pelo comprimentoPelo;
 
     @JsonProperty("sexo")
     @Convert(converter = SexoPetConverter.class)
@@ -111,11 +111,11 @@ public class Pet implements Serializable {
         this.raca = raca;
     }
 
-    public ComprimentoPelo getComprimentoPelo() {
+    public Pelo getComprimentoPelo() {
         return comprimentoPelo;
     }
 
-    public void setComprimentoPelo(ComprimentoPelo comprimentoPelo) {
+    public void setComprimentoPelo(Pelo comprimentoPelo) {
         this.comprimentoPelo = comprimentoPelo;
     }
 
