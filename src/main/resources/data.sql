@@ -3,7 +3,7 @@ INSERT INTO localizacao (bairro, cidade, uf) VALUES
   ('Floresta', 'Joinville', 'SC');
 
 INSERT INTO pet (
-  comprimento_pelo, id_localizacao, porte, raca, tipo, sexo, categoria, vacinacao, castracao
+  pelo, id_localizacao, porte, raca, tipo, sexo, categoria, vacinacao, castracao
 ) VALUES
   (1, 1, 1, 1, 1, 1, 1, 1, 1),
   (2, 2, 2, 2, 2, 2, 2, 2, 2),

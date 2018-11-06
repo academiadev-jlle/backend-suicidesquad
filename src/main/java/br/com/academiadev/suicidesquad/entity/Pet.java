@@ -36,10 +36,10 @@ public class Pet extends BaseEntity<Long> {
     @Convert(converter = RacaConverter.class)
     private Raca raca;
 
-    @JsonProperty("comprimento_pelo")
-    @Convert(converter = ComprimentoPeloConverter.class)
+    @JsonProperty("pelo")
+    @Convert(converter = PeloConverter.class)
     @NotNull
-    private ComprimentoPelo comprimentoPelo;
+    private Pelo pelo;
 
     @JsonProperty("sexo")
     @Convert(converter = SexoPetConverter.class)

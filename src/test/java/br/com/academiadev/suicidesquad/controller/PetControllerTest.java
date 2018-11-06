@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +55,7 @@ public class PetControllerTest {
                 .raca(Raca.CACHORRO_SRD)
                 .cor(Cor.MARROM)
                 .cor(Cor.BRANCO)
-                .comprimentoPelo(ComprimentoPelo.CURTO)
+                .pelo(Pelo.CURTO)
                 .sexo(SexoPet.MACHO)
                 .registro(new Registro(Situacao.PROCURANDO))
                 .build();
@@ -72,6 +73,9 @@ public class PetControllerTest {
                 .tipo(Tipo.EQUINO)
                 .porte(Porte.GRANDE)
                 .raca(Raca.LUSITANO)
+                .sexo(SexoPet.MACHO)
+                .vacinacao(Vacinacao.PARCIAL)
+                .castracao(Castracao.NAO_INFORMADO)
                 .build();
 
         Pet petComCor = Pet.builder()
@@ -88,15 +92,29 @@ public class PetControllerTest {
                 petComCor
         );
     }
-
+    
+    @Test
+    public void getPetsComParametrosDeUrl() throws Exception {
+    	List<Pet> pets = buildPets();
+    	
+    	when(petService.findAll(any(String.class), any(Pageable.class))).thenReturn(new PageImpl<>(Arrays.asList(pets.get(1))));
+    	this.mvc.perform(get("/v1/pet/find?tipo=equino")).andExpect(status().isOk()).andExpect(jsonPath("$.content[0].tipo", equalTo("EQUINO")));
+    	this.mvc.perform(get("/v1/pet/find?categoria=perdido")).andExpect(status().isOk()).andExpect(jsonPath("$.content[0].categoria", equalTo("PERDIDO")));
+    	this.mvc.perform(get("/v1/pet/find?porte=grande")).andExpect(status().isOk()).andExpect(jsonPath("$.content[0].porte", equalTo("GRANDE")));
+    	this.mvc.perform(get("/v1/pet/find?raca=lusitano")).andExpect(status().isOk()).andExpect(jsonPath("$.content[0].raca", equalTo("LUSITANO")));
+    	this.mvc.perform(get("/v1/pet/find?sexo=macho")).andExpect(status().isOk()).andExpect(jsonPath("$.content[0].sexo", equalTo("MACHO")));
+    	this.mvc.perform(get("/v1/pet/find?vacinacao=parcial")).andExpect(status().isOk()).andExpect(jsonPath("$.content[0].vacinacao", equalTo("PARCIAL")));
+    	this.mvc.perform(get("/v1/pet/find?castracao=nao_informado")).andExpect(status().isOk()).andExpect(jsonPath("$.content[0].castracao", equalTo("NAO_INFORMADO")));
+    }
+    
     @Test
     public void getPets_ComPets() throws Exception {
         List<Pet> pets = buildPets();
 
         Page<Pet> pagedResponse = new PageImpl<>(pets);
-        when(petService.findAll(any(Pageable.class))).thenReturn(pagedResponse);
+        when(petService.findAll(any(String.class), any(Pageable.class))).thenReturn(pagedResponse);
 
-        ResultActions result = this.mvc.perform(get("/pets"))
+        ResultActions result = this.mvc.perform(get("/v1/pet/find"))
                 .andExpect(status().isOk());
 
         int idx = 0;
@@ -115,9 +133,9 @@ public class PetControllerTest {
     @Test
     public void getPets_SemPets() throws Exception {
         Page<Pet> pagedResponse = new PageImpl<>(new ArrayList<>());
-        when(petService.findAll(any(Pageable.class))).thenReturn(pagedResponse);
+        when(petService.findAll(any(String.class), any(Pageable.class))).thenReturn(pagedResponse);
 
-        this.mvc.perform(get("/pets"))
+        this.mvc.perform(get("/v1/pet/find"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(0)));
     }
@@ -128,14 +146,14 @@ public class PetControllerTest {
 
         when(petService.findById(1L)).thenReturn(Optional.of(pet));
 
-        this.mvc.perform(get("/pets/1"))
+        this.mvc.perform(get("/v1/pet/find/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.categoria", equalTo(pet.getCategoria().toString())))
                 .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
                 .andExpect(jsonPath("$.porte", equalTo(pet.getPorte().toString())))
                 .andExpect(jsonPath("$.raca", equalTo(pet.getRaca().toString())))
                 .andExpect(jsonPath("$.cores", hasSize(pet.getCores().size())))
-                .andExpect(jsonPath("$.comprimento_pelo", equalTo(pet.getComprimentoPelo().toString())))
+                .andExpect(jsonPath("$.pelo", equalTo(pet.getPelo().toString())))
                 .andExpect(jsonPath("$.sexo", equalTo(pet.getSexo().toString())))
                 .andExpect(jsonPath("$.registros[0].situacao", equalTo(pet.getRegistros().get(0).getSituacao().toString())));
     }
@@ -144,7 +162,7 @@ public class PetControllerTest {
     public void getPet_Inexistente() throws Exception {
         when(petService.findById(1L)).thenReturn(Optional.empty());
 
-        this.mvc.perform(get("/pets/1"))
+        this.mvc.perform(get("v1/pet/1"))
                 .andExpect(status().isNotFound());
     }
 
@@ -155,10 +173,10 @@ public class PetControllerTest {
         petJson.put("tipo", "CACHORRO");
         petJson.put("porte", "PEQUENO");
         petJson.put("raca", "CACHORRO_SRD");
-        petJson.put("comprimento_pelo", "CURTO");
+        petJson.put("pelo", "CURTO");
 
         this.mvc
-                .perform(post("/pets")
+                .perform(post("/v1/pet/add")
                         .content(petJson.toString())
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -176,7 +194,7 @@ public class PetControllerTest {
     @Test
     public void createPet_Invalido() throws Exception {
         this.mvc
-                .perform(post("/pets")
+                .perform(post("/v1/pet/add")
                         .content("{}")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
