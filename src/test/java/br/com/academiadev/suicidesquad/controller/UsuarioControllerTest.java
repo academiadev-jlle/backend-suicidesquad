@@ -1,4 +1,4 @@
-package br.com.academiadev.suicidesquad;
+package br.com.academiadev.suicidesquad.controller;
 
 import br.com.academiadev.suicidesquad.controller.UsuarioController;
 import br.com.academiadev.suicidesquad.entity.Localizacao;
