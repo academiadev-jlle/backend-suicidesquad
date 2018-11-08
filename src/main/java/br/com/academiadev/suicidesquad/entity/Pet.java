@@ -8,6 +8,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -76,6 +77,13 @@ public class Pet extends BaseEntity<Long> {
     @OneToMany(mappedBy = "pet", orphanRemoval = true)
     @Singular
     private List<Registro> registros = new ArrayList<>();
+
+    @NotNull
+    @Size(min = 2, max = 80)
+    private String nome;
+
+    @Size(min = 1, max = 255)
+    private String descricao;
 
     public void addCor(Cor cor) {
         this.cores.add(cor);

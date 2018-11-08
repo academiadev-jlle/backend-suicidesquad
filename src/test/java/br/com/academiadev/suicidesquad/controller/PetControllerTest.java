@@ -57,6 +57,8 @@ public class PetControllerTest {
                 .comprimentoPelo(ComprimentoPelo.CURTO)
                 .sexo(SexoPet.MACHO)
                 .registro(new Registro(Situacao.PROCURANDO))
+                .nome("Fredinho")
+                .descricao("Este é um pet é um amorzinho")
                 .build();
     }
 
@@ -65,6 +67,7 @@ public class PetControllerTest {
                 .categoria(Categoria.ACHADO)
                 .tipo(Tipo.GATO)
                 .porte(Porte.MEDIO)
+                .nome("Bill")
                 .build();
 
         Pet petComRaca = Pet.builder()
@@ -72,6 +75,7 @@ public class PetControllerTest {
                 .tipo(Tipo.EQUINO)
                 .porte(Porte.GRANDE)
                 .raca(Raca.LUSITANO)
+                .nome("Açúcar")
                 .build();
 
         Pet petComCor = Pet.builder()
@@ -80,7 +84,9 @@ public class PetControllerTest {
                 .porte(Porte.PEQUENO)
                 .raca(Raca.LABRADOR)
                 .cor(Cor.BRANCO)
+                .nome("José Everaldo")
                 .build();
+
 
         return Arrays.asList(
                 petSemRaca,
@@ -137,7 +143,9 @@ public class PetControllerTest {
                 .andExpect(jsonPath("$.cores", hasSize(pet.getCores().size())))
                 .andExpect(jsonPath("$.comprimento_pelo", equalTo(pet.getComprimentoPelo().toString())))
                 .andExpect(jsonPath("$.sexo", equalTo(pet.getSexo().toString())))
-                .andExpect(jsonPath("$.registros[0].situacao", equalTo(pet.getRegistros().get(0).getSituacao().toString())));
+                .andExpect(jsonPath("$.registros[0].situacao", equalTo(pet.getRegistros().get(0).getSituacao().toString())))
+                .andExpect(jsonPath("$.nome", equalTo(pet.getNome().toString())))
+                .andExpect(jsonPath("$.descricao", equalTo(pet.getDescricao().toString())));
     }
 
     @Test
@@ -179,9 +187,10 @@ public class PetControllerTest {
                 .perform(post("/pets")
                         .content("{}")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                        .accept(MediaType.APPLICATION_JSOgitN_UTF8))
                 .andExpect(status().isBadRequest());
 
         verify(petService, never()).save(any(Pet.class));
     }
+
 }
