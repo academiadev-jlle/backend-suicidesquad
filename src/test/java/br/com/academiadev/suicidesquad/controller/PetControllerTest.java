@@ -164,6 +164,8 @@ public class PetControllerTest {
         petJson.put("porte", "PEQUENO");
         petJson.put("raca", "CACHORRO_SRD");
         petJson.put("comprimento_pelo", "CURTO");
+        petJson.put("nome", "Juvenal");
+        petJson.put("descricao", "Um pet amorzinho");
 
         this.mvc
                 .perform(post("/pets")
@@ -179,6 +181,8 @@ public class PetControllerTest {
         assertThat(argument.getValue().getTipo(), equalTo(Tipo.valueOf(petJson.getString("tipo"))));
         assertThat(argument.getValue().getPorte(), equalTo(Porte.valueOf(petJson.getString("porte"))));
         assertThat(argument.getValue().getRaca(), equalTo(Raca.valueOf(petJson.getString("raca"))));
+        assertThat(argument.getValue().getNome(), equalTo(petJson.getString("nome")));
+        assertThat(argument.getValue().getDescricao(), equalTo(petJson.getString("descricao")));
     }
 
     @Test
@@ -187,7 +191,7 @@ public class PetControllerTest {
                 .perform(post("/pets")
                         .content("{}")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSOgitN_UTF8))
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest());
 
         verify(petService, never()).save(any(Pet.class));
