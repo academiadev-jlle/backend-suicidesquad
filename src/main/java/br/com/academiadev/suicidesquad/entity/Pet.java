@@ -78,10 +78,12 @@ public class Pet extends BaseEntity<Long> {
     @Singular
     private List<Registro> registros = new ArrayList<>();
 
+    @JsonProperty("nome")
     @NotNull
     @Size(min = 2, max = 80)
     private String nome;
 
+    @JsonProperty("descricao")
     @Size(min = 1, max = 255)
     private String descricao;
 
