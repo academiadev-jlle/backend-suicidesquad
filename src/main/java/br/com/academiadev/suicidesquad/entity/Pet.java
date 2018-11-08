@@ -79,13 +79,12 @@ public class Pet extends BaseEntity<Long> {
     private List<Registro> registros = new ArrayList<>();
 
     @JsonProperty("nome")
-    @NotNull
     @Size(min = 2, max = 80)
-    private String nome;
+    private String nome = "Não informado";
 
     @JsonProperty("descricao")
     @Size(min = 1, max = 255)
-    private String descricao;
+    private String descricao = "Não informado";
 
     public void addCor(Cor cor) {
         this.cores.add(cor);
