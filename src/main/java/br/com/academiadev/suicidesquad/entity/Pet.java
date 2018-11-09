@@ -80,11 +80,11 @@ public class Pet extends BaseEntity<Long> {
 
     @JsonProperty("nome")
     @Size(min = 2, max = 80)
-    private String nome = null;
+    private String nome;
 
     @JsonProperty("descricao")
     @Size(min = 1, max = 255)
-    private String descricao = null;
+    private String descricao;
 
     public void addCor(Cor cor) {
         this.cores.add(cor);
