@@ -57,6 +57,8 @@ public class PetControllerTest {
                 .comprimentoPelo(ComprimentoPelo.CURTO)
                 .sexo(SexoPet.MACHO)
                 .registro(new Registro(Situacao.PROCURANDO))
+                .nome("Fredinho")
+                .descricao("Este é um pet é um amorzinho")
                 .build();
     }
 
@@ -65,6 +67,7 @@ public class PetControllerTest {
                 .categoria(Categoria.ACHADO)
                 .tipo(Tipo.GATO)
                 .porte(Porte.MEDIO)
+                .nome("Bill")
                 .build();
 
         Pet petComRaca = Pet.builder()
@@ -72,6 +75,7 @@ public class PetControllerTest {
                 .tipo(Tipo.EQUINO)
                 .porte(Porte.GRANDE)
                 .raca(Raca.LUSITANO)
+                .nome("Açúcar")
                 .build();
 
         Pet petComCor = Pet.builder()
@@ -80,7 +84,9 @@ public class PetControllerTest {
                 .porte(Porte.PEQUENO)
                 .raca(Raca.LABRADOR)
                 .cor(Cor.BRANCO)
+                .nome("José Everaldo")
                 .build();
+
 
         return Arrays.asList(
                 petSemRaca,
@@ -137,7 +143,9 @@ public class PetControllerTest {
                 .andExpect(jsonPath("$.cores", hasSize(pet.getCores().size())))
                 .andExpect(jsonPath("$.comprimento_pelo", equalTo(pet.getComprimentoPelo().toString())))
                 .andExpect(jsonPath("$.sexo", equalTo(pet.getSexo().toString())))
-                .andExpect(jsonPath("$.registros[0].situacao", equalTo(pet.getRegistros().get(0).getSituacao().toString())));
+                .andExpect(jsonPath("$.registros[0].situacao", equalTo(pet.getRegistros().get(0).getSituacao().toString())))
+                .andExpect(jsonPath("$.nome", equalTo(pet.getNome().toString())))
+                .andExpect(jsonPath("$.descricao", equalTo(pet.getDescricao().toString())));
     }
 
     @Test
@@ -156,6 +164,8 @@ public class PetControllerTest {
         petJson.put("porte", "PEQUENO");
         petJson.put("raca", "CACHORRO_SRD");
         petJson.put("comprimento_pelo", "CURTO");
+        petJson.put("nome", "Juvenal");
+        petJson.put("descricao", "Um pet amorzinho");
 
         this.mvc
                 .perform(post("/pets")
@@ -171,6 +181,8 @@ public class PetControllerTest {
         assertThat(argument.getValue().getTipo(), equalTo(Tipo.valueOf(petJson.getString("tipo"))));
         assertThat(argument.getValue().getPorte(), equalTo(Porte.valueOf(petJson.getString("porte"))));
         assertThat(argument.getValue().getRaca(), equalTo(Raca.valueOf(petJson.getString("raca"))));
+        assertThat(argument.getValue().getNome(), equalTo(petJson.getString("nome")));
+        assertThat(argument.getValue().getDescricao(), equalTo(petJson.getString("descricao")));
     }
 
     @Test
@@ -184,4 +196,5 @@ public class PetControllerTest {
 
         verify(petService, never()).save(any(Pet.class));
     }
+
 }

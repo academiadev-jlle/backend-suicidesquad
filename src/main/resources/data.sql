@@ -3,11 +3,11 @@ INSERT INTO localizacao (bairro, cidade, uf) VALUES
   ('Floresta', 'Joinville', 'SC');
 
 INSERT INTO pet (
-  comprimento_pelo, id_localizacao, porte, raca, tipo, sexo, categoria, vacinacao, castracao
+  nome, comprimento_pelo, id_localizacao, porte, raca, tipo, sexo, categoria, vacinacao, castracao
 ) VALUES
-  (1, 1, 1, 1, 1, 1, 1, 1, 1),
-  (2, 2, 2, 2, 2, 2, 2, 2, 2),
-  (3, 1, 3, 6, 3, 3, 3, 3, 3);
+  ('Fred', 1, 1, 1, 1, 1, 1, 1, 1, 1),
+  ('Paçoca', 2, 2, 2, 2, 2, 2, 2, 2, 2),
+  ('Foca', 3, 1, 3, 6, 3, 3, 3, 3, 3);
 
 INSERT INTO registro (id_pet, situacao, data) VALUES
   (1, 1, '2018-01-01T01:00:00'),
