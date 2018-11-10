@@ -25,7 +25,7 @@ import java.util.List;
 @Entity
 @Table(name = "usuario")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Usuario extends BaseEntity<Long> {
+public class Usuario extends AuditableEntity<Long> {
     @NotNull
     @Size(min = 1, max = 120)
     private String nome;
