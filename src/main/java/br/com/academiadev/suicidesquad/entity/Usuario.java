@@ -39,7 +39,6 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
     @Email
     private String email;
 
-    @NotNull
     private String senha;
 
     @NotNull
@@ -47,7 +46,6 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
     @Builder.Default
     private SexoUsuario sexo = SexoUsuario.NAO_INFORMADO;
 
-    @NotNull
     @JsonProperty("data_nascimento")
     private LocalDate dataNascimento;
 
