@@ -44,6 +44,8 @@ dependencies {
 
 	compile('io.springfox:springfox-swagger-ui:2.9.2')
 	compile('io.springfox:springfox-swagger2:2.9.2')
+	implementation('org.springframework.social:spring-social-core:1.1.6.RELEASE')
+	implementation('org.springframework.social:spring-social-facebook:2.0.3.RELEASE')
 
 	compile("com.h2database:h2")
 	runtimeOnly('org.postgresql:postgresql')
