@@ -2,6 +2,7 @@ package br.com.academiadev.suicidesquad.entity;
 
 import br.com.academiadev.suicidesquad.converter.SexoUsuarioConverter;
 import br.com.academiadev.suicidesquad.enums.SexoUsuario;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -48,6 +49,9 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
 
     @JsonProperty("data_nascimento")
     private LocalDate dataNascimento;
+
+    @JsonIgnore
+    private String facebookUserId;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_localizacao")

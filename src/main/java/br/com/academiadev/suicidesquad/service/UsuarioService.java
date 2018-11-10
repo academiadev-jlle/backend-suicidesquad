@@ -31,4 +31,7 @@ public class UsuarioService {
     }
 
 
+    public Optional<Usuario> findByFacebookUserId(String facebookUserId) {
+        return usuarioRepository.findByFacebookUserId(facebookUserId);
+    }
 }
