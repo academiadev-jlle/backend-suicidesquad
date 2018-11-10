@@ -44,7 +44,8 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
 
     @NotNull
     @Convert(converter = SexoUsuarioConverter.class)
-    private SexoUsuario sexo;
+    @Builder.Default
+    private SexoUsuario sexo = SexoUsuario.NAO_INFORMADO;
 
     @NotNull
     @JsonProperty("data_nascimento")
