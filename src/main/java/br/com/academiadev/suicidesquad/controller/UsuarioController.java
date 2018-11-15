@@ -1,5 +1,6 @@
 package br.com.academiadev.suicidesquad.controller;
 
+import br.com.academiadev.suicidesquad.config.SecurityConfig;
 import br.com.academiadev.suicidesquad.entity.Usuario;
 import br.com.academiadev.suicidesquad.service.UsuarioService;
 import io.swagger.annotations.ApiOperation;
@@ -54,6 +55,7 @@ public class UsuarioController {
     })
     @PostMapping("/usuarios")
     Usuario createUsuario(@Valid @RequestBody Usuario usuario) {
+        usuario.setSenha(SecurityConfig.encoder().encode(usuario.getSenha()));
         return usuarioService.save(usuario);
     }
 
