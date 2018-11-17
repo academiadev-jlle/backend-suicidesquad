@@ -31,4 +31,10 @@ public class UsuarioService {
     }
 
 
+    public Optional<Usuario> findByFacebookUserId(String facebookUserId) {
+        if (facebookUserId == null) {
+            return Optional.empty();
+        }
+        return usuarioRepository.findByFacebookUserId(facebookUserId);
+    }
 }

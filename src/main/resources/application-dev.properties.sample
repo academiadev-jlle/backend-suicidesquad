@@ -1,1 +1,4 @@
 security.jwt.token.secret-key=
+app.social.facebook.enabled = true
+app.social.facebook.app-id=
+app.social.facebook.app-secret=

@@ -44,6 +44,8 @@ dependencies {
 
 	compile('io.springfox:springfox-swagger-ui:2.9.2')
 	compile('io.springfox:springfox-swagger2:2.9.2')
+	implementation('org.springframework.social:spring-social-core:1.1.6.RELEASE')
+	implementation('org.springframework.social:spring-social-facebook:2.0.3.RELEASE')
 
 	compile("com.h2database:h2")
 	runtimeOnly('org.postgresql:postgresql')
@@ -63,3 +65,8 @@ lombok {
 	version = "1.18.4"
 	sha256 = "39f3922deb679b1852af519eb227157ef2dd0a21eec3542c8ce1b45f2df39742"
 }
+
+// Herdar configurações do Gradle
+// Possibilita isso:
+// ./gradlew bootRun -Dspring.profiles.active=prod
+bootRun.systemProperties = System.properties
