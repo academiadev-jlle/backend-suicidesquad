@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(PetController.class)
+@WebMvcTest(value = PetController.class, secure = false)
 @EnableSpringDataWebSupport
 public class PetControllerTest {
 

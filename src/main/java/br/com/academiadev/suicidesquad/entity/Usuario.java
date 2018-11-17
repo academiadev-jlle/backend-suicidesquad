@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,6 +16,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -25,7 +29,7 @@ import java.util.List;
 @Entity
 @Table(name = "usuario")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Usuario extends AuditableEntity<Long> {
+public class Usuario extends AuditableEntity<Long> implements UserDetails {
     @NotNull
     @Size(min = 1, max = 120)
     private String nome;
@@ -62,5 +66,40 @@ public class Usuario extends AuditableEntity<Long> {
 
     private void setTelefones(List<Telefone> telefones) {
         telefones.forEach(this::addTelefone);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

@@ -1,6 +1,5 @@
 package br.com.academiadev.suicidesquad.controller;
 
-import br.com.academiadev.suicidesquad.controller.UsuarioController;
 import br.com.academiadev.suicidesquad.entity.Localizacao;
 import br.com.academiadev.suicidesquad.entity.Telefone;
 import br.com.academiadev.suicidesquad.entity.Usuario;
@@ -40,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(UsuarioController.class)
+@WebMvcTest(value = UsuarioController.class, secure = false)
 @EnableSpringDataWebSupport
 public class UsuarioControllerTest {
 
@@ -169,7 +168,6 @@ public class UsuarioControllerTest {
         verify(usuarioService, times(1)).save(argumentCaptor.capture());
 
         assertThat(argumentCaptor.getValue().getNome(), equalTo(usuarioJson.getString("nome")));
-        assertThat(argumentCaptor.getValue().getSenha(), equalTo(usuarioJson.getString("senha")));
         assertThat(argumentCaptor.getValue().getEmail(), equalTo(usuarioJson.getString("email")));
         assertThat(argumentCaptor.getValue().getTelefones().get(0).getNumero(), equalTo(telefoneJson.getString("numero")));
         assertThat(argumentCaptor.getValue().getTelefones().get(0).isWhatsapp(), equalTo(telefoneJson.getBoolean("whatsapp")));
