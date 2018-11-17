@@ -2,6 +2,7 @@ package br.com.academiadev.suicidesquad.entity;
 
 import br.com.academiadev.suicidesquad.converter.*;
 import br.com.academiadev.suicidesquad.enums.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -85,6 +86,10 @@ public class Pet extends AuditableEntity<Long> {
     @JsonProperty("descricao")
     @Size(min = 1, max = 255)
     private String descricao;
+
+    @ManyToOne
+    @JsonIgnore
+    private Usuario usuario;
 
     public void addCor(Cor cor) {
         this.cores.add(cor);

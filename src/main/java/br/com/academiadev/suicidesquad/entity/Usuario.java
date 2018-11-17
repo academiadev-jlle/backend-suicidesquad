@@ -62,6 +62,26 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
     @Singular
     private List<Telefone> telefones = new ArrayList<>();
 
+    @Builder.Default
+    //@JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pet> pets = new ArrayList<>();
+
+
+    public void addPet(Pet pet) {
+        pets.add(pet);
+        System.out.println(pets);
+        pet.setUsuario(this);
+    }
+
+    public void setPets(List<Pet> pets) {
+        pets.forEach(this::addPet);
+    }
+
+    public List<Pet> getPets() {
+        return pets;
+    }
+
     public void addTelefone(Telefone telefone) {
         this.telefones.add(telefone);
         telefone.setUsuario(this);
