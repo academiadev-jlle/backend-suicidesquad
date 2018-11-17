@@ -70,7 +70,6 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
 
     public void addPet(Pet pet) {
         pets.add(pet);
-        System.out.println(pets);
         pet.setUsuario(this);
     }
 
