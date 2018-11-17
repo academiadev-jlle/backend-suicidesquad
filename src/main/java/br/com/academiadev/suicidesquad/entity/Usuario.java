@@ -63,7 +63,6 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
     private List<Telefone> telefones = new ArrayList<>();
 
     @Builder.Default
-    //@JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> pets = new ArrayList<>();
 
