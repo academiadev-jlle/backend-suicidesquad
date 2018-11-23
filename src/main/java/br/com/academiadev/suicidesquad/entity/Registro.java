@@ -2,7 +2,6 @@ package br.com.academiadev.suicidesquad.entity;
 
 import br.com.academiadev.suicidesquad.converter.SituacaoConverter;
 import br.com.academiadev.suicidesquad.enums.Situacao;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -20,7 +19,6 @@ public class Registro extends BaseEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "id_pet")
     @NotNull
-    @JsonIgnore
     private Pet pet;
 
     @Convert(converter = SituacaoConverter.class)

@@ -1,6 +1,5 @@
 package br.com.academiadev.suicidesquad.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,12 +19,10 @@ import java.time.LocalDateTime;
 public class AuditableEntity<PK> extends BaseEntity<PK> {
     @CreatedDate
     @Column(updatable = false)
-    @JsonProperty("created_date")
     @ApiModelProperty(hidden = true)
     private LocalDateTime createdDate;
 
     @LastModifiedDate
-    @JsonProperty("last_modified_date")
     @ApiModelProperty(hidden = true)
     private LocalDateTime lastModifiedDate;
 }
