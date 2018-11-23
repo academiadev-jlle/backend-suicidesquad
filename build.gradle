@@ -14,10 +14,12 @@ buildscript {
 
 plugins {
 	id 'java'
-	id 'io.franzbecker.gradle-lombok' version '1.14'
 	id 'eclipse'
 	id 'idea'
 	id 'jacoco'
+	id 'net.ltgt.apt' version '0.19'
+	id 'io.franzbecker.gradle-lombok' version '1.14'
+	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 apply plugin: 'org.springframework.boot'
@@ -33,6 +35,9 @@ repositories {
 	maven { url "https://repo.spring.io/milestone" }
 }
 
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
 
 dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-actuator')
@@ -47,6 +52,10 @@ dependencies {
 	implementation('org.springframework.social:spring-social-core:1.1.6.RELEASE')
 	implementation('org.springframework.social:spring-social-facebook:2.0.3.RELEASE')
 
+	compile('com.querydsl:querydsl-core:4.1.3')
+	compile('com.querydsl:querydsl-jpa:4.1.3')
+	compileOnly('com.querydsl:querydsl-apt:4.1.3:jpa')
+
 	compile("com.h2database:h2")
 	runtimeOnly('org.postgresql:postgresql')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
@@ -54,11 +63,9 @@ dependencies {
 
 }
 
-jacocoTestReport {
-    reports {
-        xml.enabled true
-        html.enabled false
-    }
+querydsl {
+	jpa = true
+	querydslSourcesDir = "src/main/generated"
 }
 
 lombok {
@@ -70,3 +77,14 @@ lombok {
 // Possibilita isso:
 // ./gradlew bootRun -Dspring.profiles.active=prod
 bootRun.systemProperties = System.properties
+
+compileJava {
+	aptOptions.processors.add(0, 'lombok.launch.AnnotationProcessorHider$AnnotationProcessor')
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
