@@ -11,16 +11,11 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -93,39 +88,6 @@ public class PetControllerTest {
                 petComRaca,
                 petComCor
         );
-    }
-
-    @Test
-    public void getPets_ComPets() throws Exception {
-        List<Pet> pets = buildPets();
-
-        Page<Pet> pagedResponse = new PageImpl<>(pets);
-        when(petService.findAll(any(Pageable.class))).thenReturn(pagedResponse);
-
-        ResultActions result = this.mvc.perform(get("/pets"))
-                .andExpect(status().isOk());
-
-        int idx = 0;
-        for (Pet pet : pets) {
-            result = result.andExpect(jsonPath(String.format("$.content[%d].categoria", idx), equalTo(pet.getCategoria().toString())));
-            result = result.andExpect(jsonPath(String.format("$.content[%d].tipo", idx), equalTo(pet.getTipo().toString())));
-            result = result.andExpect(jsonPath(String.format("$.content[%d].porte", idx), equalTo(pet.getPorte().toString())));
-            if (pet.getRaca() != null) {
-                result = result.andExpect(jsonPath(String.format("$.content[%d].raca", idx), equalTo(pet.getRaca().toString())));
-            }
-            result = result.andExpect(jsonPath(String.format("$.content[%d].cores", idx), hasSize(pet.getCores().size())));
-            idx++;
-        }
-    }
-
-    @Test
-    public void getPets_SemPets() throws Exception {
-        Page<Pet> pagedResponse = new PageImpl<>(new ArrayList<>());
-        when(petService.findAll(any(Pageable.class))).thenReturn(pagedResponse);
-
-        this.mvc.perform(get("/pets"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content", hasSize(0)));
     }
 
     @Test
