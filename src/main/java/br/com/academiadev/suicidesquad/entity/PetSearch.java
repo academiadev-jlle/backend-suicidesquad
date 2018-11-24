@@ -12,7 +12,7 @@ public class PetSearch {
     @NotNull
     private Tipo tipo;
 
-    private Set<SexoPet> sexos = new HashSet<>();
+    private SexoPet sexo;
 
     private Set<Porte> portes = new HashSet<>();
 
@@ -28,10 +28,10 @@ public class PetSearch {
 
     private Set<Cor> cores = new HashSet<>();
 
-    public PetSearch(@NotNull Tipo tipo, Set<SexoPet> sexos, Set<Porte> portes, Set<Raca> racas, Set<ComprimentoPelo> pelos, Set<Categoria> categorias, Set<Vacinacao> vacinacoes, Set<Castracao> castracoes, Set<Cor> cores) {
+    public PetSearch(@NotNull Tipo tipo, SexoPet sexo, Set<Porte> portes, Set<Raca> racas, Set<ComprimentoPelo> pelos, Set<Categoria> categorias, Set<Vacinacao> vacinacoes, Set<Castracao> castracoes, Set<Cor> cores) {
         this.tipo = tipo;
+        this.sexo = sexo;
 
-        if (sexos != null) this.sexos = sexos;
         if (portes != null) this.portes = portes;
         if (racas != null) this.racas = racas;
         if (pelos != null) this.pelos = pelos;
