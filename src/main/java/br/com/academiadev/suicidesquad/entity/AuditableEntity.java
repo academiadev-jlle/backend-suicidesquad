@@ -19,10 +19,8 @@ import java.time.LocalDateTime;
 public class AuditableEntity<PK> extends BaseEntity<PK> {
     @CreatedDate
     @Column(updatable = false)
-    @ApiModelProperty(hidden = true)
     private LocalDateTime createdDate;
 
     @LastModifiedDate
-    @ApiModelProperty(hidden = true)
     private LocalDateTime lastModifiedDate;
 }
