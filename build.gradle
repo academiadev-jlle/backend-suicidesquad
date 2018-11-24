@@ -94,3 +94,7 @@ jacocoTestReport {
         html.enabled false
     }
 }
+
+test {
+	systemProperty 'spring.profiles.active', 'test'
+}
