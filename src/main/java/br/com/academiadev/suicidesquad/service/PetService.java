@@ -6,10 +6,9 @@ import br.com.academiadev.suicidesquad.entity.QPet;
 import br.com.academiadev.suicidesquad.repository.PetRepository;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,19 +21,19 @@ public class PetService {
         this.petRepository = petRepository;
     }
 
-    public Optional<Pet> findById(Long idPet) {
-        return petRepository.findById(idPet);
+    public List<Pet> findAll() {
+        return petRepository.findAll();
     }
 
-    public Page<Pet> findAll(Pageable pageable) {
-        return petRepository.findAll(pageable);
+    public Optional<Pet> findById(Long idPet) {
+        return petRepository.findById(idPet);
     }
 
     public Pet save(Pet pet) {
         return petRepository.save(pet);
     }
 
-    public Page<Pet> search(PetSearch search, Pageable pageable) {
+    public Iterable<Pet> search(PetSearch search) {
         QPet pet = QPet.pet;
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -74,6 +73,6 @@ public class PetService {
             });
         }
 
-        return petRepository.findAll(builder, pageable);
+        return petRepository.findAll(builder);
     }
 }

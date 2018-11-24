@@ -1,6 +1,5 @@
 package br.com.academiadev.suicidesquad.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,6 @@ import javax.validation.constraints.NotNull;
 public class Telefone extends BaseEntity<Long> {
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
-    @JsonIgnore
     private Usuario usuario;
 
     @NotBlank

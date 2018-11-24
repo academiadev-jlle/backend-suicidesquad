@@ -2,9 +2,7 @@ package br.com.academiadev.suicidesquad.entity;
 
 import br.com.academiadev.suicidesquad.converter.SexoUsuarioConverter;
 import br.com.academiadev.suicidesquad.enums.SexoUsuario;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -47,10 +45,8 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
     @Builder.Default
     private SexoUsuario sexo = SexoUsuario.NAO_INFORMADO;
 
-    @JsonProperty("data_nascimento")
     private LocalDate dataNascimento;
 
-    @JsonIgnore
     private String facebookUserId;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
