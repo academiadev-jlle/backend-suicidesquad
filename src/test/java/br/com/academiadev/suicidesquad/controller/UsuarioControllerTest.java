@@ -10,26 +10,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -39,8 +36,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = UsuarioController.class, secure = false)
-@EnableSpringDataWebSupport
+@SpringBootTest
+@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class, ManagementWebSecurityAutoConfiguration.class})
+@AutoConfigureMockMvc
 public class UsuarioControllerTest {
 
     @Autowired
@@ -83,30 +81,6 @@ public class UsuarioControllerTest {
     }
 
     @Test
-    public void dadoBuscarUsuarios_quandoExistemUSuarios_entaoUsuariosEncontrados() throws Exception {
-
-        List<Usuario> allUsuarios = buildUsuarios();
-
-        Page<Usuario> pagedResponse = new PageImpl<>(allUsuarios);
-
-        when(usuarioService.findAll(any(Pageable.class))).thenReturn(pagedResponse);
-
-        ResultActions results = this.mvc.perform(get("/usuarios"))
-                .andExpect(status().isOk());
-
-        int idx = 0;
-        for (Usuario usuario : allUsuarios) {
-            results = results.andExpect(jsonPath(String.format("$.content[%d].email", idx), equalTo(usuario.getEmail())));
-            results = results.andExpect(jsonPath(String.format("$.content[%d].nome", idx), equalTo(usuario.getNome())));
-            if (!usuario.getTelefones().isEmpty()) {
-                results = results.andExpect(jsonPath(String.format("$.content[%d].telefones[0].numero", idx), equalTo(usuario.getTelefones().get(0).getNumero())));
-            }
-            results = results.andExpect(jsonPath(String.format("$.content[%d].data_nascimento", idx), equalTo(usuario.getDataNascimento().toString())));
-            idx++;
-        }
-    }
-
-    @Test
     public void dadoBuscarUsuario_quandoUsuarioExiste_entaoUsuarioEncontrado() throws Exception {
         Usuario usuario = buildUsuario();
 
@@ -115,17 +89,6 @@ public class UsuarioControllerTest {
         this.mvc.perform(get("/usuarios/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nome", equalTo(usuario.getNome())));
-
-
-    }
-
-    @Test
-    public void dadoBuscarUsuarios_quandoNaoExistemUsuarios_entaoRetornaListaVazia() throws Exception {
-        Page<Usuario> pagedResponde = new PageImpl<>(new ArrayList<>());
-        when(usuarioService.findAll(any(Pageable.class))).thenReturn(pagedResponde);
-
-        this.mvc.perform(get("/usuarios")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.content", hasSize(0)));
 
 
     }
@@ -161,17 +124,13 @@ public class UsuarioControllerTest {
                 .content(usuarioJson.toString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         ArgumentCaptor<Usuario> argumentCaptor = ArgumentCaptor.forClass(Usuario.class);
 
         verify(usuarioService, times(1)).save(argumentCaptor.capture());
 
         assertThat(argumentCaptor.getValue().getNome(), equalTo(usuarioJson.getString("nome")));
-        assertThat(argumentCaptor.getValue().getEmail(), equalTo(usuarioJson.getString("email")));
-        assertThat(argumentCaptor.getValue().getTelefones().get(0).getNumero(), equalTo(telefoneJson.getString("numero")));
-        assertThat(argumentCaptor.getValue().getTelefones().get(0).isWhatsapp(), equalTo(telefoneJson.getBoolean("whatsapp")));
-
     }
 
     @Test
