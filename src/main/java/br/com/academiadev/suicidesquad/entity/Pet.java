@@ -7,10 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -87,5 +84,12 @@ public class Pet extends AuditableEntity<Long> {
 
     public void setRegistros(List<Registro> registros) {
         registros.forEach(this::addRegistro);
+    }
+
+    public Situacao getSituacaoAtual() {
+        return this.registros.stream()
+                .max(Comparator.comparing(Registro::getData))
+                .map(Registro::getSituacao)
+                .orElse(null);
     }
 }
