@@ -40,8 +40,8 @@ public class PetService {
 
         builder.and(pet.tipo.eq(search.getTipo()));
 
-        if (!search.getSexos().isEmpty()) {
-            builder.and(pet.sexo.in(search.getSexos()));
+        if (search.getSexo() != null) {
+            builder.and(pet.sexo.eq(search.getSexo()));
         }
 
         if (!search.getPortes().isEmpty()) {
