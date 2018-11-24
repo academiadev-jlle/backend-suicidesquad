@@ -1,7 +1,6 @@
 package br.com.academiadev.suicidesquad.controller;
 
 import br.com.academiadev.suicidesquad.entity.Usuario;
-import br.com.academiadev.suicidesquad.enums.SexoUsuario;
 import br.com.academiadev.suicidesquad.security.JwtTokenProvider;
 import br.com.academiadev.suicidesquad.service.FacebookService;
 import br.com.academiadev.suicidesquad.service.UsuarioService;
@@ -55,7 +54,7 @@ public class FacebookAuthController {
         Optional<User> facebookUser = facebookService.getAccessToken(code).flatMap(facebookService::getUser);
 
         if (facebookUser.isPresent()) {
-            Usuario usuario = buildUsuarioFromFacebookUser(facebookUser.get());
+            Usuario usuario = facebookService.buildUsuarioFromFacebookUser(facebookUser.get());
             final String email = usuario.getEmail();
             if (email == null) {
                 // TODO: Tratar quando o usuário não tem email
@@ -72,26 +71,4 @@ public class FacebookAuthController {
         response.sendRedirect(frontendRedirectUri);
     }
 
-    private Usuario buildUsuarioFromFacebookUser(User facebookUser) {
-        return usuarioService.findByFacebookUserId(facebookUser.getId())
-                .orElseGet(() -> Usuario.builder()
-                        .nome(facebookUser.getName())
-                        .email(facebookUser.getEmail())
-                        .facebookUserId(facebookUser.getId())
-                        .sexo(determinarSexoUsuario(facebookUser.getGender()))
-                        .build());
-
-    }
-
-    private SexoUsuario determinarSexoUsuario(String facebookUserGender) {
-        if (facebookUserGender == null) {
-            return SexoUsuario.NAO_INFORMADO;
-        } else if (facebookUserGender.equals("masculino")) {
-            return SexoUsuario.MASCULINO;
-        } else if (facebookUserGender.equals("feminino")) {
-            return SexoUsuario.FEMININO;
-        } else {
-            return SexoUsuario.NAO_INFORMADO;
-        }
-    }
 }

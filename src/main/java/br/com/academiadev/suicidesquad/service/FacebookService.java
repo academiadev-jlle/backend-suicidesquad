@@ -1,5 +1,8 @@
 package br.com.academiadev.suicidesquad.service;
 
+import br.com.academiadev.suicidesquad.entity.Usuario;
+import br.com.academiadev.suicidesquad.enums.SexoUsuario;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.User;
@@ -22,6 +25,35 @@ public class FacebookService {
 
     @Value("${app.social.facebook.backend-redirect-uri:}")
     private String backendRedirectUri;
+
+    private final UsuarioService usuarioService;
+
+    @Autowired
+    public FacebookService(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
+
+    public static SexoUsuario determinarSexoUsuario(String facebookUserGender) {
+        if (facebookUserGender == null) {
+            return SexoUsuario.NAO_INFORMADO;
+        } else if (facebookUserGender.equals("masculino")) {
+            return SexoUsuario.MASCULINO;
+        } else if (facebookUserGender.equals("feminino")) {
+            return SexoUsuario.FEMININO;
+        } else {
+            return SexoUsuario.NAO_INFORMADO;
+        }
+    }
+
+    public Usuario buildUsuarioFromFacebookUser(User facebookUser) {
+        return usuarioService.findByFacebookUserId(facebookUser.getId())
+                .orElseGet(() -> Usuario.builder()
+                        .nome(facebookUser.getName())
+                        .email(facebookUser.getEmail())
+                        .facebookUserId(facebookUser.getId())
+                        .sexo(determinarSexoUsuario(facebookUser.getGender()))
+                        .build());
+    }
 
     public String createAuthorizationURL() {
         FacebookConnectionFactory connectionFactory = new FacebookConnectionFactory(appId, appSecret);
