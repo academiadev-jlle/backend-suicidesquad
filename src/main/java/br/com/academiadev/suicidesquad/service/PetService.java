@@ -1,7 +1,10 @@
 package br.com.academiadev.suicidesquad.service;
 
 import br.com.academiadev.suicidesquad.entity.Pet;
+import br.com.academiadev.suicidesquad.entity.PetSearch;
+import br.com.academiadev.suicidesquad.entity.QPet;
 import br.com.academiadev.suicidesquad.repository.PetRepository;
+import com.querydsl.core.BooleanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,5 +32,48 @@ public class PetService {
 
     public Pet save(Pet pet) {
         return petRepository.save(pet);
+    }
+
+    public Page<Pet> search(PetSearch search, Pageable pageable) {
+        QPet pet = QPet.pet;
+        BooleanBuilder builder = new BooleanBuilder();
+
+        builder.and(pet.tipo.eq(search.getTipo()));
+
+        if (search.getSexo() != null) {
+            builder.and(pet.sexo.eq(search.getSexo()));
+        }
+
+        if (!search.getPortes().isEmpty()) {
+            builder.and(pet.porte.in(search.getPortes()));
+        }
+
+        if (!search.getRacas().isEmpty()) {
+            builder.and(pet.raca.in(search.getRacas()));
+        }
+
+        if (!search.getPelos().isEmpty()) {
+            builder.and(pet.comprimentoPelo.in(search.getPelos()));
+        }
+
+        if (!search.getCategorias().isEmpty()) {
+            builder.and(pet.categoria.in(search.getCategorias()));
+        }
+
+        if (!search.getVacinacoes().isEmpty()) {
+            builder.and(pet.vacinacao.in(search.getVacinacoes()));
+        }
+
+        if (!search.getCastracoes().isEmpty()) {
+            builder.and(pet.castracao.in(search.getCastracoes()));
+        }
+
+        if (!search.getCores().isEmpty()) {
+            search.getCores().forEach(cor -> {
+                builder.and(pet.cores.contains(cor));
+            });
+        }
+
+        return petRepository.findAll(builder, pageable);
     }
 }

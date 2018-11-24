@@ -1,6 +1,7 @@
 package br.com.academiadev.suicidesquad.controller;
 
 import br.com.academiadev.suicidesquad.entity.Pet;
+import br.com.academiadev.suicidesquad.entity.PetSearch;
 import br.com.academiadev.suicidesquad.exception.ResourceNotFoundException;
 import br.com.academiadev.suicidesquad.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,9 @@ public class PetController {
         this.petService = petService;
     }
 
-    @GetMapping("/pets")
-    public Page<Pet> getPets(Pageable pageable) {
-        return petService.findAll(pageable);
+    @GetMapping("/pets/search")
+    public Page<Pet> getPets(Pageable pageable, @Valid PetSearch search) {
+        return petService.search(search, pageable);
     }
 
     @PostMapping("/pets")
