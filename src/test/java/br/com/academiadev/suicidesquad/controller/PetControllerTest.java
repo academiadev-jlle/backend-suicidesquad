@@ -51,13 +51,15 @@ public class PetControllerTest {
     private JwtTokenProvider jwtTokenProvider;
 
     private Pet buildPet() {
+        Set<Cor> cores = new HashSet<>();
+        cores.add(Cor.PRETO);
+        cores.add(Cor.BRANCO);
         return Pet.builder()
                 .tipo(Tipo.GATO)
                 .porte(Porte.MEDIO)
                 .comprimentoPelo(ComprimentoPelo.MEDIO)
                 .categoria(Categoria.ACHADO)
-                .cor(Cor.BRANCO)
-                .cor(Cor.PRETO)
+                .cores(cores)
                 .build();
     }
 
@@ -111,14 +113,19 @@ public class PetControllerTest {
     @Test
     public void buscarPets_quandoEncontra_entaoRetorna() throws Exception {
         List<Pet> pets = new ArrayList<>();
+        Set<Cor> coresA = new HashSet<>();
+        coresA.add(Cor.BRANCO);
+        coresA.add(Cor.MARROM);
+        coresA.add(Cor.PRETO);
+        Set<Cor> coresB = new HashSet<>();
+        coresB.add(Cor.BRANCO);
+        coresB.add(Cor.MARROM);
         pets.add(Pet.builder()
                 .tipo(Tipo.CACHORRO)
                 .porte(Porte.PEQUENO)
                 .comprimentoPelo(ComprimentoPelo.SEM_PELO)
                 .categoria(Categoria.PERDIDO)
-                .cor(Cor.BRANCO)
-                .cor(Cor.MARROM)
-                .cor(Cor.PRETO)
+                .cores(coresA)
                 .build());
         pets.add(Pet.builder()
                 .tipo(Tipo.CACHORRO)
@@ -126,8 +133,7 @@ public class PetControllerTest {
                 .comprimentoPelo(ComprimentoPelo.SEM_PELO)
                 .categoria(Categoria.PERDIDO)
                 .raca(Raca.PITBULL)
-                .cor(Cor.BRANCO)
-                .cor(Cor.MARROM)
+                .cores(coresB)
                 .build());
         pets.add(Pet.builder()
                 .tipo(Tipo.GATO)
