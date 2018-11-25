@@ -62,4 +62,18 @@ public class PetController {
         petService.deleteById(idPet);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/pets/{idPet}")
+    public ResponseEntity editPet(@PathVariable Long idPet, @Valid @RequestBody PetCreateDTO petCreateDTO, @AuthenticationPrincipal Usuario usuarioLogado) {
+        final Pet pet = petService.findById(idPet).orElse(null);
+        if (pet == null) {
+            return ResponseEntity.notFound().build();
+        }
+        if (!pet.getUsuario().getId().equals(usuarioLogado.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        final Pet petAtualizado = petMapper.updateEntity(petCreateDTO, pet);
+        petService.save(petAtualizado);
+        return ResponseEntity.ok().build();
+    }
 }

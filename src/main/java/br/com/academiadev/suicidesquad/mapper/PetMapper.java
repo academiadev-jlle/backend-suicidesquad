@@ -35,6 +35,22 @@ public abstract class PetMapper {
     public abstract List<Pet> toEntities(List<PetCreateDTO> dtos);
 
     @Mappings({
+            @Mapping(target = "tipo"),
+            @Mapping(target = "porte"),
+            @Mapping(target = "raca", ignore = true),
+            @Mapping(target = "comprimentoPelo", source = "comprimento_pelo"),
+            @Mapping(target = "sexo"),
+            @Mapping(target = "categoria"),
+            @Mapping(target = "vacinacao"),
+            @Mapping(target = "castracao"),
+            @Mapping(target = "nome"),
+            @Mapping(target = "cores"),
+            @Mapping(target = "localizacao"),
+            @Mapping(target = "descricao")
+    })
+    public abstract Pet updateEntity(PetCreateDTO petCreateDTO, @MappingTarget Pet pet);
+
+    @Mappings({
             @Mapping(target = "data_criacao", source = "createdDate"),
             @Mapping(target = "data_edicao", source = "lastModifiedDate"),
             @Mapping(target = "tipo"),
