@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -15,6 +16,7 @@ public class UsuarioCreateDTO {
 
     @ApiModelProperty(value = "E-mail", example = "fulano@example.com", required = true)
     @NotNull
+    @Email
     private String email;
 
     @ApiModelProperty(value = "Senha", required = true)
