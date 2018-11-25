@@ -54,8 +54,11 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Localizacao localizacao;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @Singular
+    @OneToMany(
+            mappedBy = "usuario",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @Builder.Default
     private List<Telefone> telefones = new ArrayList<>();
 
     @Builder.Default
@@ -81,7 +84,7 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
         telefone.setUsuario(this);
     }
 
-    private void setTelefones(List<Telefone> telefones) {
+    public void setTelefones(List<Telefone> telefones) {
         telefones.forEach(this::addTelefone);
     }
 
