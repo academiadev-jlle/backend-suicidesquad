@@ -1,8 +1,11 @@
 package br.com.academiadev.suicidesquad.controller;
 
 import br.com.academiadev.suicidesquad.entity.Pet;
+import br.com.academiadev.suicidesquad.entity.Usuario;
 import br.com.academiadev.suicidesquad.enums.*;
+import br.com.academiadev.suicidesquad.security.JwtTokenProvider;
 import br.com.academiadev.suicidesquad.service.PetService;
+import br.com.academiadev.suicidesquad.service.UsuarioService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,16 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,7 +42,13 @@ public class PetControllerTest {
     private PetService petService;
 
     @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     private Pet buildPet() {
         return Pet.builder()
@@ -149,5 +154,56 @@ public class PetControllerTest {
                 .andExpect(jsonPath("$[0].tipo", equalTo(petEsperado.getTipo().toString())))
                 .andExpect(jsonPath("$[0].porte", equalTo(petEsperado.getPorte().toString())))
                 .andExpect(jsonPath("$[0].cores[0]", equalTo(petEsperado.getCores().toArray()[0].toString())));
+    }
+
+    @Test
+    public void deletarPet_quandoAutorizado_entaoSucesso() throws Exception {
+        final Usuario usuario = usuarioService.save(Usuario.builder()
+                .nome("Usuário")
+                .email("usuario@example.com")
+                .senha("hunter2")
+                .build());
+        final Pet pet = petService.save(Pet.builder()
+                .tipo(Tipo.GATO)
+                .porte(Porte.MEDIO)
+                .comprimentoPelo(ComprimentoPelo.MEDIO)
+                .categoria(Categoria.ACHADO)
+                .usuario(usuario)
+                .build());
+
+        String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
+        mvc.perform(delete(String.format("/pets/%d", pet.getId()))
+                .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+
+        assertThat(petService.findAll(), hasSize(0));
+    }
+
+    @Test
+    public void deletarPet_quandoNaoAutorizado_entaoErro() throws Exception {
+        final Usuario usuarioA = usuarioService.save(Usuario.builder()
+                .nome("Usuário A")
+                .email("usuario.a@example.com")
+                .senha("hunter2")
+                .build());
+        final Usuario usuarioB = usuarioService.save(Usuario.builder()
+                .nome("Usuário B")
+                .email("usuario.b@example.com")
+                .senha("hunter2")
+                .build());
+        final Pet pet = petService.save(Pet.builder()
+                .tipo(Tipo.GATO)
+                .porte(Porte.MEDIO)
+                .comprimentoPelo(ComprimentoPelo.MEDIO)
+                .categoria(Categoria.ACHADO)
+                .usuario(usuarioA)
+                .build());
+
+        String tokenB = jwtTokenProvider.getToken(usuarioB.getUsername(), Collections.emptyList());
+        mvc.perform(delete(String.format("/pets/%d", pet.getId()))
+                .header("Authorization", "Bearer " + tokenB))
+                .andExpect(status().isForbidden());
+
+        assertThat(petService.findAll(), hasSize(1));
     }
 }

@@ -36,4 +36,12 @@ public class UsuarioService {
         }
         return usuarioRepository.findByFacebookUserId(facebookUserId);
     }
+
+    public boolean existsById(Long idUsuario) {
+        return usuarioRepository.existsById(idUsuario);
+    }
+
+    public void deleteById(Long idUsuario) {
+        usuarioRepository.deleteById(idUsuario);
+    }
 }

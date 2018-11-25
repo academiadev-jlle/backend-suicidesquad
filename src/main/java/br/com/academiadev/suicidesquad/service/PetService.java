@@ -99,4 +99,12 @@ public class PetService {
 
         return petRepository.findAll(builder);
     }
+
+    public boolean existsById(Long idPet) {
+        return petRepository.existsById(idPet);
+    }
+
+    public void deleteById(Long idPet) {
+        petRepository.deleteById(idPet);
+    }
 }
