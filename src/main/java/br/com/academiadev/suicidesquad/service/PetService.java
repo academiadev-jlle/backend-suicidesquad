@@ -3,11 +3,16 @@ package br.com.academiadev.suicidesquad.service;
 import br.com.academiadev.suicidesquad.entity.Pet;
 import br.com.academiadev.suicidesquad.entity.PetSearch;
 import br.com.academiadev.suicidesquad.entity.QPet;
+import br.com.academiadev.suicidesquad.entity.QRegistro;
+import br.com.academiadev.suicidesquad.enums.Situacao;
 import br.com.academiadev.suicidesquad.repository.PetRepository;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,9 +21,12 @@ public class PetService {
 
     private final PetRepository petRepository;
 
+    private final EntityManager entityManager;
+
     @Autowired
-    public PetService(PetRepository petRepository) {
+    public PetService(PetRepository petRepository, EntityManager entityManager) {
         this.petRepository = petRepository;
+        this.entityManager = entityManager;
     }
 
     public List<Pet> findAll() {
@@ -34,13 +42,29 @@ public class PetService {
     }
 
     public Iterable<Pet> search(PetSearch search) {
-        QPet pet = QPet.pet;
+        final JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+
+        final QPet pet = QPet.pet;
+        final QRegistro registro = QRegistro.registro;
+
         BooleanBuilder builder = new BooleanBuilder();
 
         builder.and(pet.tipo.eq(search.getTipo()));
 
         if (search.getSexo() != null) {
             builder.and(pet.sexo.eq(search.getSexo()));
+        }
+
+        if (!search.getMostrarEntregues()) {
+            final JPAQuery<Long> registroEntregueMaisRecente = queryFactory
+                    .select(registro.id)
+                    .from(registro)
+                    .innerJoin(registro.pet, pet)
+                    .having(registro.pet.eq(pet)
+                            .and(registro.situacao.eq(Situacao.ENTREGUE))
+                            .and(registro.data.eq(registro.data.max())))
+                    .groupBy(registro.id);
+            builder.andNot(pet.registros.any().id.in(registroEntregueMaisRecente));
         }
 
         if (!search.getPortes().isEmpty()) {

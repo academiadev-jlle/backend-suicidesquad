@@ -14,6 +14,8 @@ public class PetSearch {
 
     private SexoPet sexo;
 
+    private Boolean mostrarEntregues;
+
     private Set<Porte> portes = new HashSet<>();
 
     private Set<Raca> racas = new HashSet<>();
@@ -28,9 +30,10 @@ public class PetSearch {
 
     private Set<Cor> cores = new HashSet<>();
 
-    public PetSearch(@NotNull Tipo tipo, SexoPet sexo, Set<Porte> portes, Set<Raca> racas, Set<ComprimentoPelo> pelos, Set<Categoria> categorias, Set<Vacinacao> vacinacoes, Set<Castracao> castracoes, Set<Cor> cores) {
+    public PetSearch(@NotNull Tipo tipo, SexoPet sexo, Boolean mostrarEntregues, Set<Porte> portes, Set<Raca> racas, Set<ComprimentoPelo> pelos, Set<Categoria> categorias, Set<Vacinacao> vacinacoes, Set<Castracao> castracoes, Set<Cor> cores) {
         this.tipo = tipo;
         this.sexo = sexo;
+        this.mostrarEntregues = mostrarEntregues != null && mostrarEntregues;
 
         if (portes != null) this.portes = portes;
         if (racas != null) this.racas = racas;
