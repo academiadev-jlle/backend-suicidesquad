@@ -57,7 +57,8 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
     @OneToMany(
             mappedBy = "usuario",
             cascade = CascadeType.ALL,
-            orphanRemoval = true)
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
     @Builder.Default
     private List<Telefone> telefones = new ArrayList<>();
 
@@ -85,7 +86,11 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
     }
 
     public void setTelefones(List<Telefone> telefones) {
-        telefones.forEach(this::addTelefone);
+        if (telefones == null || telefones.size() == 0) {
+            this.telefones.clear();
+        } else {
+            telefones.forEach(this::addTelefone);
+        }
     }
 
     @Override

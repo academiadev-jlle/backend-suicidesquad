@@ -26,15 +26,15 @@ public abstract class UsuarioMapper {
     public abstract Usuario toEntity(UsuarioCreateDTO dto);
 
     @Mappings({
-            @Mapping(target = "nome"),
-            @Mapping(target = "email"),
+            @Mapping(target = "nome", source = "nome"),
+            @Mapping(target = "email", source = "email"),
             @Mapping(target = "senha", ignore = true),
-            @Mapping(target = "sexo", defaultValue = "NAO_INFORMADO"),
+            @Mapping(target = "sexo", source = "dto.sexo", defaultValue = "NAO_INFORMADO"),
             @Mapping(target = "dataNascimento", source = "data_nascimento", dateFormat = "yyyy-MM-dd"),
-            @Mapping(target = "localizacao"),
-            @Mapping(target = "telefones")
+            @Mapping(target = "localizacao", source = "localizacao"),
+            @Mapping(target = "telefones", source = "telefones")
     })
-    public abstract Usuario toEntity(UsuarioEditDTO dto);
+    public abstract Usuario updateEntity(UsuarioEditDTO dto, @MappingTarget Usuario entity);
 
     @Mappings({
             @Mapping(target = "nome"),
@@ -54,5 +54,12 @@ public abstract class UsuarioMapper {
         if (usuarioEditDTO.getSenha() != null) {
             entity.setSenha(PasswordService.encoder().encode(usuarioEditDTO.getSenha()));
         }
+    }
+
+    @AfterMapping
+    public void mapearRelacoes(UsuarioEditDTO dto, @MappingTarget Usuario entity) {
+        entity.getTelefones().forEach(telefone -> {
+            telefone.setUsuario(entity);
+        });
     }
 }
