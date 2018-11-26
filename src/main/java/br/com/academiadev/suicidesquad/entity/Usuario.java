@@ -4,8 +4,6 @@ import br.com.academiadev.suicidesquad.converter.SexoUsuarioConverter;
 import br.com.academiadev.suicidesquad.enums.SexoUsuario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -49,9 +47,10 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
 
     private String facebookUserId;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id_localizacao")
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @ManyToOne(
+            targetEntity = Localizacao.class,
+            cascade = CascadeType.PERSIST
+    )
     private Localizacao localizacao;
 
     @OneToMany(

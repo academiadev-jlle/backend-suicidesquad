@@ -24,5 +24,4 @@ public interface LocalizacaoMapper {
     LocalizacaoDTO toDto(Localizacao entity);
 
     List<LocalizacaoDTO> toDtos(List<Localizacao> entities);
-
 }
