@@ -75,9 +75,8 @@ public class UsuarioController {
         if (!usuarioService.existsById(idUsuario)) {
             return ResponseEntity.notFound().build();
         }
-        final Usuario usuario = usuarioMapper.updateEntity(usuarioEditDTO, usuarioLogado);
-        usuario.setId(idUsuario);
-        usuarioService.save(usuario);
+        usuarioMapper.updateEntity(usuarioEditDTO, usuarioLogado);
+        usuarioService.save(usuarioLogado);
         return ResponseEntity.ok().build();
     }
 }
