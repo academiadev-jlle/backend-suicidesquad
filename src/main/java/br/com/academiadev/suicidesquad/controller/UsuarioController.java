@@ -61,9 +61,7 @@ public class UsuarioController {
         if (!usuarioLogado.getId().equals(idUsuario)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        if (usuarioService.existsById(idUsuario)) {
-            usuarioService.deleteById(idUsuario);
-        }
+        usuarioService.deleteById(idUsuario);
         return ResponseEntity.ok().build();
     }
 
