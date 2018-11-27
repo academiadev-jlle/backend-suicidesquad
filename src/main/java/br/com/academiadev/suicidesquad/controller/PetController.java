@@ -44,8 +44,10 @@ public class PetController {
 
     @PostMapping("/pets")
     @ResponseStatus(HttpStatus.CREATED)
-    PetDetailDTO createPet(@Valid @RequestBody PetCreateDTO petCreateDTO) {
-        return petMapper.toDetailDto(petService.save(petMapper.toEntity(petCreateDTO)));
+    PetDetailDTO createPet(@Valid @RequestBody PetCreateDTO petCreateDTO, @AuthenticationPrincipal Usuario usuarioLogado) {
+        final Pet pet = petMapper.toEntity(petCreateDTO);
+        pet.setUsuario(usuarioLogado);
+        return petMapper.toDetailDto(petService.save(pet));
     }
 
     @GetMapping("/pets/{idPet}")
