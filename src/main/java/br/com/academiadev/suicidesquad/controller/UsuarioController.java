@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -51,5 +53,14 @@ public class UsuarioController {
     UsuarioDTO createUsuario(@Valid @RequestBody UsuarioCreateDTO usuarioCreateDTO) {
         Usuario usuario = usuarioMapper.toEntity(usuarioCreateDTO);
         return usuarioMapper.toDto(usuarioService.save(usuario));
+    }
+
+    @DeleteMapping("/usuarios/{idUsuario}")
+    public ResponseEntity deleteUsuario(@PathVariable Long idUsuario, @AuthenticationPrincipal Usuario usuarioLogado) {
+        if (!usuarioLogado.getId().equals(idUsuario)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        usuarioService.deleteById(idUsuario);
+        return ResponseEntity.ok().build();
     }
 }
