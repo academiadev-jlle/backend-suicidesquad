@@ -1,14 +1,18 @@
 package br.com.academiadev.suicidesquad.mapper;
 
+import br.com.academiadev.suicidesquad.dto.RegistroCreateDTO;
 import br.com.academiadev.suicidesquad.dto.RegistroDTO;
 import br.com.academiadev.suicidesquad.entity.Registro;
 import org.mapstruct.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper(
         componentModel = "spring",
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        uses = {LocalDateTime.class}
 )
 public interface RegistroMapper {
     @Mappings({
@@ -17,7 +21,11 @@ public interface RegistroMapper {
     })
     Registro toEntity(RegistroDTO dto);
 
-    List<Registro> toEntities(List<RegistroDTO> dtos);
+    @Mappings({
+            @Mapping(target = "situacao"),
+            @Mapping(target = "data", expression = "java(LocalDateTime.now())")
+    })
+    Registro toEntity(RegistroCreateDTO dto);
 
     @InheritInverseConfiguration
     RegistroDTO toDto(Registro entity);

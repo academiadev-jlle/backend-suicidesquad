@@ -26,6 +26,7 @@ import java.util.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -61,6 +62,14 @@ public class PetControllerTest {
                 .comprimentoPelo(ComprimentoPelo.MEDIO)
                 .categoria(Categoria.ACHADO)
                 .cores(cores)
+                .build();
+    }
+
+    private Usuario buildUsuario() {
+        return Usuario.builder()
+                .nome("Exemplo")
+                .email("example@example.com")
+                .senha("hunter2")
                 .build();
     }
 
@@ -304,5 +313,38 @@ public class PetControllerTest {
                 .content(petJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void adicionarRegistro_quandoValido_entaoSucesso() throws Exception {
+        final Usuario usuario = usuarioService.save(buildUsuario());
+        final Pet pet = petService.save(buildPet());
+        pet.addRegistro(new Registro(pet, Situacao.PROCURANDO));
+        usuario.addPet(pet);
+
+        String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
+        mvc.perform(post(String.format("/pets/%d/registros", pet.getId()))
+                .header("Authorization", "Bearer " + token)
+                .content("{\"situacao\": \"ENCONTRADO\"}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        assertThat(pet.getSituacaoAtual().toString(), equalTo("ENCONTRADO"));
+    }
+
+    @Test
+    public void adicionarRegistro_quandoInvalido_entaoErro() throws Exception {
+        final Usuario usuario = usuarioService.save(buildUsuario());
+        final Pet pet = petService.save(buildPet());
+        usuario.addPet(pet);
+
+        String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
+        mvc.perform(post(String.format("/pets/%d/registros", pet.getId()))
+                .header("Authorization", "Bearer " + token)
+                .content("{\"situacao\": \"isso não é uma situação\"}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        assertThat(pet.getSituacaoAtual(), nullValue());
     }
 }
