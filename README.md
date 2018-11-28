@@ -9,7 +9,7 @@ Após clonar o projeto, será necessário configurar alguns parâmetros
 para a autenticação dos usuários durante o desenvolvimento.
 
 Faça uma cópia do arquivo ```src/main/resources/application-dev.properties.sample```
-como o nome ```application-dev.properties```, no mesmo diretório, e configure os valores
+com o nome ```application-dev.properties```, no mesmo diretório, e configure os valores
 nele descritos.
 
 ### Requisitos mínimos
