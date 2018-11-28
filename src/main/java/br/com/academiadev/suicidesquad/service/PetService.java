@@ -1,15 +1,13 @@
 package br.com.academiadev.suicidesquad.service;
 
-import br.com.academiadev.suicidesquad.entity.Pet;
-import br.com.academiadev.suicidesquad.entity.PetSearch;
-import br.com.academiadev.suicidesquad.entity.QPet;
-import br.com.academiadev.suicidesquad.entity.QRegistro;
+import br.com.academiadev.suicidesquad.entity.*;
 import br.com.academiadev.suicidesquad.enums.Situacao;
 import br.com.academiadev.suicidesquad.repository.PetRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -106,5 +104,11 @@ public class PetService {
 
     public void deleteById(Long idPet) {
         petRepository.deleteById(idPet);
+    }
+
+    public boolean isPublicador(Authentication authentication, Long idPet) {
+        Pet pet = petRepository.findById(idPet).orElse(null);
+        final Usuario usuario = (Usuario) authentication.getPrincipal();
+        return (pet != null) && (usuario != null) && (usuario.getId() != null) && pet.getUsuario().getId().equals(usuario.getId());
     }
 }
