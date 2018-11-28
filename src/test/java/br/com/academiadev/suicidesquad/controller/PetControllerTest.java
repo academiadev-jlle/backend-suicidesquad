@@ -74,21 +74,29 @@ public class PetControllerTest {
     }
 
     @Test
-    @WithMockUser
     public void criarPet_quandoValido_entaoSucesso() throws Exception {
+        Usuario usuario = usuarioService.save(Usuario.builder()
+                .nome("Fulano")
+                .email("fulano@example.com")
+                .senha("hunter2")
+                .build());
+
         Map<String, String> petJson = new HashMap<>();
         petJson.put("tipo", "GATO");
         petJson.put("porte", "MEDIO");
         petJson.put("comprimento_pelo", "MEDIO");
         petJson.put("categoria", "ACHADO");
 
+        String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
         mvc.perform(post("/pets")
+                .header("Authorization", "Bearer " + token)
                 .content(objectMapper.writeValueAsString(petJson))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
         Pet petCriado = petService.findAll().get(0);
         assertThat(petCriado.getTipo().toString(), equalTo(petJson.get("tipo")));
+        assertThat(petCriado.getUsuario().getUsername(), equalTo(usuario.getUsername()));
     }
 
     @Test
