@@ -1,4 +1,10 @@
+# Obrigatório: Chave secreta usada na geração de tokens de sessão.
+# Para segurança efetiva, use no mínimo 32 caracteres.
 security.jwt.token.secret-key=
-app.social.facebook.enabled = true
+
+# Opcional: Parâmetros para a autenticação por meio do Facebook
+# Mude o enabled para true e obtenha o app id e o app secret cadastrando
+# um aplicativo no Facebook: https://developers.facebook.com/
+app.social.facebook.enabled=false
 app.social.facebook.app-id=
 app.social.facebook.app-secret=
