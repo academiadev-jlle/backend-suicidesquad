@@ -15,6 +15,7 @@ import br.com.academiadev.suicidesquad.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,26 +58,22 @@ public class PetController {
     }
 
     @DeleteMapping("/pets/{idPet}")
-    public ResponseEntity deletePet(@PathVariable Long idPet, @AuthenticationPrincipal Usuario usuarioLogado) {
+    @PreAuthorize("@petService.isPublicador(authentication, #idPet)")
+    public ResponseEntity deletePet(@PathVariable Long idPet) {
         final Pet pet = petService.findById(idPet).orElse(null);
         if (pet == null) {
             return ResponseEntity.notFound().build();
-        }
-        if (!pet.getUsuario().getId().equals(usuarioLogado.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         petService.deleteById(idPet);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/pets/{idPet}")
-    public ResponseEntity editPet(@PathVariable Long idPet, @Valid @RequestBody PetCreateDTO petCreateDTO, @AuthenticationPrincipal Usuario usuarioLogado) {
+    @PreAuthorize("@petService.isPublicador(authentication, #idPet)")
+    public ResponseEntity editPet(@PathVariable Long idPet, @Valid @RequestBody PetCreateDTO petCreateDTO) {
         Pet pet = petService.findById(idPet).orElse(null);
         if (pet == null) {
             return ResponseEntity.notFound().build();
-        }
-        if (!pet.getUsuario().getId().equals(usuarioLogado.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         petMapper.updateEntity(petCreateDTO, pet);
         petService.save(pet);
@@ -84,13 +81,11 @@ public class PetController {
     }
 
     @PostMapping("/pets/{idPet}/registros")
-    public ResponseEntity addRegistro(@PathVariable Long idPet, @Valid @RequestBody RegistroCreateDTO registroCreateDTO, @AuthenticationPrincipal Usuario usuarioLogado) {
+    @PreAuthorize("@petService.isPublicador(authentication, #idPet)")
+    public ResponseEntity addRegistro(@PathVariable Long idPet, @Valid @RequestBody RegistroCreateDTO registroCreateDTO) {
         Pet pet = petService.findById(idPet).orElse(null);
         if (pet == null) {
             return ResponseEntity.notFound().build();
-        }
-        if (!pet.getUsuario().getId().equals(usuarioLogado.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         pet.addRegistro(registroMapper.toEntity(registroCreateDTO));
         return ResponseEntity.ok().build();
