@@ -67,10 +67,11 @@ public class Pet extends AuditableEntity<Long> {
     @Size(min = 2, max = 80)
     private String nome;
 
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 2000)
     private String descricao;
 
     @ManyToOne
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
     public void addCor(Cor cor) {
