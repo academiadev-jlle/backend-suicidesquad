@@ -5,23 +5,27 @@ Projeto da aplicação para gerenciador de animais achados, perdidos e para ado�
 
 ## Configuração
 
-TODO
+Após clonar o projeto, será necessário configurar alguns parâmetros
+para a autenticação dos usuários durante o desenvolvimento.
+
+Faça uma cópia do arquivo ```src/main/resources/application-dev.properties.sample```
+com o nome ```application-dev.properties```, no mesmo diretório, e configure os valores
+nele descritos.
 
 ### Requisitos mínimos
 
-TODO
+Java 8
 
-### Instalação
+## Execução
 
-TODO
+**Testes:** Use a task do gradle para executar os testes:
 
-## Executando os testes
+    ./gradlew test
 
-TODO
+**Desenvolvimento**: A task abaixo executa a aplicação na porta 8080
+do seu ambiente de desenvolvimento.
 
-## Utilização
-
-TODO
+    ./gradlew bootRun
 
 ## Tecnologias utilizadas
 
