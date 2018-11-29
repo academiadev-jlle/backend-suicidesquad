@@ -2,7 +2,6 @@ package br.com.academiadev.suicidesquad.entity;
 
 import br.com.academiadev.suicidesquad.converter.*;
 import br.com.academiadev.suicidesquad.enums.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -72,7 +71,6 @@ public class Pet extends AuditableEntity<Long> {
     private String descricao;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
