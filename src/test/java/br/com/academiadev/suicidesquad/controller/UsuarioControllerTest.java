@@ -85,7 +85,8 @@ public class UsuarioControllerTest {
 
         mvc.perform(get(String.format("/usuarios/%d", usuario.getId())))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nome", equalTo(usuario.getNome())));
+                .andExpect(jsonPath("$.nome", equalTo(usuario.getNome())))
+                .andExpect(jsonPath("$.telefonePublico", equalTo(usuario.isTelefonePublico())));
     }
 
     @Test

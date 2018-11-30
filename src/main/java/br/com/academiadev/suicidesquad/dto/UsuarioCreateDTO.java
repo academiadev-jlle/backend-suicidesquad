@@ -29,4 +29,7 @@ public class UsuarioCreateDTO {
 
     @ApiModelProperty(value = "Localização")
     private LocalizacaoDTO localizacao;
+
+    @ApiModelProperty(value = "Telefone visível nos anúncios")
+    private boolean telefonePublico;
 }
