@@ -4,8 +4,6 @@ import br.com.academiadev.suicidesquad.converter.SexoUsuarioConverter;
 import br.com.academiadev.suicidesquad.enums.SexoUsuario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -49,13 +47,18 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
 
     private String facebookUserId;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id_localizacao")
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @ManyToOne(
+            targetEntity = Localizacao.class,
+            cascade = CascadeType.PERSIST
+    )
     private Localizacao localizacao;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @Singular
+    @OneToMany(
+            mappedBy = "usuario",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
+    @Builder.Default
     private List<Telefone> telefones = new ArrayList<>();
 
     @Builder.Default
@@ -81,8 +84,12 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
         telefone.setUsuario(this);
     }
 
-    private void setTelefones(List<Telefone> telefones) {
-        telefones.forEach(this::addTelefone);
+    public void setTelefones(List<Telefone> telefones) {
+        if (telefones == null || telefones.size() == 0) {
+            this.telefones.clear();
+        } else {
+            telefones.forEach(this::addTelefone);
+        }
     }
 
     @Override

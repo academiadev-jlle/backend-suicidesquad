@@ -2,6 +2,7 @@ package br.com.academiadev.suicidesquad.controller;
 
 import br.com.academiadev.suicidesquad.dto.UsuarioCreateDTO;
 import br.com.academiadev.suicidesquad.dto.UsuarioDTO;
+import br.com.academiadev.suicidesquad.dto.UsuarioEditDTO;
 import br.com.academiadev.suicidesquad.entity.Usuario;
 import br.com.academiadev.suicidesquad.mapper.UsuarioMapper;
 import br.com.academiadev.suicidesquad.service.UsuarioService;
@@ -61,6 +62,19 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         usuarioService.deleteById(idUsuario);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/usuarios/{idUsuario}")
+    public ResponseEntity editUsuario(@PathVariable Long idUsuario, @Valid @RequestBody UsuarioEditDTO usuarioEditDTO, @AuthenticationPrincipal Usuario usuarioLogado) {
+        if (!usuarioLogado.getId().equals(idUsuario)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        if (!usuarioService.existsById(idUsuario)) {
+            return ResponseEntity.notFound().build();
+        }
+        usuarioMapper.updateEntity(usuarioEditDTO, usuarioLogado);
+        usuarioService.save(usuarioLogado);
         return ResponseEntity.ok().build();
     }
 }

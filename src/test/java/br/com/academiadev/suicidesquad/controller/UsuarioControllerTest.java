@@ -1,7 +1,13 @@
 package br.com.academiadev.suicidesquad.controller;
 
+import br.com.academiadev.suicidesquad.entity.Pet;
 import br.com.academiadev.suicidesquad.entity.Usuario;
+import br.com.academiadev.suicidesquad.enums.Categoria;
+import br.com.academiadev.suicidesquad.enums.ComprimentoPelo;
+import br.com.academiadev.suicidesquad.enums.Porte;
+import br.com.academiadev.suicidesquad.enums.Tipo;
 import br.com.academiadev.suicidesquad.security.JwtTokenProvider;
+import br.com.academiadev.suicidesquad.service.PetService;
 import br.com.academiadev.suicidesquad.service.UsuarioService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -35,6 +41,9 @@ public class UsuarioControllerTest {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private PetService petService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -125,5 +134,81 @@ public class UsuarioControllerTest {
                 .andExpect(status().isForbidden());
 
         assertThat(usuarioService.findAll(), hasSize(2));
+    }
+
+    @Test
+    public void editarUsuario_quandoValidoEAutorizado_entaoSucesso() throws Exception {
+        final Usuario usuario = usuarioService.save(buildUsuario());
+        final Pet pet = petService.save(Pet.builder()
+                .tipo(Tipo.GATO)
+                .porte(Porte.PEQUENO)
+                .categoria(Categoria.PERDIDO)
+                .comprimentoPelo(ComprimentoPelo.LONGO)
+                .build());
+        usuario.addPet(pet);
+
+        String usuarioJson = "{" +
+                "   \"nome\": \"Novo nome\"," +
+                "   \"email\": \"novo.email@example.com\"," +
+                "   \"telefones\": [" +
+                "       {" +
+                "           \"numero\": \"(47) 99999-9999\"" +
+                "       }" +
+                "   ]" +
+                "}";
+        String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
+        mvc.perform(put(String.format("/usuarios/%d", usuario.getId()))
+                .header("Authorization", "Bearer " + token)
+                .content(usuarioJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        assertThat(usuario.getNome(), equalTo("Novo nome"));
+        assertThat(usuario.getEmail(), equalTo("novo.email@example.com"));
+        assertThat(usuario.getTelefones().get(0).getNumero(), equalTo("(47) 99999-9999"));
+        assertThat(usuario.getTelefones().get(0).getUsuario().getId(), equalTo(usuario.getId()));
+        assertThat(usuario.getPets().get(0).getId(), equalTo(pet.getId()));
+        assertThat(usuario.getPets().get(0).getUsuario().getId(), equalTo(usuario.getId()));
+    }
+
+    @Test
+    public void editarUsuario_quandoInvalidoEAutorizado_entaoErro() throws Exception {
+        final Usuario usuario = usuarioService.save(buildUsuario());
+
+        Map<String, String> usuarioJson = new HashMap<>();
+        usuarioJson.put("nome", "Novo nome");
+        usuarioJson.put("email", "email inválido");
+
+        String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
+        mvc.perform(put(String.format("/usuarios/%d", usuario.getId()))
+                .header("Authorization", "Bearer " + token)
+                .content(objectMapper.writeValueAsString(usuarioJson))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void editarUsuario_quandoNaoAutorizado_entaoErro() throws Exception {
+        final Usuario usuarioA = usuarioService.save(Usuario.builder()
+                .nome("Usuário A")
+                .email("usuario.a@example.com")
+                .senha("hunter2")
+                .build());
+        final Usuario usuarioB = usuarioService.save(Usuario.builder()
+                .nome("Usuário B")
+                .email("usuario.b@example.com")
+                .senha("hunter2")
+                .build());
+
+        Map<String, String> usuarioJson = new HashMap<>();
+        usuarioJson.put("nome", "Novo nome");
+        usuarioJson.put("email", "usuario.b.novo.email@example.com");
+
+        String tokenA = jwtTokenProvider.getToken(usuarioA.getUsername(), Collections.emptyList());
+        mvc.perform(put(String.format("/usuarios/%d", usuarioB.getId()))
+                .header("Authorization", "Bearer " + tokenA)
+                .content(objectMapper.writeValueAsString(usuarioJson))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
     }
 }
