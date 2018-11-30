@@ -62,18 +62,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handleMethodArgumentNotValid(@Nonnull MethodArgumentNotValidException e, @Nonnull HttpHeaders headers, @Nonnull HttpStatus status, @Nonnull WebRequest request) {
         List<ObjectNode> fieldErrorNodes = e.getBindingResult().getAllErrors().stream()
                 .map(objectError -> {
+                    final ObjectNode fieldErrorNode = objectMapper.createObjectNode();
                     if (objectError instanceof FieldError) {
-                        final ObjectNode fieldErrorNode = objectMapper.createObjectNode();
                         fieldErrorNode.put("field", ((FieldError) objectError).getField());
                         final Object rejectedValue = ((FieldError) objectError).getRejectedValue();
                         fieldErrorNode.put("value", rejectedValue == null ? null : rejectedValue.toString());
                         fieldErrorNode.put("error", objectError.getDefaultMessage());
-                        return fieldErrorNode;
                     } else {
-                        final ObjectNode objectErrorNode = objectMapper.createObjectNode();
-                        objectErrorNode.put("error", objectError.toString());
-                        return objectErrorNode;
+                        fieldErrorNode.put("error", objectError.toString());
                     }
+                    return fieldErrorNode;
                 })
                 .collect(Collectors.toList());
 
