@@ -94,7 +94,8 @@ public class UsuarioControllerTest {
 
         mvc.perform(get(String.format("/usuarios/%d", usuario.getId())))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nome", equalTo(usuario.getNome())));
+                .andExpect(jsonPath("$.nome", equalTo(usuario.getNome())))
+                .andExpect(jsonPath("$.email", equalTo(usuario.getEmail())));
     }
 
     @Test
@@ -134,6 +135,18 @@ public class UsuarioControllerTest {
                 .andExpect(status().isForbidden());
 
         assertThat(usuarioService.findAll(), hasSize(2));
+    }
+
+    @Test
+    public void obterUsuario_quandoExisteEmailNaoPublico_entaoRetornaEmailNull() throws Exception {
+        final Usuario usuario = buildUsuario();
+        usuario.setEmailPublico(false);
+        usuarioService.save(usuario);
+
+        mvc.perform(get(String.format("/usuarios/%d", usuario.getId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nome", equalTo(usuario.getNome())))
+                .andExpect(jsonPath("$.email", equalTo(null)));
     }
 
     @Test

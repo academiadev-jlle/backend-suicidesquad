@@ -8,6 +8,7 @@ import br.com.academiadev.suicidesquad.security.JwtTokenProvider;
 import br.com.academiadev.suicidesquad.service.PetService;
 import br.com.academiadev.suicidesquad.service.UsuarioService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,22 @@ public class PetControllerTest {
         return Usuario.builder()
                 .nome("Exemplo")
                 .email("example@example.com")
+                .senha("hunter2")
+                .build();
+    }
+
+    private Usuario buildUsuarioA() {
+        return Usuario.builder()
+                .nome("Usuário A")
+                .email("usuario.a@example.com")
+                .senha("hunter2")
+                .build();
+    }
+
+    private Usuario buildUsuarioB() {
+        return Usuario.builder()
+                .nome("Usuário B")
+                .email("usuario.b@example.com")
                 .senha("hunter2")
                 .build();
     }
@@ -182,11 +199,7 @@ public class PetControllerTest {
 
     @Test
     public void deletarPet_quandoAutorizado_entaoSucesso() throws Exception {
-        final Usuario usuario = usuarioService.save(Usuario.builder()
-                .nome("Usuário")
-                .email("usuario@example.com")
-                .senha("hunter2")
-                .build());
+        final Usuario usuario = usuarioService.save(buildUsuarioA());
         final Pet pet = petService.save(Pet.builder()
                 .tipo(Tipo.GATO)
                 .porte(Porte.MEDIO)
@@ -205,16 +218,8 @@ public class PetControllerTest {
 
     @Test
     public void deletarPet_quandoNaoAutorizado_entaoErro() throws Exception {
-        final Usuario usuarioA = usuarioService.save(Usuario.builder()
-                .nome("Usuário A")
-                .email("usuario.a@example.com")
-                .senha("hunter2")
-                .build());
-        final Usuario usuarioB = usuarioService.save(Usuario.builder()
-                .nome("Usuário B")
-                .email("usuario.b@example.com")
-                .senha("hunter2")
-                .build());
+        final Usuario usuarioA = usuarioService.save(buildUsuarioA());
+        final Usuario usuarioB = usuarioService.save(buildUsuarioB());
         final Pet pet = petService.save(Pet.builder()
                 .tipo(Tipo.GATO)
                 .porte(Porte.MEDIO)
@@ -232,7 +237,73 @@ public class PetControllerTest {
     }
 
     @Test
+    public void dadoUsuarioEmailPrivado_buscarUsuarioPublicador_entaoEmailPublico() throws Exception {
+        final Usuario usuario = buildUsuarioA();
+        final Pet pet = petService.save(Pet.builder()
+                .tipo(Tipo.GATO)
+                .porte(Porte.MEDIO)
+                .comprimentoPelo(ComprimentoPelo.MEDIO)
+                .categoria(Categoria.ACHADO)
+                .usuario(usuario)
+                .build());
+
+        mvc.perform(get(String.format("/pets/%d", pet.getId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
+                .andExpect(jsonPath("$.usuario.email", equalTo(usuario.getEmailPublico())))
+                .andExpect(jsonPath("$.email", equalTo(usuario.getEmail())));
+    }
+
+    @Test
     public void editarPet_quandoValidoEAutorizado_entaoSucesso() throws Exception {
+        Usuario usuario = usuarioService.save(Usuario.builder()
+                .nome("Fulano")
+                .email("fulano@example.com")
+                .build());
+        Set<Cor> cores = new HashSet<>();
+        cores.add(Cor.BRANCO);
+        cores.add(Cor.PRETO);
+        final Pet pet = petService.save(Pet.builder()
+                .tipo(Tipo.GATO)
+                .porte(Porte.MEDIO)
+                .comprimentoPelo(ComprimentoPelo.MEDIO)
+                .categoria(Categoria.ACHADO)
+                .usuario(usuario)
+                .build());
+
+        mvc.perform(get(String.format("/pets/%d", pet.getId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
+                .andExpect(jsonPath("$.usuario.email", equalTo(usuario.getEmailPublico())))
+                .andExpect(jsonPath("$.email", equalTo(usuario.getEmail())));
+
+    }
+
+    @Test
+    public void dadoUsuarioEmailPrivado_buscarUsuarioPublicador_entaoEmailNull() throws Exception {
+        Usuario usuario = Usuario.builder()
+                .nome("um usuario")
+                .email("umemail@example.com")
+                .emailPublico(false)
+                .senha("hunter2")
+                .build();
+        final Pet pet = petService.save(Pet.builder()
+                .tipo(Tipo.GATO)
+                .porte(Porte.MEDIO)
+                .comprimentoPelo(ComprimentoPelo.MEDIO)
+                .categoria(Categoria.ACHADO)
+                .usuario(usuario)
+                .build());
+        mvc.perform(get(String.format("/pets/%d", pet.getId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
+                .andExpect(jsonPath("$.email", equalTo(null)))
+                .andExpect(jsonPath("$.usuario.email", equalTo(null)));
+        Assertions.assertThat(usuario.getEmailPublico()).isEqualTo(null);
+    }
+
+    @Test
+    public void editarPet_quandoInvalidoEAutorizado_entaoErro() throws Exception {
         Usuario usuario = usuarioService.save(Usuario.builder()
                 .nome("Fulano")
                 .email("fulano@example.com")
@@ -270,27 +341,6 @@ public class PetControllerTest {
         assertThat(pet.getSituacaoAtual().toString(), equalTo("PROCURANDO"));
         assertThat(pet.getRaca().toString(), equalTo("CACHORRO_SRD"));
         assertThat(pet.getUsuario().getId(), equalTo(usuario.getId()));
-    }
-
-    @Test
-    public void editarPet_quandoInvalidoEAutorizado_entaoErro() throws Exception {
-        Usuario usuario = usuarioService.save(Usuario.builder()
-                .nome("Fulano")
-                .email("fulano@example.com")
-                .build());
-        final Pet pet = petService.save(Pet.builder()
-                .tipo(Tipo.GATO)
-                .porte(Porte.MEDIO)
-                .comprimentoPelo(ComprimentoPelo.MEDIO)
-                .categoria(Categoria.ACHADO)
-                .build());
-
-        String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
-        mvc.perform(put(String.format("/pets/%d", pet.getId()))
-                .header("Authorization", "Bearer " + token)
-                .content("{}")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
     }
 
     @Test
