@@ -13,6 +13,6 @@ public class UsuarioDTO {
     @ApiModelProperty(value = "Nome", example = "Fulano")
     private String nome;
 
-    @ApiModelProperty(value = "Telefone visível publicamente", example = "true")
-    private boolean telefonePublico;
+    @ApiModelProperty(value = "email", example = "fulano@gmail.com")
+    private String email;
 }

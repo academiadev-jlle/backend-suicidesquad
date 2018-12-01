@@ -16,12 +16,11 @@ import java.util.List;
 public abstract class UsuarioMapper {
     @Mappings({
             @Mapping(target = "nome"),
-            @Mapping(target = "email"),
+            @Mapping(target = "email", source = "email"),
             @Mapping(target = "senha", ignore = true),
             @Mapping(target = "sexo", defaultValue = "NAO_INFORMADO"),
             @Mapping(target = "dataNascimento", source = "data_nascimento", dateFormat = "yyyy-MM-dd"),
             @Mapping(target = "localizacao"),
-            @Mapping(target = "telefonePublico", source = "telefonePublico")
     })
     public abstract Usuario toEntity(UsuarioCreateDTO dto);
 
@@ -30,7 +29,7 @@ public abstract class UsuarioMapper {
     @Mappings({
             @Mapping(target = "nome"),
             @Mapping(target = "data_criacao", source = "createdDate"),
-            @Mapping(target = "telefonePublico", source = "telefonePublico")
+            @Mapping(target = "email", source = "emailPublico")
     })
     public abstract UsuarioDTO toDto(Usuario entity);
 

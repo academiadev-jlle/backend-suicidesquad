@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper(
         componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        uses = {LocalizacaoMapper.class, RegistroMapper.class}
+        uses = {LocalizacaoMapper.class, RegistroMapper.class, UsuarioMapper.class}
 )
 public abstract class PetMapper {
     @Mappings({
@@ -79,7 +79,7 @@ public abstract class PetMapper {
             @Mapping(target = "localizacao"),
             @Mapping(target = "usuario"),
             @Mapping(target = "registros"),
-            @Mapping(target = "email", source = "usuario.email"),
+            @Mapping(target = "email", source = "usuario.emailPublico"),
 //            @Mapping(target = "telefones", source = "usuario.telefones"),
     })
     public abstract PetDetailDTO toDetailDto(Pet entity);

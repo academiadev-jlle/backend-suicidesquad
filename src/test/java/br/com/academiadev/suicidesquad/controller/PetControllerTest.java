@@ -7,6 +7,7 @@ import br.com.academiadev.suicidesquad.security.JwtTokenProvider;
 import br.com.academiadev.suicidesquad.service.PetService;
 import br.com.academiadev.suicidesquad.service.UsuarioService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,22 @@ public class PetControllerTest {
                 .categoria(Categoria.ACHADO)
                 .cor(Cor.BRANCO)
                 .cor(Cor.PRETO)
+                .build();
+    }
+
+    private Usuario buildUsuarioA() {
+        return Usuario.builder()
+                .nome("Usuário A")
+                .email("usuario.a@example.com")
+                .senha("hunter2")
+                .build();
+    }
+
+    private Usuario buildUsuarioB() {
+        return Usuario.builder()
+                .nome("Usuário B")
+                .email("usuario.b@example.com")
+                .senha("hunter2")
                 .build();
     }
 
@@ -166,11 +183,7 @@ public class PetControllerTest {
 
     @Test
     public void deletarPet_quandoAutorizado_entaoSucesso() throws Exception {
-        final Usuario usuario = usuarioService.save(Usuario.builder()
-                .nome("Usuário")
-                .email("usuario@example.com")
-                .senha("hunter2")
-                .build());
+        final Usuario usuario = usuarioService.save(buildUsuarioA());
         final Pet pet = petService.save(Pet.builder()
                 .tipo(Tipo.GATO)
                 .porte(Porte.MEDIO)
@@ -189,16 +202,8 @@ public class PetControllerTest {
 
     @Test
     public void deletarPet_quandoNaoAutorizado_entaoErro() throws Exception {
-        final Usuario usuarioA = usuarioService.save(Usuario.builder()
-                .nome("Usuário A")
-                .email("usuario.a@example.com")
-                .senha("hunter2")
-                .build());
-        final Usuario usuarioB = usuarioService.save(Usuario.builder()
-                .nome("Usuário B")
-                .email("usuario.b@example.com")
-                .senha("hunter2")
-                .build());
+        final Usuario usuarioA = usuarioService.save(buildUsuarioA());
+        final Usuario usuarioB = usuarioService.save(buildUsuarioB());
         final Pet pet = petService.save(Pet.builder()
                 .tipo(Tipo.GATO)
                 .porte(Porte.MEDIO)
@@ -213,5 +218,50 @@ public class PetControllerTest {
                 .andExpect(status().isForbidden());
 
         assertThat(petService.findAll(), hasSize(1));
+    }
+
+    @Test
+    public void dadoUsuarioEmailPrivado_buscarUsuarioPublicador_entaoEmailPublico() throws Exception {
+        final Usuario usuario = buildUsuarioA();
+        final Pet pet = petService.save(Pet.builder()
+                .tipo(Tipo.GATO)
+                .porte(Porte.MEDIO)
+                .comprimentoPelo(ComprimentoPelo.MEDIO)
+                .categoria(Categoria.ACHADO)
+                .usuario(usuario)
+                .build());
+
+        mvc.perform(get(String.format("/pets/%d", pet.getId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
+                .andExpect(jsonPath("$.usuario.email", equalTo(usuario.getEmailPublico())))
+                .andExpect(jsonPath("$.email", equalTo(usuario.getEmail())));
+
+    }
+
+    @Test
+    public void dadoUsuarioEmailPrivado_buscarUsuarioPublicador_entaoEmailNull() throws Exception {
+        Usuario usuario = Usuario.builder()
+                .nome("um usuario")
+                .email("umemail@gmail.com")
+                .emailPublico(false)
+                .senha("hunter2")
+                .build();
+        final Pet pet = petService.save(Pet.builder()
+                .tipo(Tipo.GATO)
+                .porte(Porte.MEDIO)
+                .comprimentoPelo(ComprimentoPelo.MEDIO)
+                .categoria(Categoria.ACHADO)
+                .usuario(usuario)
+                .build());
+
+        mvc.perform(get(String.format("/pets/%d", pet.getId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
+                .andExpect(jsonPath("$.email", equalTo(null)))
+                .andExpect(jsonPath("$.usuario.email", equalTo(null)));
+
+        Assertions.assertThat(usuario.getEmailPublico()).isEqualTo(null);
+
     }
 }
