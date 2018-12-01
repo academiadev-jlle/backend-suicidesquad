@@ -1,15 +1,22 @@
 package br.com.academiadev.suicidesquad.controller;
 
-import br.com.academiadev.suicidesquad.entity.Pet;
-import br.com.academiadev.suicidesquad.entity.Usuario;
-import br.com.academiadev.suicidesquad.enums.Categoria;
-import br.com.academiadev.suicidesquad.enums.ComprimentoPelo;
-import br.com.academiadev.suicidesquad.enums.Porte;
-import br.com.academiadev.suicidesquad.enums.Tipo;
-import br.com.academiadev.suicidesquad.security.JwtTokenProvider;
-import br.com.academiadev.suicidesquad.service.PetService;
-import br.com.academiadev.suicidesquad.service.UsuarioService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +27,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import br.com.academiadev.suicidesquad.entity.Pet;
+import br.com.academiadev.suicidesquad.entity.Usuario;
+import br.com.academiadev.suicidesquad.enums.Categoria;
+import br.com.academiadev.suicidesquad.enums.ComprimentoPelo;
+import br.com.academiadev.suicidesquad.enums.Porte;
+import br.com.academiadev.suicidesquad.enums.Tipo;
+import br.com.academiadev.suicidesquad.security.JwtTokenProvider;
+import br.com.academiadev.suicidesquad.service.PetService;
+import br.com.academiadev.suicidesquad.service.UsuarioService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -52,29 +61,36 @@ public class UsuarioControllerTest {
     private JwtTokenProvider jwtTokenProvider;
 
     private Usuario buildUsuario() {
-        return Usuario.builder()
+        List<String> fotos = new ArrayList<>();
+        fotos.add("link1");
+        fotos.add("link2");
+    	return Usuario.builder()
                 .nome("Fulano")
                 .email("fulano@example.com")
                 .senha("hunter2")
+                .fotos(fotos)
                 .build();
     }
 
     @Test
     public void criarUsuario_quandoValido_entaoSucesso() throws Exception {
-        final Map<String, String> usuarioJson = new HashMap<>();
-        usuarioJson.put("nome", "Fulano");
-        usuarioJson.put("email", "fulano@example.com");
-        usuarioJson.put("senha", "hunter2");
-
+        String usuarioJson = "{" +
+                "   \"nome\": \"Fulano\"," +
+                "   \"email\": \"fulano@example.com\"," +
+                "   \"senha\": \"hunter2\"," +
+                "	\"fotos\": [\"link1\", \"link2\"]" +
+                "}";
+        
         mvc.perform(post("/usuarios")
-                .content(objectMapper.writeValueAsString(usuarioJson))
+                .content(usuarioJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
         Usuario usuarioCriado = usuarioService.findAll().get(0);
-        assertThat(usuarioCriado.getNome(), equalTo(usuarioJson.get("nome")));
-        assertThat(usuarioCriado.getEmail(), equalTo(usuarioJson.get("email")));
-        assertThat(usuarioCriado.getSenha(), not(equalTo(usuarioJson.get("senha"))));
+        assertThat(usuarioCriado.getNome(), equalTo("Fulano"));
+        assertThat(usuarioCriado.getEmail(), equalTo("fulano@example.com"));
+        assertThat(usuarioCriado.getSenha(), not(equalTo("hunter2")));
+        assertThat(usuarioCriado.getFotos().get(0), equalTo("link1"));
     }
 
     @Test

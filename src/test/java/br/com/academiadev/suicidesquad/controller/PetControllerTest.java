@@ -1,13 +1,25 @@
 package br.com.academiadev.suicidesquad.controller;
 
-import br.com.academiadev.suicidesquad.entity.Pet;
-import br.com.academiadev.suicidesquad.entity.Registro;
-import br.com.academiadev.suicidesquad.entity.Usuario;
-import br.com.academiadev.suicidesquad.enums.*;
-import br.com.academiadev.suicidesquad.security.JwtTokenProvider;
-import br.com.academiadev.suicidesquad.service.PetService;
-import br.com.academiadev.suicidesquad.service.UsuarioService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +33,21 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.nullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import br.com.academiadev.suicidesquad.entity.Pet;
+import br.com.academiadev.suicidesquad.entity.Registro;
+import br.com.academiadev.suicidesquad.entity.Usuario;
+import br.com.academiadev.suicidesquad.enums.Categoria;
+import br.com.academiadev.suicidesquad.enums.ComprimentoPelo;
+import br.com.academiadev.suicidesquad.enums.Cor;
+import br.com.academiadev.suicidesquad.enums.Porte;
+import br.com.academiadev.suicidesquad.enums.Raca;
+import br.com.academiadev.suicidesquad.enums.Situacao;
+import br.com.academiadev.suicidesquad.enums.Tipo;
+import br.com.academiadev.suicidesquad.security.JwtTokenProvider;
+import br.com.academiadev.suicidesquad.service.PetService;
+import br.com.academiadev.suicidesquad.service.UsuarioService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -56,20 +73,29 @@ public class PetControllerTest {
         Set<Cor> cores = new HashSet<>();
         cores.add(Cor.PRETO);
         cores.add(Cor.BRANCO);
+        
+        List<String> fotos = new ArrayList<>();
+        fotos.add("link1");
+        fotos.add("link2");
         return Pet.builder()
                 .tipo(Tipo.GATO)
                 .porte(Porte.MEDIO)
                 .comprimentoPelo(ComprimentoPelo.MEDIO)
                 .categoria(Categoria.ACHADO)
                 .cores(cores)
+                .fotos(fotos)
                 .build();
     }
 
     private Usuario buildUsuario() {
-        return Usuario.builder()
+    	List<String> fotos = new ArrayList<>();
+    	fotos.add("link1");
+    	fotos.add("link2");
+    	return Usuario.builder()
                 .nome("Exemplo")
                 .email("example@example.com")
                 .senha("hunter2")
+                .fotos(fotos)
                 .build();
     }
 
@@ -119,7 +145,9 @@ public class PetControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
                 .andExpect(jsonPath("$.cores[0]", equalTo(pet.getCores().toArray()[0].toString())))
-                .andExpect(jsonPath("$.cores[1]", equalTo(pet.getCores().toArray()[1].toString())));
+                .andExpect(jsonPath("$.cores[1]", equalTo(pet.getCores().toArray()[1].toString())))
+                .andExpect(jsonPath("$.fotos[0]", equalTo(pet.getFotos().toArray()[0].toString())))
+                .andExpect(jsonPath("$.fotos[1]", equalTo(pet.getFotos().toArray()[1].toString())));
     }
 
     @Test
@@ -240,12 +268,16 @@ public class PetControllerTest {
         Set<Cor> cores = new HashSet<>();
         cores.add(Cor.BRANCO);
         cores.add(Cor.PRETO);
+        List<String> fotos = new ArrayList<>();
+        fotos.add("link1");
+        fotos.add("link2");
         final Pet pet = petService.save(Pet.builder()
                 .tipo(Tipo.GATO)
                 .porte(Porte.MEDIO)
                 .comprimentoPelo(ComprimentoPelo.MEDIO)
                 .categoria(Categoria.ACHADO)
                 .cores(cores)
+                .fotos(fotos)
                 .build());
         pet.addRegistro(new Registro(pet, Situacao.PROCURANDO));
         usuario.addPet(pet);
@@ -255,7 +287,8 @@ public class PetControllerTest {
                 "   \"porte\": \"MEDIO\"," +
                 "   \"comprimento_pelo\": \"MEDIO\"," +
                 "   \"categoria\": \"ACHADO\"," +
-                "   \"cores\": [\"BRANCO\", \"PRETO\"]" +
+                "   \"cores\": [\"BRANCO\", \"PRETO\"]," +
+                "	\"fotos\": [\"link1\", \"link2\"]" +
                 "}";
 
         String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
