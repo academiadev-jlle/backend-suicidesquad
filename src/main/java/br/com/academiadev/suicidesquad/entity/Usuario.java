@@ -1,21 +1,35 @@
 package br.com.academiadev.suicidesquad.entity;
 
-import br.com.academiadev.suicidesquad.converter.SexoUsuarioConverter;
-import br.com.academiadev.suicidesquad.enums.SexoUsuario;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import br.com.academiadev.suicidesquad.converter.SexoUsuarioConverter;
+import br.com.academiadev.suicidesquad.enums.SexoUsuario;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 
 @Data
@@ -25,7 +39,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "usuario")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Usuario extends AuditableEntity<Long> implements UserDetails {
     @NotNull
     @Size(min = 1, max = 120)
@@ -64,8 +78,12 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
     @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> pets = new ArrayList<>();
-
-
+    
+    @ElementCollection(targetClass = String.class)
+    @CollectionTable(name = "usuario_fotos")
+    @Builder.Default
+    private List<String> fotos = new ArrayList<>();
+    
     public void addPet(Pet pet) {
         pets.add(pet);
         pet.setUsuario(this);
@@ -90,6 +108,14 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
         } else {
             telefones.forEach(this::addTelefone);
         }
+    }
+    
+    public void addFoto(String foto) {
+    	this.fotos.add(foto);
+    }
+    
+    public void removeFoto(String foto) {
+    	this.fotos.remove(foto);
     }
 
     @Override

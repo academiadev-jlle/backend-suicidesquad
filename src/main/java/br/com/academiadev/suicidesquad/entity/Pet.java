@@ -59,6 +59,11 @@ public class Pet extends AuditableEntity<Long> {
     @Convert(converter = CorConverter.class)
     @Builder.Default
     private Set<Cor> cores = new HashSet<>();
+    
+    @ElementCollection(targetClass = String.class)
+    @CollectionTable(name = "pet_fotos")
+    @Builder.Default
+    private List<String> fotos = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "pet",
@@ -77,7 +82,15 @@ public class Pet extends AuditableEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
-
+    
+    public void addFoto(String foto) {
+    	this.fotos.add(foto);
+    }
+    
+    public void removeFoto(String foto) {
+    	this.fotos.remove(foto);
+    }
+    
     public void addCor(Cor cor) {
         this.cores.add(cor);
     }
