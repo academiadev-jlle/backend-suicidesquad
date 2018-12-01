@@ -44,6 +44,7 @@ public abstract class UsuarioMapper {
     public abstract Usuario updateEntity(UsuarioEditDTO dto, @MappingTarget Usuario entity);
 
     @Mappings({
+            @Mapping(target = "id"),
             @Mapping(target = "nome"),
             @Mapping(target = "data_criacao", source = "createdDate"),
             @Mapping(target = "email", source = "emailPublico")
