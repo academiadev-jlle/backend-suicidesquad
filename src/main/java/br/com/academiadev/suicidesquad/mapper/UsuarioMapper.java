@@ -45,7 +45,8 @@ public abstract class UsuarioMapper {
 
     @Mappings({
             @Mapping(target = "nome"),
-            @Mapping(target = "data_criacao", source = "createdDate")
+            @Mapping(target = "data_criacao", source = "createdDate"),
+            @Mapping(target = "email", source = "emailPublico")
     })
     public abstract UsuarioDTO toDto(Usuario entity);
 

@@ -65,10 +65,25 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> pets = new ArrayList<>();
 
+    @Builder.Default
+    @NotNull
+    private boolean emailPublico = true;
+
+    public boolean isEmailPublico(){
+        return emailPublico;
+    }
 
     public void addPet(Pet pet) {
         pets.add(pet);
         pet.setUsuario(this);
+    }
+
+    public String getEmailPublico() {
+        if (this.emailPublico) {
+            return email;
+        } else {
+            return null;
+        }
     }
 
     public void setPets(List<Pet> pets) {
