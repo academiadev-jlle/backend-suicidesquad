@@ -25,6 +25,6 @@ public class AmazonController {
 	
 	@DeleteMapping("/amazon")
 	public void deleteImageFromAmazon(String imageKey) {
-		AmazonService.deleteImageFromAmazon(imageKey);
+		amazonService.deleteImageFromAmazon(imageKey);
 	}
 }

@@ -18,12 +18,13 @@ public class AmazonService {
 	
 	private final String clientRegion = "*** Client region ***";
 	private final String bucketName = "*** Bucket name ***";
+	private final String configFilePath = System.getProperty("user.dir") + "\\suicide-squad\\awsconfigfile.txt";
 	
 	public String saveImageToAmazon(File imageObj, String imageKey) throws IOException {
 		try {
             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
                     .withRegion(clientRegion)
-                    .withCredentials(new ProfileCredentialsProvider())
+                    .withCredentials(new ProfileCredentialsProvider(configFilePath))
                     .build();
         
             // Upload a file as a new object with ContentType and title specified.
@@ -49,13 +50,13 @@ public class AmazonService {
         return imageKey;
     }
 	
-	public static void deleteImageFromAmazon(String imageKey) {
+	public void deleteImageFromAmazon(String imageKey) {
 		String clientRegion = "*** Client region ***";
         String bucketName = "*** Bucket name ***";
 
         try {
             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                    .withCredentials(new ProfileCredentialsProvider())
+                    .withCredentials(new ProfileCredentialsProvider(configFilePath))
                     .withRegion(clientRegion)
                     .build();
 
