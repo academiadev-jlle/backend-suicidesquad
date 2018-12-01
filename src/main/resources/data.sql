@@ -8,17 +8,17 @@ INSERT INTO LOCALIZACAO (BAIRRO, CIDADE, UF) VALUES
 ('Monte Verde', 'Florianópolis', 'Santa Catarina'),
 ('Santa Maria', 'Aracaju', 'Sergipe');
 
-INSERT INTO USUARIO (CREATED_DATE, LAST_MODIFIED_DATE, DATA_NASCIMENTO, EMAIL, FACEBOOK_USER_ID, NOME, SENHA, SEXO, LOCALIZACAO_ID) VALUES
-('2018-11-23 13:18:25', '2018-11-24 17:24:53', '1970-12-10', 'dchristophle0@example.com', null, 'Danny Christophle', '$2a$10$YIqp1w.m/4brTM9vfXyuc.qCB/e4UkF8WMUh9b2ySspSXzCZMlZLS', 1, 1),
-('2018-11-18 03:33:23', '2018-11-18 06:33:23', '1988-10-12', 'gnusche1@example.com', null, 'Gualterio Nusche', '$2a$10$2tTVuJQAyEhyy77MHniEGOEyJQave6ezht17Q8AOU5QPZqvtoul5e', 1, 2),
-('2018-11-26 05:31:25', '2018-11-26 14:58:10', null, 'dwortt2@example.com', null, 'Dennie Wortt', '$2a$10$bC0R9ksjYhd//5m10ciPluxpjOUT75bYa6ya/rZ1qiARaZGB.yinC', 3, 3),
-('2018-10-13 06:12:17', '2018-11-16 06:44:07', '2008-11-05', 'sconnal3@example.com', null, 'Salomi Connal', '$2a$10$V4ej2VaXtDLgEM0dQ6Va3ucibkJ07T38.rcZ/Iz61c48MgRm0ODv6', 2, 4),
-('2018-09-10 17:24:53', '2018-11-20 14:04:17', '2010-05-21', 'dpfleger4@example.com', null, 'Dulce Pfleger', '$2a$10$EK7Wd/5kTniJ0wFl01zkVuAU.Ja5yu9LvCd9/8SCwsG.5mr4Li2ou', 3, 5),
-('2018-11-10 14:58:33', '2018-11-25 14:26:17', '1985-05-02', 'loakwood5@example.com', null, 'Lela Oakwood', '$2a$10$7zn19kqTV09C0e8shv8wBOmCrFQ2GMPyItBvvjniW3O8Enf30yING', 3, 6),
-('2018-09-18 08:59:56', '2018-11-18 17:12:06', null, 'kjoye6@example.com', null, 'Kitti Joye', '$2a$10$NIv/3CWCh4t7RzEgbFeWT./hIEgFQEtmHKgz5YyXQKK0ezIpRwh9K', 3, 7),
-('2018-10-16 17:04:14', '2018-11-16 19:37:22', '1995-12-29', 'egalliver7@example.com', null, 'Euphemia Galliver', '$2a$10$K33sDIo6WQ6gjWMwJddzL.xnmTHudr5.ckpG5Z29.80wLSJ7bJWim', 2, 8),
-('2018-11-17 22:37:19', '2018-11-17 23:33:03', null, 'okira0@example.com', null, 'Onfroi Kira', '$2a$10$lI8FFVHeiVyCBEV3dQCmSOrHAOsJRYTDC23rcSVNDh3usclJCk54S', 3, null),
-('2018-11-14 08:03:55', '2018-11-14 22:18:13', '2018-03-09', 'nhathwood1@example.com', null, 'Nicolle Hathwood', '$2a$10$Qm003NFCbAfG8B0sn.Y1luc3VbDtTCF/ktolGkYw3d.kNDZ5/y106', 1, null);
+INSERT INTO USUARIO (CREATED_DATE, LAST_MODIFIED_DATE, DATA_NASCIMENTO, EMAIL, FACEBOOK_USER_ID, NOME, SENHA, SEXO, LOCALIZACAO_ID, EMAIL_PUBLICO) VALUES
+('2018-11-23 13:18:25', '2018-11-24 17:24:53', '1970-12-10', 'dchristophle0@example.com', null, 'Danny Christophle', '$2a$10$YIqp1w.m/4brTM9vfXyuc.qCB/e4UkF8WMUh9b2ySspSXzCZMlZLS', 1, 1, 1),
+('2018-11-18 03:33:23', '2018-11-18 06:33:23', '1988-10-12', 'gnusche1@example.com', null, 'Gualterio Nusche', '$2a$10$2tTVuJQAyEhyy77MHniEGOEyJQave6ezht17Q8AOU5QPZqvtoul5e', 1, 2, 1),
+('2018-11-26 05:31:25', '2018-11-26 14:58:10', null, 'dwortt2@example.com', null, 'Dennie Wortt', '$2a$10$bC0R9ksjYhd//5m10ciPluxpjOUT75bYa6ya/rZ1qiARaZGB.yinC', 3, 3, 0),
+('2018-10-13 06:12:17', '2018-11-16 06:44:07', '2008-11-05', 'sconnal3@example.com', null, 'Salomi Connal', '$2a$10$V4ej2VaXtDLgEM0dQ6Va3ucibkJ07T38.rcZ/Iz61c48MgRm0ODv6', 2, 4, 1),
+('2018-09-10 17:24:53', '2018-11-20 14:04:17', '2010-05-21', 'dpfleger4@example.com', null, 'Dulce Pfleger', '$2a$10$EK7Wd/5kTniJ0wFl01zkVuAU.Ja5yu9LvCd9/8SCwsG.5mr4Li2ou', 3, 5, 1),
+('2018-11-10 14:58:33', '2018-11-25 14:26:17', '1985-05-02', 'loakwood5@example.com', null, 'Lela Oakwood', '$2a$10$7zn19kqTV09C0e8shv8wBOmCrFQ2GMPyItBvvjniW3O8Enf30yING', 3, 6, 0),
+('2018-09-18 08:59:56', '2018-11-18 17:12:06', null, 'kjoye6@example.com', null, 'Kitti Joye', '$2a$10$NIv/3CWCh4t7RzEgbFeWT./hIEgFQEtmHKgz5YyXQKK0ezIpRwh9K', 3, 7, 1),
+('2018-10-16 17:04:14', '2018-11-16 19:37:22', '1995-12-29', 'egalliver7@example.com', null, 'Euphemia Galliver', '$2a$10$K33sDIo6WQ6gjWMwJddzL.xnmTHudr5.ckpG5Z29.80wLSJ7bJWim', 2, 8, 1),
+('2018-11-17 22:37:19', '2018-11-17 23:33:03', null, 'okira0@example.com', null, 'Onfroi Kira', '$2a$10$lI8FFVHeiVyCBEV3dQCmSOrHAOsJRYTDC23rcSVNDh3usclJCk54S', 3, null, 0),
+('2018-11-14 08:03:55', '2018-11-14 22:18:13', '2018-03-09', 'nhathwood1@example.com', null, 'Nicolle Hathwood', '$2a$10$Qm003NFCbAfG8B0sn.Y1luc3VbDtTCF/ktolGkYw3d.kNDZ5/y106', 1, null, 1);
 
 INSERT INTO PUBLIC.TELEFONE (NUMERO, IS_WHATSAPP, USUARIO_ID) VALUES
 ('(16) 92289-2031', false, 9),
