@@ -6,9 +6,8 @@ import br.com.academiadev.suicidesquad.dto.PetDetailDTO;
 import br.com.academiadev.suicidesquad.dto.RegistroCreateDTO;
 import br.com.academiadev.suicidesquad.entity.Pet;
 import br.com.academiadev.suicidesquad.entity.PetSearch;
-import br.com.academiadev.suicidesquad.entity.Registro;
 import br.com.academiadev.suicidesquad.entity.Usuario;
-import br.com.academiadev.suicidesquad.exception.ResourceNotFoundException;
+import br.com.academiadev.suicidesquad.exception.PetNotFoundException;
 import br.com.academiadev.suicidesquad.mapper.PetMapper;
 import br.com.academiadev.suicidesquad.mapper.RegistroMapper;
 import br.com.academiadev.suicidesquad.service.PetService;
@@ -56,7 +55,7 @@ public class PetController {
         return petService
                 .findById(idPet)
                 .map(petMapper::toDetailDto)
-                .orElseThrow(() -> new ResourceNotFoundException("Pet com o id " + idPet + " não foi encontrado"));
+                .orElseThrow(PetNotFoundException::new);
     }
 
     @DeleteMapping("/pets/{idPet}")
