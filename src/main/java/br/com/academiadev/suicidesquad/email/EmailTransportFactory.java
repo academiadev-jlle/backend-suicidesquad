@@ -21,7 +21,8 @@ public class EmailTransportFactory {
                 throw new RuntimeException("Can't send email: SendGrid API key not configured.");
             }
             return new SendGridEmailTransport(sendGridApiKey);
-        } else if (provider.equals("mailtrap")) {
+        }
+        if (provider.equals("mailtrap")) {
             String host = env.getProperty("app.email.mailtrap.host", "smtp.mailtrap.io");
             String port = env.getProperty("app.email.mailtrap.port", "2525");
             String username = env.getProperty("app.email.mailtrap.username");
