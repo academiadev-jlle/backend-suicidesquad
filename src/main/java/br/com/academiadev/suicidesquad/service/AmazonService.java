@@ -18,7 +18,7 @@ public class AmazonService {
 	
 	private final String clientRegion = "*** Client region ***";
 	private final String bucketName = "*** Bucket name ***";
-	private final String configFilePath = System.getProperty("user.dir") + "\\suicide-squad\\awsconfigfile.txt";
+	private final String configFilePath = System.getProperty("user.dir") + "\\suicide-squad\\src\\main\\resources\\awsconfigfile.txt";
 	
 	public void saveImageToAmazon(File imageObj, String imageKey) throws IOException {
 		try {
