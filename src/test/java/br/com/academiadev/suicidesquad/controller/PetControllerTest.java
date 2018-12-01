@@ -1,6 +1,7 @@
 package br.com.academiadev.suicidesquad.controller;
 
 import br.com.academiadev.suicidesquad.entity.Pet;
+import br.com.academiadev.suicidesquad.entity.Registro;
 import br.com.academiadev.suicidesquad.entity.Usuario;
 import br.com.academiadev.suicidesquad.enums.*;
 import br.com.academiadev.suicidesquad.security.JwtTokenProvider;
@@ -26,6 +27,7 @@ import java.util.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -52,13 +54,23 @@ public class PetControllerTest {
     private JwtTokenProvider jwtTokenProvider;
 
     private Pet buildPet() {
+        Set<Cor> cores = new HashSet<>();
+        cores.add(Cor.PRETO);
+        cores.add(Cor.BRANCO);
         return Pet.builder()
                 .tipo(Tipo.GATO)
                 .porte(Porte.MEDIO)
                 .comprimentoPelo(ComprimentoPelo.MEDIO)
                 .categoria(Categoria.ACHADO)
-                .cor(Cor.BRANCO)
-                .cor(Cor.PRETO)
+                .cores(cores)
+                .build();
+    }
+
+    private Usuario buildUsuario() {
+        return Usuario.builder()
+                .nome("Exemplo")
+                .email("example@example.com")
+                .senha("hunter2")
                 .build();
     }
 
@@ -136,14 +148,19 @@ public class PetControllerTest {
     @Test
     public void buscarPets_quandoEncontra_entaoRetorna() throws Exception {
         List<Pet> pets = new ArrayList<>();
+        Set<Cor> coresA = new HashSet<>();
+        coresA.add(Cor.BRANCO);
+        coresA.add(Cor.MARROM);
+        coresA.add(Cor.PRETO);
+        Set<Cor> coresB = new HashSet<>();
+        coresB.add(Cor.BRANCO);
+        coresB.add(Cor.MARROM);
         pets.add(Pet.builder()
                 .tipo(Tipo.CACHORRO)
                 .porte(Porte.PEQUENO)
                 .comprimentoPelo(ComprimentoPelo.SEM_PELO)
                 .categoria(Categoria.PERDIDO)
-                .cor(Cor.BRANCO)
-                .cor(Cor.MARROM)
-                .cor(Cor.PRETO)
+                .cores(coresA)
                 .build());
         pets.add(Pet.builder()
                 .tipo(Tipo.CACHORRO)
@@ -151,8 +168,7 @@ public class PetControllerTest {
                 .comprimentoPelo(ComprimentoPelo.SEM_PELO)
                 .categoria(Categoria.PERDIDO)
                 .raca(Raca.PITBULL)
-                .cor(Cor.BRANCO)
-                .cor(Cor.MARROM)
+                .cores(coresB)
                 .build());
         pets.add(Pet.builder()
                 .tipo(Tipo.GATO)
@@ -236,6 +252,30 @@ public class PetControllerTest {
                 .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
                 .andExpect(jsonPath("$.usuario.email", equalTo(usuario.getEmailPublico())))
                 .andExpect(jsonPath("$.email", equalTo(usuario.getEmail())));
+    }
+
+    @Test
+    public void editarPet_quandoValidoEAutorizado_entaoSucesso() throws Exception {
+        Usuario usuario = usuarioService.save(Usuario.builder()
+                .nome("Fulano")
+                .email("fulano@example.com")
+                .build());
+        Set<Cor> cores = new HashSet<>();
+        cores.add(Cor.BRANCO);
+        cores.add(Cor.PRETO);
+        final Pet pet = petService.save(Pet.builder()
+                .tipo(Tipo.GATO)
+                .porte(Porte.MEDIO)
+                .comprimentoPelo(ComprimentoPelo.MEDIO)
+                .categoria(Categoria.ACHADO)
+                .usuario(usuario)
+                .build());
+
+        mvc.perform(get(String.format("/pets/%d", pet.getId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
+                .andExpect(jsonPath("$.usuario.email", equalTo(usuario.getEmailPublico())))
+                .andExpect(jsonPath("$.email", equalTo(usuario.getEmail())));
 
     }
 
@@ -254,14 +294,115 @@ public class PetControllerTest {
                 .categoria(Categoria.ACHADO)
                 .usuario(usuario)
                 .build());
-
         mvc.perform(get(String.format("/pets/%d", pet.getId())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
                 .andExpect(jsonPath("$.email", equalTo(null)))
                 .andExpect(jsonPath("$.usuario.email", equalTo(null)));
-
         Assertions.assertThat(usuario.getEmailPublico()).isEqualTo(null);
+    }
 
+    @Test
+    public void editarPet_quandoInvalidoEAutorizado_entaoErro() throws Exception {
+        Usuario usuario = usuarioService.save(Usuario.builder()
+                .nome("Fulano")
+                .email("fulano@example.com")
+                .build());
+        Set<Cor> cores = new HashSet<>();
+        cores.add(Cor.BRANCO);
+        cores.add(Cor.PRETO);
+        final Pet pet = petService.save(Pet.builder()
+                .tipo(Tipo.GATO)
+                .porte(Porte.MEDIO)
+                .comprimentoPelo(ComprimentoPelo.MEDIO)
+                .categoria(Categoria.ACHADO)
+                .cores(cores)
+                .build());
+        pet.addRegistro(new Registro(pet, Situacao.PROCURANDO));
+        usuario.addPet(pet);
+
+        String petJson = "{" +
+                "   \"tipo\": \"CACHORRO\"," +
+                "   \"porte\": \"MEDIO\"," +
+                "   \"comprimento_pelo\": \"MEDIO\"," +
+                "   \"categoria\": \"ACHADO\"," +
+                "   \"cores\": [\"BRANCO\", \"PRETO\"]" +
+                "}";
+
+        String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
+        mvc.perform(put(String.format("/pets/%d", pet.getId()))
+                .header("Authorization", "Bearer " + token)
+                .content(petJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        assertThat(pet.getTipo().toString(), equalTo("CACHORRO"));
+        assertThat(pet.getPorte().toString(), equalTo("MEDIO"));
+        assertThat(pet.getSituacaoAtual().toString(), equalTo("PROCURANDO"));
+        assertThat(pet.getRaca().toString(), equalTo("CACHORRO_SRD"));
+        assertThat(pet.getUsuario().getId(), equalTo(usuario.getId()));
+    }
+
+    @Test
+    public void editarPet_quandoNaoAutorizado_entaoErro() throws Exception {
+        final Usuario usuarioA = usuarioService.save(Usuario.builder()
+                .nome("Usuário A")
+                .email("usuario.a@example.com")
+                .senha("hunter2")
+                .build());
+        final Usuario usuarioB = usuarioService.save(Usuario.builder()
+                .nome("Usuário B")
+                .email("usuario.b@example.com")
+                .senha("hunter2")
+                .build());
+        final Pet pet = petService.save(buildPet());
+        usuarioB.addPet(pet);
+
+        String petJson = "{" +
+                "   \"tipo\": \"CACHORRO\"," +
+                "   \"porte\": \"MEDIO\"," +
+                "   \"comprimento_pelo\": \"MEDIO\"," +
+                "   \"categoria\": \"ACHADO\"," +
+                "   \"cores\": [\"BRANCO\", \"PRETO\"]" +
+                "}";
+        String tokenA = jwtTokenProvider.getToken(usuarioA.getUsername(), Collections.emptyList());
+        mvc.perform(put(String.format("/pets/%d", pet.getId()))
+                .header("Authorization", "Bearer " + tokenA)
+                .content(petJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void adicionarRegistro_quandoValido_entaoSucesso() throws Exception {
+        final Usuario usuario = usuarioService.save(buildUsuario());
+        final Pet pet = petService.save(buildPet());
+        pet.addRegistro(new Registro(pet, Situacao.PROCURANDO));
+        usuario.addPet(pet);
+
+        String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
+        mvc.perform(post(String.format("/pets/%d/registros", pet.getId()))
+                .header("Authorization", "Bearer " + token)
+                .content("{\"situacao\": \"ENCONTRADO\"}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        assertThat(pet.getSituacaoAtual().toString(), equalTo("ENCONTRADO"));
+    }
+
+    @Test
+    public void adicionarRegistro_quandoInvalido_entaoErro() throws Exception {
+        final Usuario usuario = usuarioService.save(buildUsuario());
+        final Pet pet = petService.save(buildPet());
+        usuario.addPet(pet);
+
+        String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
+        mvc.perform(post(String.format("/pets/%d/registros", pet.getId()))
+                .header("Authorization", "Bearer " + token)
+                .content("{\"situacao\": \"isso não é uma situação\"}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        assertThat(pet.getSituacaoAtual(), nullValue());
     }
 }

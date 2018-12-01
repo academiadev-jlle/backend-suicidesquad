@@ -6,10 +6,11 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class UsuarioCreateDTO {
+public class UsuarioEditDTO {
     @ApiModelProperty(value = "Nome", example = "Fulano", required = true)
     @NotNull
     private String nome;
@@ -19,8 +20,7 @@ public class UsuarioCreateDTO {
     @Email
     private String email;
 
-    @ApiModelProperty(value = "Senha", required = true)
-    @NotNull
+    @ApiModelProperty(value = "Senha")
     private String senha;
 
     @ApiModelProperty(value = "Sexo", allowableValues = "NAO_INFORMADO,MASCULINO,FEMININO")
@@ -32,6 +32,6 @@ public class UsuarioCreateDTO {
     @ApiModelProperty(value = "Localização")
     private LocalizacaoDTO localizacao;
 
-    @ApiModelProperty(value = "email visível nos anúncios")
-    private boolean emailPublico;
+    @ApiModelProperty(value = "Telefones")
+    private Set<TelefoneDTO> telefones;
 }

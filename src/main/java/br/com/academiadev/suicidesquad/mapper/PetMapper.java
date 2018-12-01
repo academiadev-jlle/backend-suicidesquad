@@ -1,12 +1,15 @@
 package br.com.academiadev.suicidesquad.mapper;
 
+import br.com.academiadev.suicidesquad.dto.LocalizacaoDTO;
 import br.com.academiadev.suicidesquad.dto.PetCreateDTO;
 import br.com.academiadev.suicidesquad.dto.PetDTO;
 import br.com.academiadev.suicidesquad.dto.PetDetailDTO;
 import br.com.academiadev.suicidesquad.entity.Pet;
 import br.com.academiadev.suicidesquad.enums.Raca;
 import br.com.academiadev.suicidesquad.enums.Tipo;
+import br.com.academiadev.suicidesquad.service.LocalizacaoService;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -16,6 +19,10 @@ import java.util.List;
         uses = {LocalizacaoMapper.class, RegistroMapper.class, UsuarioMapper.class}
 )
 public abstract class PetMapper {
+
+    @Autowired
+    private LocalizacaoService localizacaoService;
+
     @Mappings({
             @Mapping(target = "tipo"),
             @Mapping(target = "porte"),
@@ -27,12 +34,28 @@ public abstract class PetMapper {
             @Mapping(target = "castracao", defaultValue = "NAO_INFORMADO"),
             @Mapping(target = "nome"),
             @Mapping(target = "cores"),
-            @Mapping(target = "localizacao"),
+            @Mapping(target = "localizacao", ignore = true),
             @Mapping(target = "descricao")
     })
     public abstract Pet toEntity(PetCreateDTO dto);
 
     public abstract List<Pet> toEntities(List<PetCreateDTO> dtos);
+
+    @Mappings({
+            @Mapping(target = "tipo"),
+            @Mapping(target = "porte"),
+            @Mapping(target = "raca", ignore = true),
+            @Mapping(target = "comprimentoPelo", source = "comprimento_pelo"),
+            @Mapping(target = "sexo"),
+            @Mapping(target = "categoria"),
+            @Mapping(target = "vacinacao"),
+            @Mapping(target = "castracao"),
+            @Mapping(target = "nome"),
+            @Mapping(target = "cores"),
+            @Mapping(target = "localizacao", ignore = true),
+            @Mapping(target = "descricao")
+    })
+    public abstract Pet updateEntity(PetCreateDTO petCreateDTO, @MappingTarget Pet pet);
 
     @Mappings({
             @Mapping(target = "data_criacao", source = "createdDate"),
@@ -99,6 +122,20 @@ public abstract class PetMapper {
             entity.setRaca(Raca.EQUINO_SRD);
         } else {
             throw new RuntimeException("Tipo de pet inválido");
+        }
+    }
+
+    @AfterMapping
+    public void mapearLocalizacao(PetCreateDTO dto, @MappingTarget Pet entity) {
+        final LocalizacaoDTO localizacaoDTO = dto.getLocalizacao();
+        if (localizacaoDTO != null) {
+            entity.setLocalizacao(localizacaoService.findOrCreate(
+                    localizacaoDTO.getBairro(),
+                    localizacaoDTO.getCidade(),
+                    localizacaoDTO.getUf()
+            ));
+        } else {
+            entity.setLocalizacao(null);
         }
     }
 }

@@ -57,20 +57,25 @@ public class Pet extends AuditableEntity<Long> {
     @ElementCollection(targetClass = Cor.class)
     @CollectionTable(name = "pet_cor")
     @Convert(converter = CorConverter.class)
-    @Singular("cor")
+    @Builder.Default
     private Set<Cor> cores = new HashSet<>();
 
-    @OneToMany(mappedBy = "pet", orphanRemoval = true)
-    @Singular
+    @OneToMany(
+            mappedBy = "pet",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @Builder.Default
     private List<Registro> registros = new ArrayList<>();
 
     @Size(min = 2, max = 80)
     private String nome;
 
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 2000)
     private String descricao;
 
     @ManyToOne
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
     public void addCor(Cor cor) {
