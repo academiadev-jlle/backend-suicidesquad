@@ -19,8 +19,8 @@ public class AmazonController {
 	private AmazonService amazonService;
 	
 	@PostMapping("/amazon")
-	public String saveImageToAmazon(File imageObj, String imageKey) throws IOException {
-		return amazonService.saveImageToAmazon(imageObj, imageKey);
+	public void saveImageToAmazon(File imageObj, String imageKey) throws IOException {
+		amazonService.saveImageToAmazon(imageObj, imageKey);
 	}
 	
 	@DeleteMapping("/amazon")

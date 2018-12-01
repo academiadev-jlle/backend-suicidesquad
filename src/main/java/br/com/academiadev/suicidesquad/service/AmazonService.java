@@ -20,7 +20,7 @@ public class AmazonService {
 	private final String bucketName = "*** Bucket name ***";
 	private final String configFilePath = System.getProperty("user.dir") + "\\suicide-squad\\awsconfigfile.txt";
 	
-	public String saveImageToAmazon(File imageObj, String imageKey) throws IOException {
+	public void saveImageToAmazon(File imageObj, String imageKey) throws IOException {
 		try {
             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
                     .withRegion(clientRegion)
@@ -46,8 +46,6 @@ public class AmazonService {
             // couldn't parse the response from Amazon S3.
             e.printStackTrace();
         }
-        
-        return imageKey;
     }
 	
 	public void deleteImageFromAmazon(String imageKey) {
