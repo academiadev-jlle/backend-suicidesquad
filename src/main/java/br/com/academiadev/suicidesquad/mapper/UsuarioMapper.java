@@ -24,7 +24,7 @@ public abstract class UsuarioMapper {
 
     @Mappings({
             @Mapping(target = "nome"),
-            @Mapping(target = "email", source = "email"),
+            @Mapping(target = "email"),
             @Mapping(target = "senha", ignore = true),
             @Mapping(target = "sexo", defaultValue = "NAO_INFORMADO"),
             @Mapping(target = "dataNascimento", source = "data_nascimento", dateFormat = "yyyy-MM-dd"),
