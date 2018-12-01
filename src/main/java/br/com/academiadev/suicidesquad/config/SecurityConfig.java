@@ -1,6 +1,7 @@
 package br.com.academiadev.suicidesquad.config;
 
 import br.com.academiadev.suicidesquad.security.JwtTokenProvider;
+import br.com.academiadev.suicidesquad.security.RestAuthenticationEntryPoint;
 import br.com.academiadev.suicidesquad.service.CustomUserDetailsService;
 import br.com.academiadev.suicidesquad.service.PasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
+
+    @Autowired
+    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     @Bean
     @Override
@@ -70,6 +74,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 ).permitAll()
                 .anyRequest().authenticated()
                 .and()
+            .exceptionHandling()
+                .authenticationEntryPoint(restAuthenticationEntryPoint)
+                .and()
             .apply(new JwtConfigurer(jwtTokenProvider));
         // @formatter:on
     }
@@ -78,5 +85,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(PasswordService.encoder());
     }
-
 }
