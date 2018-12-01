@@ -30,8 +30,7 @@ public class EmailTransportFactory {
                 throw new RuntimeException("Can't send email: Mailtrap credentials not configured.");
             }
             return new MailtrapEmailTransport(host, Integer.valueOf(port), username, password);
-        } else {
-            return new NullEmailTransport();
         }
+        return new NullEmailTransport();
     }
 }
