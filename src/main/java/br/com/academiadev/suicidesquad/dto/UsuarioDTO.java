@@ -13,6 +13,6 @@ public class UsuarioDTO {
     @ApiModelProperty(value = "Nome", example = "Fulano")
     private String nome;
 
-    @ApiModelProperty(value = "email", example = "fulano@gmail.com")
+    @ApiModelProperty(value = "email", example = "fulano@example.com")
     private String email;
 }

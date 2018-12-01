@@ -283,7 +283,7 @@ public class PetControllerTest {
     public void dadoUsuarioEmailPrivado_buscarUsuarioPublicador_entaoEmailNull() throws Exception {
         Usuario usuario = Usuario.builder()
                 .nome("um usuario")
-                .email("umemail@gmail.com")
+                .email("umemail@example.com")
                 .emailPublico(false)
                 .senha("hunter2")
                 .build();
