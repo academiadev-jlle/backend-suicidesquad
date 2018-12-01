@@ -1,5 +1,7 @@
 package br.com.academiadev.suicidesquad.dto;
 
+import java.util.List;
+
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,4 +14,7 @@ public class UsuarioDTO {
 
     @ApiModelProperty(value = "Nome", example = "Fulano")
     private String nome;
+    
+    @ApiModelProperty(value = "Fotos", example = "link_do_repositório_externo")
+    private List<String> fotos;
 }

@@ -1,11 +1,11 @@
 package br.com.academiadev.suicidesquad.dto;
 
-import io.swagger.annotations.Api;
+import java.util.List;
+import java.util.Set;
+
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -48,6 +48,9 @@ public class PetDTO {
 
     @ApiModelProperty(value = "Cores", example = "MARROM")
     private List<String> cores;
+    
+    @ApiModelProperty(value = "Fotos", example = "link0")
+    private List<String> fotos;
 
     @ApiModelProperty(value = "ID do usuário publicador")
     private String usuario_id;

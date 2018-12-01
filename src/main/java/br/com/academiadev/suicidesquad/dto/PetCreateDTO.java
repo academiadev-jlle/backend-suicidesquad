@@ -1,11 +1,12 @@
 package br.com.academiadev.suicidesquad.dto;
 
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -43,6 +44,9 @@ public class PetCreateDTO {
 
     @ApiModelProperty(value = "Cores", example = "MARROM")
     private List<String> cores;
+    
+    @ApiModelProperty(value = "Fotos", example = "link_do_repositório_externo")
+    private List<String> fotos;
 
     @ApiModelProperty(value = "Localização")
     private LocalizacaoDTO localizacao;

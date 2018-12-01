@@ -1,12 +1,14 @@
 package br.com.academiadev.suicidesquad.dto;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.List;
+import java.util.Set;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -34,4 +36,7 @@ public class UsuarioEditDTO {
 
     @ApiModelProperty(value = "Telefones")
     private Set<TelefoneDTO> telefones;
+    
+    @ApiModelProperty(value = "Fotos", example = "link_do_repositório_externo")
+    private List<String> fotos;
 }

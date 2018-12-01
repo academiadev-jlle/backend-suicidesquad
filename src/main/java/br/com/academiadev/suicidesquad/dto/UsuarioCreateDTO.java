@@ -1,11 +1,13 @@
 package br.com.academiadev.suicidesquad.dto;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.List;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -31,4 +33,7 @@ public class UsuarioCreateDTO {
 
     @ApiModelProperty(value = "Localização")
     private LocalizacaoDTO localizacao;
+    
+    @ApiModelProperty(value = "Fotos", example = "link_do_repositório_externo")
+    private List<String> fotos;
 }
