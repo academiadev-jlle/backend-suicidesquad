@@ -177,7 +177,6 @@ public class UsuarioControllerTest {
 
         String usuarioJson = "{" +
                 "   \"nome\": \"Novo nome\"," +
-                "   \"email\": \"novo.email@example.com\"," +
                 "   \"telefones\": [" +
                 "       {" +
                 "           \"numero\": \"(47) 99999-9999\"" +
@@ -226,7 +225,6 @@ public class UsuarioControllerTest {
 
         Map<String, String> usuarioJson = new HashMap<>();
         usuarioJson.put("nome", "Novo nome");
-        usuarioJson.put("email", "usuario.b.novo.email@example.com");
 
         String tokenA = jwtTokenProvider.getToken(usuarioA.getUsername(), Collections.emptyList());
         mvc.perform(put(String.format("/usuarios/%d", usuarioB.getId()))
