@@ -48,7 +48,7 @@ public class EmailService {
             if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
                 throw new RuntimeException("Can't send email: Mailtrap credentials not configured.");
             }
-            return new MailtrapTransport(host, Integer.valueOf(port), username, password);
+            return new MailtrapEmailTransport(host, Integer.valueOf(port), username, password);
         } else {
             return new NullEmailTransport();
         }

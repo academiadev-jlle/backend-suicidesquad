@@ -7,10 +7,10 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
-public class MailtrapTransport implements EmailTransport {
+public class MailtrapEmailTransport implements EmailTransport {
     private JavaMailSenderImpl sender;
 
-    public MailtrapTransport(String host, int port, String username, String password) {
+    public MailtrapEmailTransport(String host, int port, String username, String password) {
         sender = new JavaMailSenderImpl();
         sender.setHost(host);
         sender.setPort(port);
