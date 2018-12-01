@@ -76,6 +76,7 @@ querydsl {
 
 sourceSets {
 	main.java.srcDirs += 'build/generated/source/apt/main'
+	main.java.srcDirs += 'src/main/generated'
 }
 
 // Herdar configurações do Gradle
