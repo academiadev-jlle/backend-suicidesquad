@@ -1,5 +1,6 @@
 package br.com.academiadev.suicidesquad.exception.handler;
 
+import br.com.academiadev.suicidesquad.exception.EmailExistenteException;
 import br.com.academiadev.suicidesquad.exception.ResourceNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,6 +56,18 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         return handleExceptionInternal(e, objectMapper.writeValueAsString(errorNode), headers, HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler({
+            EmailExistenteException.class
+    })
+    private ResponseEntity<Object> handleEmailExistente(EmailExistenteException e, WebRequest request) throws JsonProcessingException {
+        final ObjectNode errorNode = objectMapper.createObjectNode();
+        errorNode.put("code", 400);
+        errorNode.put("error", "Este email já foi usado. Por favor, use outro endereço.");
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        return handleExceptionInternal(e, objectMapper.writeValueAsString(errorNode), headers, HttpStatus.BAD_REQUEST, request);
     }
 
     @Override

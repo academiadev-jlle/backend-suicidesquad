@@ -4,6 +4,7 @@ import br.com.academiadev.suicidesquad.dto.UsuarioCreateDTO;
 import br.com.academiadev.suicidesquad.dto.UsuarioDTO;
 import br.com.academiadev.suicidesquad.dto.UsuarioEditDTO;
 import br.com.academiadev.suicidesquad.entity.Usuario;
+import br.com.academiadev.suicidesquad.exception.EmailExistenteException;
 import br.com.academiadev.suicidesquad.exception.UsuarioNotFoundException;
 import br.com.academiadev.suicidesquad.mapper.UsuarioMapper;
 import br.com.academiadev.suicidesquad.service.UsuarioService;
@@ -47,11 +48,15 @@ public class UsuarioController {
 
     @ApiOperation(value = "Cria o usuário")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Usuário criado com sucesso")
+            @ApiResponse(code = 201, message = "Usuário criado com sucesso"),
+            @ApiResponse(code = 400, message = "Usuário inválido"),
     })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/usuarios")
     UsuarioDTO createUsuario(@Valid @RequestBody UsuarioCreateDTO usuarioCreateDTO) {
+        if (usuarioService.existsByEmail(usuarioCreateDTO.getEmail())) {
+            throw new EmailExistenteException();
+        }
         Usuario usuario = usuarioMapper.toEntity(usuarioCreateDTO);
         return usuarioMapper.toDto(usuarioService.save(usuario));
     }

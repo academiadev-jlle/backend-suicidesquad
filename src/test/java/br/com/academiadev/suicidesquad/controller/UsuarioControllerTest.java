@@ -79,6 +79,21 @@ public class UsuarioControllerTest {
 
     @Test
     public void criarUsuario_quandoInvalido_entaoErro() throws Exception {
+        Usuario usuarioExistente = usuarioService.save(buildUsuario());
+
+        final Map<String, String> usuarioNovoJson = new HashMap<>();
+        usuarioNovoJson.put("nome", "Fulano");
+        usuarioNovoJson.put("email", usuarioExistente.getEmail());
+        usuarioNovoJson.put("senha", "hunter2");
+
+        mvc.perform(post("/usuarios")
+                .content(objectMapper.writeValueAsString(usuarioNovoJson))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void criarUsuario_quandoEmailExistente_entaoErro() throws Exception {
         final Map<String, String> usuarioJson = new HashMap<>();
         usuarioJson.put("nome", "Fulano");
 
@@ -162,7 +177,6 @@ public class UsuarioControllerTest {
 
         String usuarioJson = "{" +
                 "   \"nome\": \"Novo nome\"," +
-                "   \"email\": \"novo.email@example.com\"," +
                 "   \"telefones\": [" +
                 "       {" +
                 "           \"numero\": \"(47) 99999-9999\"" +
@@ -177,7 +191,7 @@ public class UsuarioControllerTest {
                 .andExpect(status().isOk());
 
         assertThat(usuario.getNome(), equalTo("Novo nome"));
-        assertThat(usuario.getEmail(), equalTo("novo.email@example.com"));
+        assertThat(usuario.getEmail(), equalTo("fulano@example.com"));
         assertThat(usuario.getTelefones().get(0).getNumero(), equalTo("(47) 99999-9999"));
         assertThat(usuario.getTelefones().get(0).getUsuario().getId(), equalTo(usuario.getId()));
         assertThat(usuario.getPets().get(0).getId(), equalTo(pet.getId()));
@@ -188,14 +202,10 @@ public class UsuarioControllerTest {
     public void editarUsuario_quandoInvalidoEAutorizado_entaoErro() throws Exception {
         final Usuario usuario = usuarioService.save(buildUsuario());
 
-        Map<String, String> usuarioJson = new HashMap<>();
-        usuarioJson.put("nome", "Novo nome");
-        usuarioJson.put("email", "email inválido");
-
         String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
         mvc.perform(put(String.format("/usuarios/%d", usuario.getId()))
                 .header("Authorization", "Bearer " + token)
-                .content(objectMapper.writeValueAsString(usuarioJson))
+                .content(objectMapper.writeValueAsString("{}"))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
@@ -215,7 +225,6 @@ public class UsuarioControllerTest {
 
         Map<String, String> usuarioJson = new HashMap<>();
         usuarioJson.put("nome", "Novo nome");
-        usuarioJson.put("email", "usuario.b.novo.email@example.com");
 
         String tokenA = jwtTokenProvider.getToken(usuarioA.getUsername(), Collections.emptyList());
         mvc.perform(put(String.format("/usuarios/%d", usuarioB.getId()))

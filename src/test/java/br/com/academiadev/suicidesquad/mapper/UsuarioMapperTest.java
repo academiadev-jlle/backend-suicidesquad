@@ -52,7 +52,6 @@ public class UsuarioMapperTest {
 
         UsuarioEditDTO usuarioB_EditDTO = new UsuarioEditDTO();
         usuarioB_EditDTO.setNome(usuarioB.getNome());
-        usuarioB_EditDTO.setEmail(usuarioB.getEmail());
 
         LocalizacaoDTO localizacaoB_DTO = new LocalizacaoDTO();
         localizacaoB_DTO.setBairro("Floresta");
@@ -75,7 +74,6 @@ public class UsuarioMapperTest {
 
         UsuarioEditDTO usuarioB_EditDTO = new UsuarioEditDTO();
         usuarioB_EditDTO.setNome(usuarioB.getNome());
-        usuarioB_EditDTO.setEmail(usuarioB.getEmail());
 
         LocalizacaoDTO localizacaoA_DTO = new LocalizacaoDTO();
         localizacaoA_DTO.setBairro(localizacaoA.getBairro());
