@@ -177,6 +177,7 @@ public class UsuarioControllerTest {
 
         String usuarioJson = "{" +
                 "   \"nome\": \"Novo nome\"," +
+                "   \"email_publico\": \"false\"," +
                 "   \"telefones\": [" +
                 "       {" +
                 "           \"numero\": \"(47) 99999-9999\"" +
@@ -192,6 +193,7 @@ public class UsuarioControllerTest {
 
         assertThat(usuario.getNome(), equalTo("Novo nome"));
         assertThat(usuario.getEmail(), equalTo("fulano@example.com"));
+        assertThat(usuario.getEmailPublico(), nullValue());
         assertThat(usuario.getTelefones().get(0).getNumero(), equalTo("(47) 99999-9999"));
         assertThat(usuario.getTelefones().get(0).getUsuario().getId(), equalTo(usuario.getId()));
         assertThat(usuario.getPets().get(0).getId(), equalTo(pet.getId()));

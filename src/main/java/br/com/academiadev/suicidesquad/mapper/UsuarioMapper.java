@@ -37,7 +37,8 @@ public abstract class UsuarioMapper {
             @Mapping(target = "sexo", defaultValue = "NAO_INFORMADO"),
             @Mapping(target = "dataNascimento", source = "data_nascimento", dateFormat = "yyyy-MM-dd"),
             @Mapping(target = "localizacao", ignore = true),
-            @Mapping(target = "telefones")
+            @Mapping(target = "telefones"),
+            @Mapping(target = "emailPublico", source = "email_publico")
     })
     public abstract Usuario updateEntity(UsuarioEditDTO dto, @MappingTarget Usuario entity);
 
