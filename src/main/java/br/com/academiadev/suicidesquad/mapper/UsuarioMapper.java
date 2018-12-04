@@ -28,7 +28,8 @@ public abstract class UsuarioMapper {
             @Mapping(target = "senha", ignore = true),
             @Mapping(target = "sexo", defaultValue = "NAO_INFORMADO"),
             @Mapping(target = "dataNascimento", source = "data_nascimento", dateFormat = "yyyy-MM-dd"),
-            @Mapping(target = "localizacao", ignore = true)
+            @Mapping(target = "localizacao", ignore = true),
+            @Mapping(target = "emailPublico", source = "email_publico", defaultValue = "true")
     })
     public abstract Usuario toEntity(UsuarioCreateDTO dto);
 
