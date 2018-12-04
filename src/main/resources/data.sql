@@ -65,18 +65,18 @@ INSERT INTO PUBLIC.TELEFONE (NUMERO, IS_WHATSAPP, USUARIO_ID) VALUES
 ('(50) 92794-1789', false, 10);
 
 
-INSERT INTO PET (CREATED_DATE, LAST_MODIFIED_DATE, CASTRACAO, CATEGORIA, COMPRIMENTO_PELO, DESCRICAO, NOME, PORTE, RACA, SEXO, TIPO, VACINACAO, ID_LOCALIZACAO, ID_USUARIO) VALUES
-('2018-10-25 18:58:41', '2018-10-26 01:54:33', 1, 3, 4, 'Vivamus in felis eu sapien cursus vestibulum.', 'Arabelle', 1, 5, 3, 1, 1, null, 10),
-('2018-10-24 18:09:41', '2018-10-24 18:35:46', 1, 2, 1, 'Curabitur convallis. Duis consequat dui nec nisi volutpat eleifend.', 'Wolfy', 3, 4, 3, 1, 1, null, 10),
-('2018-10-24 02:45:47', '2018-10-24 18:07:05', 1, 3, 2, 'Fusce consequat. Nulla nisl. Nunc nisl.', 'Creighton', 1, 4, 3, 1, 1, 4, 10),
-('2018-10-23 06:49:59', '2018-10-24 08:11:06', 1, 2, 1, 'Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.', null, 2, 5, 3, 1, 1, null, 9),
-('2018-10-23 20:33:38', '2018-10-24 02:38:02', 1, 3, 3, null, null, 2, 4, 3, 1, 1, null, 2),
-('2018-10-23 19:24:58', '2018-10-24 05:52:45', 1, 3, 1, 'Vestibulum rutrum rutrum neque. Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia.', 'Isidro', 3, 7, 3, 2, 1, null, 5),
-('2018-10-23 03:47:14', '2018-10-23 21:31:59', 1, 1, 1, 'Pellentesque viverra pede ac diam.', 'Julee', 1, 6, 3, 2, 1, null, 9),
-('2018-10-23 20:08:20', '2018-10-24 03:06:22', 1, 2, 3, 'Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl.', 'Merridie', 1, 7, 3, 2, 1, 3, 8),
-('2018-10-26 13:23:29', '2018-10-26 13:49:13', 1, 3, 4, null, 'Itch', 3, 7, 3, 2, 1, 2, 9),
-('2018-10-23 01:04:15', '2018-10-23 11:53:37', 1, 1, 2, 'Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.', null, 1, 8, 3, 3, 1, null, 4),
-('2018-10-26 12:37:41', '2018-10-27 06:58:54', 1, 2, 4, 'Ut at dolor quis odio consequat varius.', 'Julee', 3, 9, 3, 3, 1, null, 2);
+INSERT INTO PET (CREATED_DATE, LAST_MODIFIED_DATE, CASTRACAO, CATEGORIA, COMPRIMENTO_PELO, DESCRICAO, NOME, PORTE, RACA, SEXO, TIPO, VACINACAO, DATA_NOTIFICACAO_DE_INATIVIDADE, ID_LOCALIZACAO, ID_USUARIO) VALUES
+('2018-10-25 18:58:41', '2018-10-26 01:54:33', 1, 3, 4, 'Vivamus in felis eu sapien cursus vestibulum.', 'Arabelle', 1, 5, 3, 1, 1, null, null, 10),
+('2018-10-24 18:09:41', '2018-10-24 18:35:46', 1, 2, 1, 'Curabitur convallis. Duis consequat dui nec nisi volutpat eleifend.', 'Wolfy', 3, 4, 3, 1, 1, null, null, 10),
+('2018-10-24 02:45:47', '2018-10-24 18:07:05', 1, 3, 2, 'Fusce consequat. Nulla nisl. Nunc nisl.', 'Creighton', 1, 4, 3, 1, 1, null, 4, 10),
+('2018-10-23 06:49:59', '2018-10-24 08:11:06', 1, 2, 1, 'Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.', null, 2, 5, 3, 1, 1, null, null, 9),
+('2018-10-23 20:33:38', '2018-10-24 02:38:02', 1, 3, 3, null, null, 2, 4, 3, 1, 1, null, null, 2),
+('2018-10-23 19:24:58', '2018-10-24 05:52:45', 1, 3, 1, 'Vestibulum rutrum rutrum neque. Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia.', 'Isidro', 3, 7, 3, 2, 1, null, null, 5),
+('2018-10-23 03:47:14', '2018-10-23 21:31:59', 1, 1, 1, 'Pellentesque viverra pede ac diam.', 'Julee', 1, 6, 3, 2, 1, null, null, 9),
+('2018-10-23 20:08:20', '2018-10-24 03:06:22', 1, 2, 3, 'Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl.', 'Merridie', 1, 7, 3, 2, 1, null, 3, 8),
+('2018-10-26 13:23:29', '2018-10-26 13:49:13', 1, 3, 4, null, 'Itch', 3, 7, 3, 2, 1, null, 2, 9),
+('2018-10-23 01:04:15', '2018-10-23 11:53:37', 1, 1, 2, 'Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.', null, 1, 8, 3, 3, 1, null, null, 4),
+('2018-10-26 12:37:41', '2018-10-27 06:58:54', 1, 2, 4, 'Ut at dolor quis odio consequat varius.', 'Julee', 3, 9, 3, 3, 1, null, null, 2);
 
 INSERT INTO REGISTRO (ID_PET, DATA, SITUACAO) VALUES
 (1, '2018-12-02 08:38:15', 1),
