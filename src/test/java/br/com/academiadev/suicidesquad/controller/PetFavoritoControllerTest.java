@@ -125,7 +125,7 @@ public class PetFavoritoControllerTest {
                 .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
 
-        mvc.perform(post(String.format("/favoritos/%d/", pet.getId()))
+        mvc.perform(delete(String.format("/favoritos/%d/", pet.getId()))
                 .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
 

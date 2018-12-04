@@ -48,34 +48,29 @@ public class PetFavoritoController {
         return petMapper.toDtos(petFavoritoService.findAllPetsByUsuarioId(usuarioLogado.getId()));
     }
 
-    //se existe deleta se não existe cria
     @PostMapping("/favoritos/{idPet}/")
     PetFavorito createFavorito(@PathVariable Long idPet, @Valid @AuthenticationPrincipal Usuario usuarioLogado) {
-        if (petFavoritoService.existsPetFavorito(idPet, usuarioLogado.getId())) {
+        Pet pet = petService.findById(idPet).get();
+        PetFavorito petFavorito = PetFavorito.builder()
+                .pet(pet)
+                .usuario(usuarioLogado).build();
+        pet.addPetFavorito(petFavorito);
+        usuarioLogado.addPetFavorito(petFavorito);
 
-            PetFavorito petFavorito = petFavoritoService.findByIdPetAndIdUsuario(idPet, usuarioLogado.getId()).get();
-
-            Pet pet = petService.findById(idPet).get();
-
-            pet.getPetFavoritos().remove(petFavorito);
-            usuarioLogado.getPetFavoritos().remove(petFavorito);
-
-            petFavoritoService.deleteById(petFavorito.getId());
-            return petFavorito;
-        } else {
-
-            Pet pet = petService.findById(idPet).get();
-
-            PetFavorito petFavorito = PetFavorito.builder()
-                    .pet(pet)
-                    .usuario(usuarioLogado).build();
-
-            pet.addPetFavorito(petFavorito);
-            usuarioLogado.addPetFavorito(petFavorito);
-
-            return petFavoritoService.save(petFavorito);
-        }
-
+        return petFavoritoService.save(petFavorito);
     }
+
+    @DeleteMapping("/favoritos/{idPet}")
+    public void deletarFavorito(@PathVariable Long idPet, @Valid @AuthenticationPrincipal Usuario usuarioLogado) {
+        PetFavorito petFavorito = petFavoritoService.findByIdPetAndIdUsuario(idPet, usuarioLogado.getId()).get();
+
+        Pet pet = petService.findById(idPet).get();
+
+        pet.getPetFavoritos().remove(petFavorito);
+        usuarioLogado.getPetFavoritos().remove(petFavorito);
+
+        petFavoritoService.deleteById(petFavorito.getId());
+    }
+
 
 }
