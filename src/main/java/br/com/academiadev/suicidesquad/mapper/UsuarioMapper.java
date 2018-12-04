@@ -34,7 +34,6 @@ public abstract class UsuarioMapper {
 
     @Mappings({
             @Mapping(target = "nome"),
-            @Mapping(target = "senha", ignore = true),
             @Mapping(target = "sexo", defaultValue = "NAO_INFORMADO"),
             @Mapping(target = "dataNascimento", source = "data_nascimento", dateFormat = "yyyy-MM-dd"),
             @Mapping(target = "localizacao", ignore = true),
@@ -55,13 +54,6 @@ public abstract class UsuarioMapper {
     @AfterMapping
     public void mapearSenha(UsuarioCreateDTO usuarioCreateDTO, @MappingTarget Usuario entity) {
         entity.setSenha(PasswordService.encoder().encode(usuarioCreateDTO.getSenha()));
-    }
-
-    @AfterMapping
-    public void mapearSenha(UsuarioEditDTO usuarioEditDTO, @MappingTarget Usuario entity) {
-        if (usuarioEditDTO.getSenha() != null) {
-            entity.setSenha(PasswordService.encoder().encode(usuarioEditDTO.getSenha()));
-        }
     }
 
     @AfterMapping

@@ -15,9 +15,6 @@ public class UsuarioEditDTO {
     @NotNull
     private String nome;
 
-    @ApiModelProperty(value = "Senha")
-    private String senha;
-
     @ApiModelProperty(value = "Sexo", allowableValues = "NAO_INFORMADO,MASCULINO,FEMININO")
     private String sexo;
 
