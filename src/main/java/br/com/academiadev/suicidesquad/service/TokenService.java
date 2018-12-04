@@ -3,6 +3,7 @@ package br.com.academiadev.suicidesquad.service;
 import br.com.academiadev.suicidesquad.entity.Usuario;
 import br.com.academiadev.suicidesquad.exception.InvalidTokenException;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.impl.DefaultJwtParser;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneOffset;
@@ -24,6 +25,18 @@ public class TokenService {
                 .setExpiration(expiresAt)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
+    }
+
+    private String unverifiedParseToken(String token) throws InvalidTokenException {
+        String[] splitToken = token.split("\\.");
+        if (splitToken.length < 2) {
+            throw new InvalidTokenException();
+        }
+        String unsignedToken = splitToken[0] + "." + splitToken[1] + ".";
+
+        DefaultJwtParser parser = new DefaultJwtParser();
+        Jwt<?, ?> jwt = parser.parse(unsignedToken);
+        return ((Claims) jwt.getBody()).getSubject();
     }
 
     private String parseToken(String token, String secretKey) throws InvalidTokenException {
@@ -48,6 +61,17 @@ public class TokenService {
         // Uma hora
         final long validadeMs = 3600000L;
         return generateToken(usuario.getEmail(), validadeMs, getRedefinicaoSenhaSecretKey(usuario));
+    }
+
+    String getEmailFromRedefinicaoSenhaToken(String token) {
+        String subject;
+        try {
+            subject = unverifiedParseToken(token);
+        } catch (InvalidTokenException e) {
+            return null;
+        }
+        return subject;
+
     }
 
     public boolean validateRedefinicaoSenhaToken(Usuario usuario, String token) {

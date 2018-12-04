@@ -62,7 +62,9 @@ public class RedefinicaoSenhaServiceTest {
 
         final String token = "um token bem seguro";
         when(tokenService.validateRedefinicaoSenhaToken(usuario, token)).thenReturn(true);
-        redefinicaoSenhaService.completarRedefinicao(usuario, token, "senha2");
+        when(tokenService.getEmailFromRedefinicaoSenhaToken(token)).thenReturn(usuario.getEmail());
+        when(usuarioService.findByEmail(usuario.getEmail())).thenReturn(Optional.of(usuario));
+        redefinicaoSenhaService.completarRedefinicao(token, "senha2");
 
         ArgumentCaptor<Usuario> captor = ArgumentCaptor.forClass(Usuario.class);
         verify(usuarioService, times(1)).save(captor.capture());
@@ -77,6 +79,6 @@ public class RedefinicaoSenhaServiceTest {
         final String token = "um token errado";
         when(tokenService.validateRedefinicaoSenhaToken(usuario, token)).thenReturn(false);
 
-        redefinicaoSenhaService.completarRedefinicao(usuario, token, "senha2");
+        redefinicaoSenhaService.completarRedefinicao(token, "senha2");
     }
 }
