@@ -95,33 +95,6 @@ public class PetFavoritoControllerTest {
     }
 
     @Test
-    public void dadoPetFavorito_quandoBuscarPorId_entaoEncontrado() throws Exception {
-        final Usuario usuario = buildUsuario();
-        usuarioService.save(usuario);
-
-        final Pet petA = buildPetA(usuario);
-        final Pet petB = buildPetB(usuario);
-
-        petService.save(petA);
-        petService.save(petB);
-
-        final PetFavorito petFavorito = PetFavorito.builder()
-                .pet(petA)
-                .usuario(usuario)
-                .build();
-
-        petFavoritoService.save(petFavorito);
-
-        String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
-        mvc.perform(get(String.format("/favoritos/%d/", petFavorito.getId()))
-                .header("Authorization", "Bearer " + token))
-                .andExpect(status().isOk());
-
-        assertThat(petFavorito.getPet(), equalTo(petA));
-        assertThat(petFavorito.getUsuario(), equalTo(usuario));
-    }
-
-    @Test
     public void dadoUsuario_petFavoritado_entaoPetAdicionado() throws Exception {
         Usuario usuario = buildUsuario();
         usuarioService.save(usuario);

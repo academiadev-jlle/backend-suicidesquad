@@ -11,6 +11,9 @@ import br.com.academiadev.suicidesquad.mapper.PetFavoritoMapper;
 import br.com.academiadev.suicidesquad.mapper.PetMapper;
 import br.com.academiadev.suicidesquad.service.PetFavoritoService;
 import br.com.academiadev.suicidesquad.service.PetService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -36,12 +39,10 @@ public class PetFavoritoController {
         this.petFavoritoMapper = petFavoritoMapper;
     }
 
-    @GetMapping("/favoritos/{idFavorito}")
-    public PetFavoritoDTO getPetFavorito(@PathVariable Long idFavorito) {
-        return petFavoritoService.findById(idFavorito).map(petFavoritoMapper::toDTO)
-                .orElseThrow(PetNotFoundException::new);
-    }
-
+    @ApiOperation(value = "Retorna todos os pets favoritados do usuário logado")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Lista de pets favoritados encontrada")
+    })
     @GetMapping("/favoritos/")
     public Iterable<PetDTO> getAllPetsFavoritos(@Valid @AuthenticationPrincipal Usuario usuarioLogado) {
         return petMapper.toDtos(petFavoritoService.findAllPetsByUsuarioId(usuarioLogado.getId()));
