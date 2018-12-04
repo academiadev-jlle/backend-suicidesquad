@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -162,54 +163,6 @@ public class PetFavoritoControllerTest {
 
         assertThat(petFavoritoService.existsPetFavorito(petB.getId(), usuario.getId()), equalTo(false));
         assertThat(petFavoritoService.existsPetFavorito(petA.getId(), 2l), equalTo(false));
-    }
-
-    @Test
-    public void dadoPetFavoritoExistente_quandoBuscarPorIdUsuarioEIdPet_entaoEncontrado() {
-        final Usuario usuario = buildUsuario();
-        usuarioService.save(usuario);
-
-        final Pet petA = buildPetA(usuario);
-        final Pet petB = buildPetB(usuario);
-
-        petService.save(petA);
-        petService.save(petB);
-
-        final PetFavorito petFavorito = new PetFavorito(usuario, petA);
-
-        petFavoritoService.save(petFavorito);
-
-        petFavoritoService.save(new PetFavorito(usuario, petB));
-
-        Optional<PetFavorito> petFavoritoRespo = petFavoritoService.findByIdPetAndIdUsuario(petA.getId(), usuario.getId());
-
-        assertThat(petFavoritoRespo.get(), equalTo(petFavorito));
-        assertThat(petFavoritoRespo.get().getUsuario(), equalTo(usuario));
-        assertThat(petFavoritoRespo.get().getPet(), equalTo(petA));
-    }
-
-
-    @Test
-    public void dadoPetFavoritoNaoExiste_quandoBuscarPorIdUsuarioEIdPet_entaoNaoEncontrado() {
-        final Usuario usuario = buildUsuario();
-        usuarioService.save(usuario);
-
-        final Pet petA = buildPetA(usuario);
-        final Pet petB = buildPetB(usuario);
-
-        petService.save(petA);
-        petService.save(petB);
-
-        petFavoritoService.save(new PetFavorito(usuario, petA));
-
-        try {
-            PetFavorito petFavoritoRespo = petFavoritoService.findByIdPetAndIdUsuario(petB.getId(),
-                    usuario.getId()).orElseThrow(PetFavoritoNotFoundException::new);
-
-        } catch (Exception e) {
-            assertThat(e.getMessage(), equalTo("Pet Favorito não encontrado"));
-        }
-
     }
 
     @Test
