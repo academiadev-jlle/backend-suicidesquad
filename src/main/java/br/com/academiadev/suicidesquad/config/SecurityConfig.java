@@ -72,6 +72,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         "/usuarios",
                     "/usuarios/{id}"
                 ).permitAll()
+                .antMatchers(
+                        HttpMethod.PUT,
+                        "/senhas/requisitar_redefinicao",
+                        "/senhas/redefinir"
+                ).permitAll()
                 .anyRequest().authenticated()
                 .and()
             .exceptionHandling()

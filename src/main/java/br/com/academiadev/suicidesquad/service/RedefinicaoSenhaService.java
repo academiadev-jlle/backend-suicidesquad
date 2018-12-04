@@ -2,14 +2,12 @@ package br.com.academiadev.suicidesquad.service;
 
 import br.com.academiadev.suicidesquad.entity.Usuario;
 import br.com.academiadev.suicidesquad.exception.InvalidTokenRedefinicaoSenhaException;
-import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.ZoneOffset;
-import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class RedefinicaoSenhaService {
@@ -30,6 +28,14 @@ public class RedefinicaoSenhaService {
         this.tokenService = tokenService;
     }
 
+    private Optional<Usuario> getUsuarioFromToken(String token) {
+        String email = tokenService.getEmailFromRedefinicaoSenhaToken(token);
+        if (email == null) {
+            return Optional.empty();
+        }
+        return usuarioService.findByEmail(email);
+    }
+
     @Transactional
     public void iniciarRedefinicao(Usuario usuario) {
         final String token = tokenService.generateRedefinicaoSenhaToken(usuario);
@@ -41,7 +47,9 @@ public class RedefinicaoSenhaService {
     }
 
     @Transactional
-    public void completarRedefinicao(Usuario usuario, String token, String novaSenha) {
+    public void completarRedefinicao(String token, String novaSenha) {
+        Usuario usuario = getUsuarioFromToken(token)
+                .orElseThrow(InvalidTokenRedefinicaoSenhaException::new);
         if (!tokenService.validateRedefinicaoSenhaToken(usuario, token)) {
             throw new InvalidTokenRedefinicaoSenhaException();
         }
