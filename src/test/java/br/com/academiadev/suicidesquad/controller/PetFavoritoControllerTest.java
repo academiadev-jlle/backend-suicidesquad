@@ -142,11 +142,7 @@ public class PetFavoritoControllerTest {
         petService.save(petA);
         petService.save(petB);
 
-        final PetFavorito petFavorito = PetFavorito.builder()
-                .pet(petA)
-                .usuario(usuario)
-                .build();
-        petFavoritoService.save(petFavorito);
+        petFavoritoService.save(new PetFavorito(usuario, petA));
 
         assertThat(petFavoritoService.existsPetFavorito(petA.getId(), usuario.getId()), equalTo(true));
     }
@@ -162,11 +158,7 @@ public class PetFavoritoControllerTest {
         petService.save(petA);
         petService.save(petB);
 
-        final PetFavorito petFavorito = PetFavorito.builder()
-                .pet(petA)
-                .usuario(usuario)
-                .build();
-        petFavoritoService.save(petFavorito);
+        petFavoritoService.save(new PetFavorito(usuario, petA));
 
         assertThat(petFavoritoService.existsPetFavorito(petB.getId(), usuario.getId()), equalTo(false));
         assertThat(petFavoritoService.existsPetFavorito(petA.getId(), 2l), equalTo(false));
@@ -183,17 +175,11 @@ public class PetFavoritoControllerTest {
         petService.save(petA);
         petService.save(petB);
 
-        final PetFavorito petFavorito = PetFavorito.builder()
-                .pet(petA)
-                .usuario(usuario)
-                .build();
+        final PetFavorito petFavorito = new PetFavorito(usuario, petA);
+
         petFavoritoService.save(petFavorito);
 
-        final PetFavorito petFavoritoB = PetFavorito.builder()
-                .pet(petB)
-                .usuario(usuario)
-                .build();
-        petFavoritoService.save(petFavoritoB);
+        petFavoritoService.save(new PetFavorito(usuario, petB));
 
         Optional<PetFavorito> petFavoritoRespo = petFavoritoService.findByIdPetAndIdUsuario(petA.getId(), usuario.getId());
 
@@ -214,11 +200,7 @@ public class PetFavoritoControllerTest {
         petService.save(petA);
         petService.save(petB);
 
-        final PetFavorito petFavorito = PetFavorito.builder()
-                .pet(petA)
-                .usuario(usuario)
-                .build();
-        petFavoritoService.save(petFavorito);
+        petFavoritoService.save(new PetFavorito(usuario, petA));
 
         try {
             PetFavorito petFavoritoRespo = petFavoritoService.findByIdPetAndIdUsuario(petB.getId(),
@@ -241,15 +223,9 @@ public class PetFavoritoControllerTest {
         Pet petB = buildPetB(usuario);
         petService.save(petB);
 
-        PetFavorito petFavoritoA = PetFavorito.builder()
-                .pet(petA)
-                .usuario(usuario)
-                .build();
+        PetFavorito petFavoritoA = new PetFavorito(usuario, petA);
 
-        PetFavorito petFavoritoB = PetFavorito.builder()
-                .pet(petB)
-                .usuario(usuario)
-                .build();
+        PetFavorito petFavoritoB = new PetFavorito(usuario, petB);
 
         petFavoritoService.save(petFavoritoA);
         petFavoritoService.save(petFavoritoB);
