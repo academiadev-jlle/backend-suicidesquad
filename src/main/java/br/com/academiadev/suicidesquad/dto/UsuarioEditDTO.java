@@ -26,4 +26,7 @@ public class UsuarioEditDTO {
 
     @ApiModelProperty(value = "Telefones")
     private Set<TelefoneDTO> telefones;
+
+    @ApiModelProperty(value = "Email visível nos anúncios?")
+    private boolean email_publico;
 }
