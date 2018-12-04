@@ -15,11 +15,6 @@ public class UsuarioEditDTO {
     @NotNull
     private String nome;
 
-    @ApiModelProperty(value = "E-mail", example = "fulano@example.com", required = true)
-    @NotNull
-    @Email
-    private String email;
-
     @ApiModelProperty(value = "Senha")
     private String senha;
 

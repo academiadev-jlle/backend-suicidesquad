@@ -21,6 +21,10 @@ public class UsuarioService {
         return usuarioRepository.findById(id);
     }
 
+    public Optional<Usuario> findByEmail(String email) {
+        return usuarioRepository.findByEmail(email);
+    }
+
     public List<Usuario> findAll() {
         return usuarioRepository.findAll();
     }
@@ -39,6 +43,10 @@ public class UsuarioService {
 
     public boolean existsById(Long idUsuario) {
         return usuarioRepository.existsById(idUsuario);
+    }
+
+    public boolean existsByEmail(String email) {
+        return usuarioRepository.existsByEmail(email);
     }
 
     public void deleteById(Long idUsuario) {

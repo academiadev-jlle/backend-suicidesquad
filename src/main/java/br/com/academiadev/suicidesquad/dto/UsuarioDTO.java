@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UsuarioDTO {
+    @ApiModelProperty(value = "ID", example = "1")
+    private String id;
+
     @ApiModelProperty(value = "Data de criação", example = "2018-01-01 00:00:00")
     private String data_criacao;
 

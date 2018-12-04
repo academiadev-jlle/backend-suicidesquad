@@ -8,3 +8,10 @@ security.jwt.token.secret-key=
 app.social.facebook.enabled=false
 app.social.facebook.app-id=
 app.social.facebook.app-secret=
+
+# Opcional: Parâmetros para o envio de emails
+# Mude o provider para "mailtrap" e obtenha
+# as credenciais no site: https://mailtrap.io/
+app.email.provider=null
+app.email.mailtrap.username=
+app.email.mailtrap.password=

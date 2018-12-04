@@ -34,7 +34,6 @@ public abstract class UsuarioMapper {
 
     @Mappings({
             @Mapping(target = "nome"),
-            @Mapping(target = "email"),
             @Mapping(target = "senha", ignore = true),
             @Mapping(target = "sexo", defaultValue = "NAO_INFORMADO"),
             @Mapping(target = "dataNascimento", source = "data_nascimento", dateFormat = "yyyy-MM-dd"),
@@ -44,6 +43,7 @@ public abstract class UsuarioMapper {
     public abstract Usuario updateEntity(UsuarioEditDTO dto, @MappingTarget Usuario entity);
 
     @Mappings({
+            @Mapping(target = "id"),
             @Mapping(target = "nome"),
             @Mapping(target = "data_criacao", source = "createdDate"),
             @Mapping(target = "email", source = "emailPublico")
