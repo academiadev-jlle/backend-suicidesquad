@@ -133,39 +133,6 @@ public class PetFavoritoControllerTest {
     }
 
     @Test
-    public void dadoPetFavorito_quandoExistsById_entaoVerdadeiro() {
-        final Usuario usuario = buildUsuario();
-        usuarioService.save(usuario);
-
-        final Pet petA = buildPetA(usuario);
-        final Pet petB = buildPetB(usuario);
-
-        petService.save(petA);
-        petService.save(petB);
-
-        petFavoritoService.save(new PetFavorito(usuario, petA));
-
-        assertThat(petFavoritoService.existsPetFavorito(petA.getId(), usuario.getId()), equalTo(true));
-    }
-
-    @Test
-    public void dadoPetFavoritoNaoExistente_quandoExistsById_entaoFalso() {
-        final Usuario usuario = buildUsuario();
-        usuarioService.save(usuario);
-
-        final Pet petA = buildPetA(usuario);
-        final Pet petB = buildPetB(usuario);
-
-        petService.save(petA);
-        petService.save(petB);
-
-        petFavoritoService.save(new PetFavorito(usuario, petA));
-
-        assertThat(petFavoritoService.existsPetFavorito(petB.getId(), usuario.getId()), equalTo(false));
-        assertThat(petFavoritoService.existsPetFavorito(petA.getId(), 2l), equalTo(false));
-    }
-
-    @Test
     public void dadoUsuarioComPetsFavoritos_quandoBuscaTodos_entaoForamEncontrados() throws Exception {
         Usuario usuario = buildUsuario();
         usuarioService.save(usuario);

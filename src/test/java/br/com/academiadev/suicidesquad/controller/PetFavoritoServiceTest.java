@@ -100,4 +100,26 @@ public class PetFavoritoServiceTest {
             assertThat(e.getMessage(), equalTo("Pet Favorito não encontrado"));
         }
     }
+
+    @Test
+    public void dadoPetFavorito_quandoExistsById_entaoVerdadeiro() {
+        final Usuario usuario = buildUsuario();
+        final Pet petA = buildPetA(usuario);
+        when(petFavoritoService.existsPetFavorito(petA.getId(), usuario.getId())).thenReturn(true);
+        assertThat(true, equalTo(petFavoritoService.existsPetFavorito(petA.getId(), usuario.getId())));
+    }
+
+    @Test
+    public void dadoPetFavoritoNaoExistente_quandoExistsById_entaoFalso() {
+        final Usuario usuario = buildUsuario();
+
+        final Pet petA = buildPetA(usuario);
+        final Pet petB = buildPetB(usuario);
+
+        when(petFavoritoService.existsPetFavorito(petB.getId(), usuario.getId())).thenReturn(false);
+        when(petFavoritoService.existsPetFavorito(petA.getId(), usuario.getId())).thenReturn(false);
+        assertThat(false, equalTo(petFavoritoService.existsPetFavorito(petB.getId(), usuario.getId())));
+        assertThat(false, equalTo(petFavoritoService.existsPetFavorito(petB.getId(), usuario.getId())));
+    }
+
 }
