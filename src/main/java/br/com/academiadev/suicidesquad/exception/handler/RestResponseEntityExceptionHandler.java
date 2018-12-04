@@ -74,7 +74,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler({
             InvalidTokenException.class
     })
-    private ResponseEntity<Object> hnadleInvalidToken(InvalidTokenException e, WebRequest request) throws JsonProcessingException {
+    private ResponseEntity<Object> handleInvalidToken(InvalidTokenException e, WebRequest request) throws JsonProcessingException {
         final ObjectNode errorNode = objectMapper.createObjectNode();
         errorNode.put("code", 400);
         errorNode.put("error", "Este token é inválido.");
