@@ -7,7 +7,6 @@ import br.com.academiadev.suicidesquad.entity.Usuario;
 import br.com.academiadev.suicidesquad.enums.*;
 import br.com.academiadev.suicidesquad.exception.PetFavoritoNotFoundException;
 import br.com.academiadev.suicidesquad.service.PetFavoritoService;
-import br.com.academiadev.suicidesquad.service.UsuarioService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

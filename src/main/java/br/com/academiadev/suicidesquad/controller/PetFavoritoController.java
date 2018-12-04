@@ -2,11 +2,9 @@ package br.com.academiadev.suicidesquad.controller;
 
 
 import br.com.academiadev.suicidesquad.dto.PetDTO;
-import br.com.academiadev.suicidesquad.dto.PetFavoritoDTO;
 import br.com.academiadev.suicidesquad.entity.Pet;
 import br.com.academiadev.suicidesquad.entity.PetFavorito;
 import br.com.academiadev.suicidesquad.entity.Usuario;
-import br.com.academiadev.suicidesquad.exception.PetNotFoundException;
 import br.com.academiadev.suicidesquad.mapper.PetFavoritoMapper;
 import br.com.academiadev.suicidesquad.mapper.PetMapper;
 import br.com.academiadev.suicidesquad.service.PetFavoritoService;
