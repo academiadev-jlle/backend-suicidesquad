@@ -54,6 +54,10 @@ public class Pet extends AuditableEntity<Long> {
     @JoinColumn(name = "id_localizacao")
     private Localizacao localizacao;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "pet")
+    private List<PetFavorito> petFavoritos = new ArrayList<>();
+
     @ElementCollection(targetClass = Cor.class)
     @CollectionTable(name = "pet_cor")
     @Convert(converter = CorConverter.class)
@@ -80,6 +84,10 @@ public class Pet extends AuditableEntity<Long> {
 
     public void addCor(Cor cor) {
         this.cores.add(cor);
+    }
+
+    public void addPetFavorito(PetFavorito petFavorito){
+        this.petFavoritos.add(petFavorito);
     }
 
     public void addRegistro(Registro registro) {
