@@ -53,7 +53,7 @@ public class PetFavoritoController {
 
     @PostMapping("/favoritos/{idPet}/")
     @ResponseStatus(HttpStatus.CREATED)
-    PetFavorito createFavorito(@PathVariable Long idPet,@Valid @AuthenticationPrincipal Usuario usuarioLogado) {
+    public PetFavorito createFavorito(@PathVariable Long idPet, @Valid @AuthenticationPrincipal Usuario usuarioLogado) {
         Pet pet = petService.findById(idPet).get();
         Usuario usuario = usuarioService.findById(usuarioLogado.getId()).get();
 
@@ -61,19 +61,21 @@ public class PetFavoritoController {
         pet.addPetFavorito(petFavorito);
         usuario.addPetFavorito(petFavorito);
 
-        return petFavoritoService.save(petFavorito);
+        return petFavoritoService.saveIfNotExists(petFavorito);
     }
 
     @DeleteMapping("/favoritos/{idPet}")
     public void deletarFavorito(@PathVariable Long idPet, @Valid @AuthenticationPrincipal Usuario usuarioLogado) {
-        PetFavorito petFavorito = petFavoritoService.findByIdPetAndIdUsuario(idPet, usuarioLogado.getId()).get();
-        Usuario usuario = usuarioService.findById(usuarioLogado.getId()).get();
-        Pet pet = petService.findById(idPet).get();
+        PetFavorito petFavorito = petFavoritoService.findByIdPetAndIdUsuario(idPet, usuarioLogado.getId()).orElse(null);
 
-        pet.getPetFavoritos().remove(petFavorito);
-        usuario.getPetFavoritos().remove(petFavorito);
+        if (petFavorito != null) {
+            Usuario usuario = usuarioService.findById(usuarioLogado.getId()).get();
+            Pet pet = petService.findById(idPet).get();
 
-        petFavoritoService.deleteById(petFavorito.getId());
+            pet.getPetFavoritos().remove(petFavorito);
+            usuario.getPetFavoritos().remove(petFavorito);
+            petFavoritoService.deleteById(petFavorito.getId());
+        }
     }
 
 

@@ -58,4 +58,12 @@ public class PetFavoritoService {
         return petFavoritoRepository.findAll().stream().filter(petFavorito ->
                 (petFavorito.getPet().getId() == idPet) && (petFavorito.getUsuario().getId() == idUsuario)).findFirst();
     }
+
+    public PetFavorito saveIfNotExists(PetFavorito petFavorito) {
+        if (!existsPetFavorito(petFavorito.getPet().getId(), petFavorito.getUsuario().getId())) {
+            return petFavoritoRepository.save(petFavorito);
+        } else {
+            return findByIdPetAndIdUsuario(petFavorito.getPet().getId(), petFavorito.getUsuario().getId()).orElse(null);
+        }
+    }
 }
