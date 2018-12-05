@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Data
@@ -73,6 +74,8 @@ public class Pet extends AuditableEntity<Long> {
 
     @Size(min = 1, max = 2000)
     private String descricao;
+
+    private LocalDateTime dataNotificacaoDeInatividade;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario")

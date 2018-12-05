@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,12 @@ public class PetService {
 
     public List<Pet> findAll() {
         return petRepository.findAll();
+    }
+
+    public List<Pet> findPetsInativosNaoNotificadosDoUsuario(Usuario usuario) {
+        // Pet inativo: não houve atualização da situação por 7 dias.
+        LocalDateTime dataDeCorte = LocalDateTime.now().minusDays(7);
+        return petRepository.findPetsDoUsuarioInativosNaoNotificadosDesde(usuario, dataDeCorte);
     }
 
     public Optional<Pet> findById(Long idPet) {
