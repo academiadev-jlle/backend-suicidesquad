@@ -72,7 +72,7 @@ public class FacebookAuthControllerTest {
         mvc.perform(get("/auth/facebook/cadastrar_e_logar_via_callback")
                 .param("code", facebookCode))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl("http://example.com/"))
+                .andExpect(redirectedUrl("http://example.com/?accessToken=" + facebookAccessToken ))
                 .andExpect(cookie().exists("token"));
     }
 

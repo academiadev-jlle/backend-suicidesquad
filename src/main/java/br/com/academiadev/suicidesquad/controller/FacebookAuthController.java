@@ -81,7 +81,7 @@ public class FacebookAuthController {
     )
     @ApiResponses({
             @ApiResponse(code = 302, message = "Redirecionamento com o cookie do token de sessão"),
-            @ApiResponse(code = 302, message = "Redirecionamento sem o cookie, mas com um access token"),
+            @ApiResponse(code = 302, message = "Redirecionamento sem o cookie"),
             @ApiResponse(code = 302, message = "Redirecionamento sem nada (falha na autenticação)"),
     })
     public void cadastrarViaCallback(HttpServletResponse response, @RequestParam("code") String code) throws IOException {
@@ -97,22 +97,16 @@ public class FacebookAuthController {
 
         Usuario usuario = facebookService.buildUsuarioFromFacebookUser(facebookUser.get());
 
-        if (usuario.getEmail() == null) {
-            // Conta do facebook sem email cadastrado/público
-            // O frontend deve pedir um email e fazer outro request
-            // no endpoint "cadastrarComEmailSuplementar",
-            // usando o accessToken retornado na query string deste redirect.
-            response.sendRedirect(UriComponentsBuilder
-                    .fromHttpUrl(frontendRedirectUri)
-                    .queryParam("accessToken", accessToken.get())
-                    .build()
-                    .toUriString());
-            return;
+        if (usuario.getEmail() != null) {
+            Cookie tokenCookie = buildTokenCookie(usuario.getEmail());
+            response.addCookie(tokenCookie);
         }
 
-        Cookie tokenCookie = buildTokenCookie(usuario.getEmail());
-        response.addCookie(tokenCookie);
-        response.sendRedirect(frontendRedirectUri);
+        response.sendRedirect(UriComponentsBuilder
+                .fromHttpUrl(frontendRedirectUri)
+                .queryParam("accessToken", accessToken.get())
+                .build()
+                .toUriString());
     }
 
     @PostMapping("/cadastrar_e_logar_com_email_suplementar")
