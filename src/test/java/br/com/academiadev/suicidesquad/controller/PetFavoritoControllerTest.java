@@ -99,7 +99,7 @@ public class PetFavoritoControllerTest {
         String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
         mvc.perform(post(String.format("/favoritos/%d/", pet.getId()))
                 .header("Authorization", "Bearer " + token))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         assertThat(usuario.getPetFavoritos().size(), equalTo(1));
         assertThat(usuario.getPetFavoritos().get(0).getPet(), equalTo(pet));
@@ -116,7 +116,7 @@ public class PetFavoritoControllerTest {
         String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
         mvc.perform(post(String.format("/favoritos/%d/", pet.getId()))
                 .header("Authorization", "Bearer " + token))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         mvc.perform(delete(String.format("/favoritos/%d/", pet.getId()))
                 .header("Authorization", "Bearer " + token))
