@@ -48,7 +48,9 @@ public class PetFavoritoController {
     })
     @GetMapping("/favoritos/")
     public Iterable<PetDTO> getAllPetsFavoritos(@Valid @AuthenticationPrincipal Usuario usuarioLogado) {
-        return petMapper.toDtos(petFavoritoService.findAllPetsByUsuarioId(usuarioLogado.getId()));
+        Iterable<PetDTO> petDTOS = petMapper.toDtos(petFavoritoService.findAllPetsByUsuarioId(usuarioLogado.getId()));
+        petDTOS.forEach(petDTO -> petDTO.setPetFavoritado(true));
+        return petDTOS;
     }
 
     @PostMapping("/favoritos/{idPet}/")

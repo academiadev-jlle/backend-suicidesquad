@@ -57,4 +57,7 @@ public class PetDTO {
 
     @ApiModelProperty(value = "Localização")
     private LocalizacaoDTO localizacao;
+
+    @ApiModelProperty(value = "Pet Favorito")
+    private boolean petFavoritado = false;
 }

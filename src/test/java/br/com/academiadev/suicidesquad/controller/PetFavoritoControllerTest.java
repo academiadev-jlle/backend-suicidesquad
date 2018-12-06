@@ -158,6 +158,8 @@ public class PetFavoritoControllerTest {
                 .andExpect(jsonPath("$[0].tipo", equalTo(petA.getTipo().toString())))
                 .andExpect(jsonPath("$[1].tipo", equalTo(petB.getTipo().toString())))
                 .andExpect(jsonPath("$[0].porte", equalTo(petA.getPorte().toString())))
-                .andExpect(jsonPath("$[1].porte", equalTo(petB.getPorte().toString())));
+                .andExpect(jsonPath("$[1].porte", equalTo(petB.getPorte().toString())))
+                .andExpect(jsonPath("$[0].petFavoritado", equalTo(true)))
+                .andExpect(jsonPath("$[1].petFavoritado", equalTo(true)));
     }
 }
