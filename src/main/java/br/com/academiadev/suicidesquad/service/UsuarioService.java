@@ -24,7 +24,6 @@ public class UsuarioService {
     public Optional<Usuario> findByEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }
-
     public List<Usuario> findAll() {
         return usuarioRepository.findAll();
     }
@@ -47,6 +46,10 @@ public class UsuarioService {
 
     public boolean existsByEmail(String email) {
         return usuarioRepository.existsByEmail(email);
+    }
+
+    public boolean existsByFacebookUserId(String facebookUserId) {
+        return usuarioRepository.existsByFacebookUserId(facebookUserId);
     }
 
     public void deleteById(Long idUsuario) {
