@@ -25,9 +25,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -137,6 +135,18 @@ public class PetControllerTest {
                 .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
                 .andExpect(jsonPath("$.cores[0]", equalTo(pet.getCores().toArray()[0].toString())))
                 .andExpect(jsonPath("$.cores[1]", equalTo(pet.getCores().toArray()[1].toString())));
+    }
+
+    @Test
+    public void obterPet_quandoExisteELogado_entaoRetornaEGravaVisita() throws Exception {
+        Usuario usuario = usuarioService.save(buildUsuario());
+        Pet pet = petService.save(buildPet());
+
+        String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
+        mvc.perform(get(String.format("/pets/%d", pet.getId()))
+                .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.n_visitas", equalTo(1)));
     }
 
     @Test
