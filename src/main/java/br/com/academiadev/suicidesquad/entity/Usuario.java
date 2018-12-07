@@ -66,6 +66,13 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
     private List<Pet> pets = new ArrayList<>();
 
     @Builder.Default
+    @OneToMany(
+            mappedBy = "usuario",
+            orphanRemoval = true
+    )
+    private List<Visita> visitas = new ArrayList<>();
+
+    @Builder.Default
     @NotNull
     private boolean emailPublico = true;
 
