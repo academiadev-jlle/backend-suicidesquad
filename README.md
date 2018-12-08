@@ -56,10 +56,6 @@ TODO
   * **Larissa Lopes** - [lopeslarissa](https://github.com/lopeslarissa)
   * **Iago Elias** - [imarinheiro](https://github.com/imarinheiro)
 
-## Licença
-
-Esse projeto é feito sob a licença do [MIT](https://opensource.org/licenses/MIT).
-
 ## Agradecimentos
 
 * À [Code:Nation](https://www.codenation.com.br/) pela oportunidade de participar do projeto AcademiaDev Joinville
