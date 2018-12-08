@@ -66,6 +66,10 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
     private List<Pet> pets = new ArrayList<>();
 
     @Builder.Default
+    @OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<PetFavorito> petFavoritos = new ArrayList<>();
+
+    @Builder.Default
     @OneToMany(
             mappedBy = "usuario",
             orphanRemoval = true
@@ -76,13 +80,19 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
     @NotNull
     private boolean emailPublico = true;
 
-    public boolean isEmailPublico(){
+    public boolean isEmailPublico() {
         return emailPublico;
     }
 
     public void addPet(Pet pet) {
         pets.add(pet);
         pet.setUsuario(this);
+    }
+
+    public void addPetFavorito(Pet pet) {
+        PetFavorito petFavorito = new PetFavorito(this, pet);
+        this.petFavoritos.add(petFavorito);
+        pet.addPetFavorito(petFavorito);
     }
 
     public String getEmailPublico() {
