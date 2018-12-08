@@ -5,7 +5,6 @@ import br.com.academiadev.suicidesquad.dto.PetDTO;
 import br.com.academiadev.suicidesquad.entity.Pet;
 import br.com.academiadev.suicidesquad.entity.PetFavorito;
 import br.com.academiadev.suicidesquad.entity.Usuario;
-import br.com.academiadev.suicidesquad.mapper.PetFavoritoMapper;
 import br.com.academiadev.suicidesquad.mapper.PetMapper;
 import br.com.academiadev.suicidesquad.service.PetFavoritoService;
 import br.com.academiadev.suicidesquad.service.PetService;
@@ -31,15 +30,12 @@ public class PetFavoritoController {
 
     private final PetFavoritoService petFavoritoService;
 
-    private final PetFavoritoMapper petFavoritoMapper;
-
     @Autowired
-    public PetFavoritoController(PetMapper petMapper, UsuarioService usuarioService, PetService petService, PetFavoritoService petFavoritoService, PetFavoritoMapper petFavoritoMapper) {
+    public PetFavoritoController(PetMapper petMapper, UsuarioService usuarioService, PetService petService, PetFavoritoService petFavoritoService) {
         this.petMapper = petMapper;
         this.usuarioService = usuarioService;
         this.petService = petService;
         this.petFavoritoService = petFavoritoService;
-        this.petFavoritoMapper = petFavoritoMapper;
     }
 
     @ApiOperation(value = "Retorna todos os pets favoritados do usuário logado")
