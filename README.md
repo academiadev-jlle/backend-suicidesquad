@@ -40,4 +40,17 @@ automaticamente no momento do _push_.
 
 ## Tecnologias utilizadas
 
-TODO
+* Gradle
+* [Spring](https://spring.io/)
+  * Web: controladores, repostas HTTP
+  * Data: interafaces de acesso aos dados
+  * Security: autenticação
+  * Mail: envio de emails por SMTP
+  * Social: interação com a API do Facebook
+* [Banco de dados H2](http://www.h2database.com/html/main.html)
+* [Lombok](https://projectlombok.org/): geração de código repetitivo (_getters_, _setters_, etc.)
+* [MapStruct](http://mapstruct.org/): mapeamento entre objetos, principalmente DAOs e DTOs
+* [Querydsl](http://www.querydsl.com/): construção de consultas de dados complexas, como a pesquisa de pets
+* [Swagger](https://swagger.io/): geração de documentação da API
+* [Circle CI](https://circleci.com/): integração contínua
+* [Codecov](https://codecov.io/): relatórios de cobertura dos testes
