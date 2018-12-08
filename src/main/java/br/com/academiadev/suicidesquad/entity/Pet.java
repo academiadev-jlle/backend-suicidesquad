@@ -69,6 +69,14 @@ public class Pet extends AuditableEntity<Long> {
     @Builder.Default
     private List<Registro> registros = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "pet",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @Builder.Default
+    private List<Visita> visitas = new ArrayList<>();
+
     @Size(min = 2, max = 80)
     private String nome;
 
@@ -99,5 +107,15 @@ public class Pet extends AuditableEntity<Long> {
                 .max(Comparator.comparing(Registro::getData))
                 .map(Registro::getSituacao)
                 .orElse(null);
+    }
+
+    public void addVisita(Usuario usuario) {
+        Visita visita = new Visita(this, usuario);
+        this.visitas.add(visita);
+        usuario.getVisitas().add(visita);
+    }
+
+    public int getNumeroDeVisitas() {
+        return this.visitas.size();
     }
 }

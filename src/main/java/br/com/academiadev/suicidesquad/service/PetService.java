@@ -118,4 +118,8 @@ public class PetService {
         final Usuario usuario = (Usuario) authentication.getPrincipal();
         return (pet != null) && (usuario != null) && (usuario.getId() != null) && pet.getUsuario().getId().equals(usuario.getId());
     }
+
+    public void adicionarVisita(Pet pet, Usuario usuario) {
+        pet.addVisita(usuario);
+    }
 }

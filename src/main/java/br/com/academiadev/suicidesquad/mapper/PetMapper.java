@@ -105,6 +105,7 @@ public abstract class PetMapper {
             @Mapping(target = "usuario"),
             @Mapping(target = "registros"),
             @Mapping(target = "email", source = "usuario.emailPublico"),
+            @Mapping(target = "n_visitas", source = "numeroDeVisitas")
 //            @Mapping(target = "telefones", source = "usuario.telefones"),
     })
     public abstract PetDetailDTO toDetailDto(Pet entity);

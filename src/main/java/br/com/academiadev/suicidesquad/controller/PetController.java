@@ -11,11 +11,15 @@ import br.com.academiadev.suicidesquad.exception.PetNotFoundException;
 import br.com.academiadev.suicidesquad.mapper.PetMapper;
 import br.com.academiadev.suicidesquad.mapper.RegistroMapper;
 import br.com.academiadev.suicidesquad.service.PetService;
+import br.com.academiadev.suicidesquad.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,15 +30,18 @@ public class PetController {
 
     private final PetService petService;
 
+    private final UsuarioService usuarioService;
+
     private final PetMapper petMapper;
 
     private final RegistroMapper registroMapper;
 
     @Autowired
-    public PetController(PetService petService, PetMapper petMapper, RegistroMapper registroMapper) {
+    public PetController(PetService petService, PetMapper petMapper, RegistroMapper registroMapper, UsuarioService usuarioService) {
         this.petService = petService;
         this.petMapper = petMapper;
         this.registroMapper = registroMapper;
+        this.usuarioService = usuarioService;
     }
 
     @GetMapping("/pets/search")
@@ -52,10 +59,18 @@ public class PetController {
 
     @GetMapping("/pets/{idPet}")
     public PetDetailDTO getPet(@PathVariable Long idPet) {
-        return petService
+        Pet pet = petService
                 .findById(idPet)
-                .map(petMapper::toDetailDto)
                 .orElseThrow(PetNotFoundException::new);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
+            Usuario usuarioVisitante = usuarioService.findById(((Usuario) authentication.getPrincipal()).getId())
+                    .orElseThrow(() -> new RuntimeException("Usuário deixou de existir no meio do request"));
+            petService.adicionarVisita(pet, usuarioVisitante);
+            petService.save(pet);
+        }
+        return petMapper.toDetailDto(pet);
     }
 
     @DeleteMapping("/pets/{idPet}")
