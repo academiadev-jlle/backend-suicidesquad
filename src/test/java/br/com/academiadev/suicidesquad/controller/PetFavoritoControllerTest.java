@@ -136,18 +136,8 @@ public class PetFavoritoControllerTest {
         Pet petB = buildPetB(usuario);
         petService.save(petB);
 
-        PetFavorito petFavoritoA = new PetFavorito(usuario, petA);
-
-        PetFavorito petFavoritoB = new PetFavorito(usuario, petB);
-
-        petFavoritoService.save(petFavoritoA);
-        petFavoritoService.save(petFavoritoB);
-
-        usuario.addPetFavorito(petFavoritoA);
-        usuario.addPetFavorito(petFavoritoB);
-
-        petA.addPetFavorito(petFavoritoA);
-        petB.addPetFavorito(petFavoritoB);
+        usuario.addPetFavorito(petA);
+        usuario.addPetFavorito(petB);
 
         String token = jwtTokenProvider.getToken(usuario.getUsername(), Collections.emptyList());
         mvc.perform(get("/favoritos/")

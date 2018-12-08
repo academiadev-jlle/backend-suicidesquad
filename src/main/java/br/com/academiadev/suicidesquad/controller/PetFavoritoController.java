@@ -5,6 +5,8 @@ import br.com.academiadev.suicidesquad.dto.PetDTO;
 import br.com.academiadev.suicidesquad.entity.Pet;
 import br.com.academiadev.suicidesquad.entity.PetFavorito;
 import br.com.academiadev.suicidesquad.entity.Usuario;
+import br.com.academiadev.suicidesquad.exception.PetNotFoundException;
+import br.com.academiadev.suicidesquad.exception.UsuarioNotFoundException;
 import br.com.academiadev.suicidesquad.mapper.PetMapper;
 import br.com.academiadev.suicidesquad.service.PetFavoritoService;
 import br.com.academiadev.suicidesquad.service.PetService;
@@ -43,7 +45,7 @@ public class PetFavoritoController {
             @ApiResponse(code = 200, message = "Lista de pets favoritados encontrada")
     })
     @GetMapping("/favoritos/")
-    public Iterable<PetDTO> getAllPetsFavoritos(@Valid @AuthenticationPrincipal Usuario usuarioLogado) {
+    public Iterable<PetDTO> getAllPetsFavoritos(@AuthenticationPrincipal Usuario usuarioLogado) {
         Iterable<PetDTO> petDTOS = petMapper.toDtos(petFavoritoService.findAllPetsByUsuarioId(usuarioLogado.getId()));
         petDTOS.forEach(petDTO -> petDTO.setPetFavoritado(true));
         return petDTOS;
@@ -51,19 +53,15 @@ public class PetFavoritoController {
 
     @PostMapping("/favoritos/{idPet}/")
     @ResponseStatus(HttpStatus.CREATED)
-    public PetFavorito createFavorito(@PathVariable Long idPet, @Valid @AuthenticationPrincipal Usuario usuarioLogado) {
-        Pet pet = petService.findById(idPet).get();
-        Usuario usuario = usuarioService.findById(usuarioLogado.getId()).get();
-
-        PetFavorito petFavorito = new PetFavorito(usuario, pet);
-        pet.addPetFavorito(petFavorito);
-        usuario.addPetFavorito(petFavorito);
-
-        return petFavoritoService.saveIfNotExists(petFavorito);
+    public void createFavorito(@PathVariable Long idPet,@AuthenticationPrincipal Usuario usuarioLogado) {
+        Pet pet = petService.findById(idPet).orElseThrow(PetNotFoundException::new);
+        Usuario usuario = usuarioService.findById(usuarioLogado.getId()).orElseThrow(UsuarioNotFoundException::new);
+        usuarioService.adicionarFavorito(usuario, pet);
+        usuarioService.save(usuario);
     }
 
     @DeleteMapping("/favoritos/{idPet}")
-    public void deletarFavorito(@PathVariable Long idPet, @Valid @AuthenticationPrincipal Usuario usuarioLogado) {
+    public void deletarFavorito(@PathVariable Long idPet,@AuthenticationPrincipal Usuario usuarioLogado) {
         PetFavorito petFavorito = petFavoritoService.findByIdPetAndIdUsuario(idPet, usuarioLogado.getId()).orElse(null);
 
         if (petFavorito != null) {

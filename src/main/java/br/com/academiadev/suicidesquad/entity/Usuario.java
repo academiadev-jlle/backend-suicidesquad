@@ -66,7 +66,7 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
     private List<Pet> pets = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "usuario", orphanRemoval = true)
+    @OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<PetFavorito> petFavoritos = new ArrayList<>();
 
     @Builder.Default
@@ -89,8 +89,10 @@ public class Usuario extends AuditableEntity<Long> implements UserDetails {
         pet.setUsuario(this);
     }
 
-    public void addPetFavorito(PetFavorito petFavorito) {
-        petFavoritos.add(petFavorito);
+    public void addPetFavorito(Pet pet) {
+        PetFavorito petFavorito = new PetFavorito(this, pet);
+        this.petFavoritos.add(petFavorito);
+        pet.addPetFavorito(petFavorito);
     }
 
     public String getEmailPublico() {

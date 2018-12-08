@@ -32,20 +32,12 @@ public class PetFavoritoService {
         return petFavoritoRepository.findById(id);
     }
 
-    public List<PetFavorito> findAll() {
-        return petFavoritoRepository.findAll();
-    }
-
     public PetFavorito save(PetFavorito petFavorito) {
         return petFavoritoRepository.save(petFavorito);
     }
 
     public void deleteById(Long id) {
         petFavoritoRepository.deleteById(id);
-    }
-
-    public boolean existsById(Long id) {
-        return petFavoritoRepository.existsById(id);
     }
 
     public boolean existsPetFavorito(Long idPet, Long idUsuario) {

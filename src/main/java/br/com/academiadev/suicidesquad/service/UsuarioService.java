@@ -1,5 +1,7 @@
 package br.com.academiadev.suicidesquad.service;
 
+import br.com.academiadev.suicidesquad.entity.Pet;
+import br.com.academiadev.suicidesquad.entity.PetFavorito;
 import br.com.academiadev.suicidesquad.entity.Usuario;
 import br.com.academiadev.suicidesquad.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +56,9 @@ public class UsuarioService {
 
     public void deleteById(Long idUsuario) {
         usuarioRepository.deleteById(idUsuario);
+    }
+
+    public void adicionarFavorito(Usuario usuario, Pet pet){
+        usuario.addPetFavorito(pet);
     }
 }
