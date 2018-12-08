@@ -47,7 +47,7 @@ public class UsuarioTest {
 		assertThat(usuario.getTelefones(), hasSize(1));
 		
 		usuario.setTelefones(lista2);
-		assertThat(usuario.getTelefones(), hasSize(2));
+		assertThat(usuario.getTelefones(), hasSize(3));
 	}
 	
 	@Test
