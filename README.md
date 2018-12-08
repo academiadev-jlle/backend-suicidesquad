@@ -5,16 +5,12 @@ Conheça mais sobre o projeto no outro repositório, [wiki-suicidesquad](https:/
 
 ## Configuração
 
-Após clonar o projeto, será necessário configurar alguns parâmetros
-para a autenticação dos usuários durante o desenvolvimento.
+Antes de tudo, tenha certeza de instalar o Java JDK 8. Após clonar o projeto,
+será necessário configurar alguns parâmetros para a autenticação dos usuários durante o desenvolvimento.
 
 Faça uma cópia do arquivo ```src/main/resources/application-dev.properties.sample```
 com o nome ```application-dev.properties```, no mesmo diretório, e configure os valores
 nele descritos.
-
-### Requisitos mínimos
-
-Java 8
 
 ## Execução
 
