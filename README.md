@@ -27,11 +27,22 @@ do seu ambiente de desenvolvimento.
 
     ./gradlew bootRun
 
+## _Deployment_ com Heroku
+
+Pré-requisitos:
+
+* Uma _API key_ do [SendGrid](https://sendgrid.com/), para o envio de emails. 
+
+Após criar um app no [Heroku](https://heroku.com/), é necessário adicionar as seguintes _config vars_:
+
+* `SPRING_PROFILES_ACTIVE=prod`: ativa a configuração de produção
+* `SENDGRID_API_KEY`: sua _API key_ do sendgrid
+* `JWT_TOKEN_SECRET_KEY`: insira 256 caracteres aleatórios, usados na geração de tokens
+
+Siga as instruções do Heroku para fazer um _deploy_  via Heroku CLI. Os demais parâmetros serão configurados
+automaticamente no momento do _push_. 
+
 ## Tecnologias utilizadas
-
-TODO
-
-## Controle de versões
 
 TODO
 
