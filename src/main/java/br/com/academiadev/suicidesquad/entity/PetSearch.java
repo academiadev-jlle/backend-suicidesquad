@@ -1,46 +1,46 @@
 package br.com.academiadev.suicidesquad.entity;
 
 import br.com.academiadev.suicidesquad.enums.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PetSearch {
     @NotNull
     private Tipo tipo;
 
     private SexoPet sexo;
 
-    private Boolean mostrarEntregues;
+    @Builder.Default
+    private Boolean mostrarEntregues = false;
 
+    @Builder.Default
     private Set<Porte> portes = new HashSet<>();
 
+    @Builder.Default
     private Set<Raca> racas = new HashSet<>();
 
+    @Builder.Default
     private Set<ComprimentoPelo> pelos = new HashSet<>();
 
+    @Builder.Default
     private Set<Categoria> categorias = new HashSet<>();
 
+    @Builder.Default
     private Set<Vacinacao> vacinacoes = new HashSet<>();
 
+    @Builder.Default
     private Set<Castracao> castracoes = new HashSet<>();
 
+    @Builder.Default
     private Set<Cor> cores = new HashSet<>();
-
-    public PetSearch(@NotNull Tipo tipo, SexoPet sexo, Boolean mostrarEntregues, Set<Porte> portes, Set<Raca> racas, Set<ComprimentoPelo> pelos, Set<Categoria> categorias, Set<Vacinacao> vacinacoes, Set<Castracao> castracoes, Set<Cor> cores) {
-        this.tipo = tipo;
-        this.sexo = sexo;
-        this.mostrarEntregues = mostrarEntregues != null && mostrarEntregues;
-
-        if (portes != null) this.portes = portes;
-        if (racas != null) this.racas = racas;
-        if (pelos != null) this.pelos = pelos;
-        if (categorias != null) this.categorias = categorias;
-        if (vacinacoes != null) this.vacinacoes = vacinacoes;
-        if (castracoes != null) this.castracoes = castracoes;
-        if (cores != null) this.cores = cores;
-    }
 }
