@@ -20,6 +20,22 @@ public class ConvertersTest {
     private TipoConverter tipoConverter = new TipoConverter();
     private VacinacaoConverter vacinacaoConverter = new VacinacaoConverter();
 
+
+    @Test
+    public void convertNullToDatabaseColumn() {
+        assertThat(castracaoConverter.convertToDatabaseColumn(null), equalTo(null));
+        assertThat(categoriaConverter.convertToDatabaseColumn(null), equalTo(null));
+        assertThat(comprimentoPeloConverter.convertToDatabaseColumn(null), equalTo(null));
+        assertThat(corConverter.convertToDatabaseColumn(null), equalTo(null));
+        assertThat(porteConverter.convertToDatabaseColumn(null), equalTo(null));
+        assertThat(racaConverter.convertToDatabaseColumn(null), equalTo(null));
+        assertThat(sexoPetConverter.convertToDatabaseColumn(null), equalTo(null));
+        assertThat(sexoUsuarioConverter.convertToDatabaseColumn(null), equalTo(null));
+        assertThat(situacaoConverter.convertToDatabaseColumn(null), equalTo(null));
+        assertThat(tipoConverter.convertToDatabaseColumn(null), equalTo(null));
+        assertThat(vacinacaoConverter.convertToDatabaseColumn(null), equalTo(null));
+    }
+
     @Test
     public void convertToDatabaseColumn() {
         assertThat(castracaoConverter.convertToDatabaseColumn(Castracao.CASTRADO), equalTo(3));
@@ -48,5 +64,20 @@ public class ConvertersTest {
         assertThat(situacaoConverter.convertToEntityAttribute(2), equalTo(Situacao.ENCONTRADO));
         assertThat(tipoConverter.convertToEntityAttribute(1), equalTo(Tipo.CACHORRO));
         assertThat(vacinacaoConverter.convertToEntityAttribute(2), equalTo(Vacinacao.PARCIAL));
+    }
+
+    @Test
+    public void convertNullToEntityAttribute() {
+        assertThat(castracaoConverter.convertToEntityAttribute(null), equalTo(null));
+        assertThat(categoriaConverter.convertToEntityAttribute(null), equalTo(null));
+        assertThat(comprimentoPeloConverter.convertToEntityAttribute(null), equalTo(null));
+        assertThat(corConverter.convertToEntityAttribute(null), equalTo(null));
+        assertThat(porteConverter.convertToEntityAttribute(null), equalTo(null));
+        assertThat(racaConverter.convertToEntityAttribute(null), equalTo(null));
+        assertThat(sexoPetConverter.convertToEntityAttribute(null), equalTo(null));
+        assertThat(sexoUsuarioConverter.convertToEntityAttribute(null), equalTo(null));
+        assertThat(situacaoConverter.convertToEntityAttribute(null), equalTo(null));
+        assertThat(tipoConverter.convertToEntityAttribute(null), equalTo(null));
+        assertThat(vacinacaoConverter.convertToEntityAttribute(null), equalTo(null));
     }
 }
