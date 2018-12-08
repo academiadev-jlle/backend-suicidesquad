@@ -36,7 +36,8 @@ public class EmailAuthControllerTest {
     public void efetuarLogin_quandoCredenciasInvalidas_entaoFalha() throws Exception {
     	mvc.perform(
     			post("/auth/email")
-    			.content(new AuthenticationRequest().toString())
+    			.content(objectMapper.writeValueAsString(new AuthenticationRequest()))
+    			.contentType(MediaType.APPLICATION_JSON)
     			)
     	.andExpect(status().isUnauthorized());
     }
@@ -49,7 +50,10 @@ public class EmailAuthControllerTest {
         usuarioJson.put("senha", "hunter2");
         
     	mvc
-    	.perform(post("/usuarios").content(objectMapper.writeValueAsString(usuarioJson)).contentType(MediaType.APPLICATION_JSON_UTF8))
+    	.perform(
+    			post("/usuarios")
+    			.content(objectMapper.writeValueAsString(usuarioJson))
+    			.contentType(MediaType.APPLICATION_JSON))
     	.andExpect(status().isCreated());
     	
     	AuthenticationRequest data = new AuthenticationRequest();
@@ -57,7 +61,10 @@ public class EmailAuthControllerTest {
     	data.setPassword(usuarioJson.get("senha"));
     	
     	mvc
-    	.perform(post("/auth/email").content(objectMapper.writeValueAsString(data)).contentType(MediaType.APPLICATION_JSON_UTF8))
+    	.perform(
+    			post("/auth/email")
+    			.content(objectMapper.writeValueAsString(data))
+    			.contentType(MediaType.APPLICATION_JSON))
     	.andExpect(status().isOk());
     	
     }
