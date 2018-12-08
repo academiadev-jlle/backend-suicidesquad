@@ -25,4 +25,7 @@ public class PetDetailDTO extends PetDTO {
 
     @ApiModelProperty(value = "Descrição")
     private String descricao;
+
+    @ApiModelProperty(value = "Número de visitas", example = "1")
+    private int n_visitas;
 }

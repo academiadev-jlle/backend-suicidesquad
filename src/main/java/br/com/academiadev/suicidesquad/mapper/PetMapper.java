@@ -58,6 +58,7 @@ public abstract class PetMapper {
     public abstract Pet updateEntity(PetCreateDTO petCreateDTO, @MappingTarget Pet pet);
 
     @Mappings({
+            @Mapping(target = "id"),
             @Mapping(target = "data_criacao", source = "createdDate"),
             @Mapping(target = "data_edicao", source = "lastModifiedDate"),
             @Mapping(target = "tipo"),
@@ -83,6 +84,7 @@ public abstract class PetMapper {
 
 
     @Mappings({
+            @Mapping(target = "id"),
             @Mapping(target = "data_criacao", source = "createdDate"),
             @Mapping(target = "data_edicao", source = "lastModifiedDate"),
             @Mapping(target = "tipo"),
@@ -103,6 +105,7 @@ public abstract class PetMapper {
             @Mapping(target = "usuario"),
             @Mapping(target = "registros"),
             @Mapping(target = "email", source = "usuario.emailPublico"),
+            @Mapping(target = "n_visitas", source = "numeroDeVisitas")
 //            @Mapping(target = "telefones", source = "usuario.telefones"),
     })
     public abstract PetDetailDTO toDetailDto(Pet entity);

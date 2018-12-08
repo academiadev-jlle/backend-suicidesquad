@@ -55,6 +55,10 @@ public class Pet extends AuditableEntity<Long> {
     @JoinColumn(name = "id_localizacao")
     private Localizacao localizacao;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "pet")
+    private List<PetFavorito> petFavoritos = new ArrayList<>();
+
     @ElementCollection(targetClass = Cor.class)
     @CollectionTable(name = "pet_cor")
     @Convert(converter = CorConverter.class)
@@ -68,6 +72,14 @@ public class Pet extends AuditableEntity<Long> {
     )
     @Builder.Default
     private List<Registro> registros = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "pet",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @Builder.Default
+    private List<Visita> visitas = new ArrayList<>();
 
     @Size(min = 2, max = 80)
     private String nome;
@@ -85,6 +97,10 @@ public class Pet extends AuditableEntity<Long> {
         this.cores.add(cor);
     }
 
+    public void addPetFavorito(PetFavorito petFavorito){
+        this.petFavoritos.add(petFavorito);
+    }
+
     public void addRegistro(Registro registro) {
         this.registros.add(registro);
         registro.setPet(this);
@@ -99,5 +115,15 @@ public class Pet extends AuditableEntity<Long> {
                 .max(Comparator.comparing(Registro::getData))
                 .map(Registro::getSituacao)
                 .orElse(null);
+    }
+
+    public void addVisita(Usuario usuario) {
+        Visita visita = new Visita(this, usuario);
+        this.visitas.add(visita);
+        usuario.getVisitas().add(visita);
+    }
+
+    public int getNumeroDeVisitas() {
+        return this.visitas.size();
     }
 }
