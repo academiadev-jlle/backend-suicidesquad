@@ -134,6 +134,7 @@ public class PetControllerTest {
 
         mvc.perform(get(String.format("/pets/%d", pet.getId())))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", equalTo(pet.getId().toString())))
                 .andExpect(jsonPath("$.tipo", equalTo(pet.getTipo().toString())))
                 .andExpect(jsonPath("$.cores[0]", equalTo(pet.getCores().toArray()[0].toString())))
                 .andExpect(jsonPath("$.cores[1]", equalTo(pet.getCores().toArray()[1].toString())));
