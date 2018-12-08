@@ -1,4 +1,4 @@
-package br.com.academiadev.suicidesquad.controller;
+package br.com.academiadev.suicidesquad.service;
 
 
 import br.com.academiadev.suicidesquad.entity.Pet;
