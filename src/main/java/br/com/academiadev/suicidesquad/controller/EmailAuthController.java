@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/auth/email")
 public class EmailAuthController {
     private final AuthenticationManager authenticationManager;

@@ -50,7 +50,6 @@ public class FacebookAuthController {
     }
 
     @GetMapping("/authorization")
-    @CrossOrigin
     @ApiOperation(
             value = "Redireciona para a URL de autorização do Facebook",
             notes = "Inicia a autenticação com um perfil do Facebook, através de um redirecionamento que requisitará " +
