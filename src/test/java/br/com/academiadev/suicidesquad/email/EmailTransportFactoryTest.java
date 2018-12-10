@@ -30,19 +30,19 @@ public class EmailTransportFactoryTest {
     }
 
     @Test
-    public void buildNullTransport() {
+    public void construirNullTransport() {
         mockProviderProperty("null");
         assertThat(factory.buildTransport(), instanceOf(NullEmailTransport.class));
     }
 
     @Test(expected = RuntimeException.class)
-    public void buildMailtrapTransport_quandoCredenciaisInvalidas_retornaErro() {
+    public void construirMailtrapTransport_quandoCredenciaisInvalidas_retornaErro() {
         mockProviderProperty("mailtrap");
         factory.buildTransport();
     }
 
     @Test
-    public void buildMailtrapTransport_quandoCredenciaisValidas_retornaTransport() {
+    public void construirMailtrapTransport_quandoCredenciaisValidas_retornaTransport() {
         mockProviderProperty("mailtrap");
         when(env.getProperty(eq("app.email.mailtrap.host"), anyString())).thenReturn("example.com");
         when(env.getProperty(eq("app.email.mailtrap.port"), anyString())).thenReturn("1337");
@@ -52,13 +52,13 @@ public class EmailTransportFactoryTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void buildSendGridTransport_quandoAPIKeyInvalida_retornaErro() {
+    public void construirSendGridTransport_quandoAPIKeyInvalida_retornaErro() {
         mockProviderProperty("sendgrid");
         factory.buildTransport();
     }
 
     @Test
-    public void buildSendGridTransport_quandoAPIKeyValida_retornaErro() {
+    public void construirSendGridTransport_quandoAPIKeyValida_retornaErro() {
         mockProviderProperty("sendgrid");
         when(env.getProperty("app.email.sendgrid.api-key")).thenReturn("test-api-key");
         assertThat(factory.buildTransport(), instanceOf(SendGridEmailTransport.class));
