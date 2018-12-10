@@ -1,10 +1,13 @@
 package br.com.academiadev.suicidesquad.mapper;
 
 import br.com.academiadev.suicidesquad.dto.LocalizacaoDTO;
+import br.com.academiadev.suicidesquad.dto.UsuarioCreateDTO;
+import br.com.academiadev.suicidesquad.dto.UsuarioDTO;
 import br.com.academiadev.suicidesquad.dto.UsuarioEditDTO;
 import br.com.academiadev.suicidesquad.entity.Localizacao;
 import br.com.academiadev.suicidesquad.entity.Usuario;
 import br.com.academiadev.suicidesquad.repository.LocalizacaoRepository;
+import br.com.academiadev.suicidesquad.service.PasswordService;
 import br.com.academiadev.suicidesquad.service.UsuarioService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +44,7 @@ public class UsuarioMapperTest {
                 .nome(String.format("Usuário %s", desc))
                 .email(String.format("usuario.%s@example.com", desc))
                 .localizacao(localizacao)
+                .senha("hunter2")
                 .build();
     }
 
@@ -86,5 +90,31 @@ public class UsuarioMapperTest {
         assertThat(usuarioB.getNome(), equalTo("Usuário B"));
         assertThat(usuarioB.getLocalizacao().getId(), equalTo(localizacaoA.getId()));
         assertThat(localizacaoRepository.findAll(), hasSize(1));
+    }
+
+    @Test
+    public void dadoUsuario_quandoToDTO_entaoDeuCerto(){
+        Usuario usuario = buildUsuario("descrição", buildLocalizacao());
+        UsuarioDTO usuarioDTO = usuarioMapper.toDto(usuario);
+
+        assertThat(usuarioDTO.getId(), equalTo(usuario.getId()));
+        assertThat(usuarioDTO.getEmail(), equalTo(usuario.getEmail()));
+        assertThat(usuarioDTO.getNome(), equalTo(usuario.getNome()));
+    }
+
+    @Test
+    public void dadoUsuarioCreateDTO_quandoToEntity_entaoDeuCerto(){
+        Usuario usuario = buildUsuario("A", buildLocalizacao());
+
+        UsuarioCreateDTO usuarioCreateDTO = new UsuarioCreateDTO();
+        usuarioCreateDTO.setEmail(usuario.getEmail());
+        usuarioCreateDTO.setNome(usuario.getNome());
+        usuarioCreateDTO.setSenha(usuario.getSenha());
+
+        Usuario usuarioRecebido = usuarioMapper.toEntity(usuarioCreateDTO);
+
+        assertThat(usuario.getNome(), equalTo(usuarioRecebido.getNome()));
+        assertThat(usuario.getEmail(), equalTo(usuarioRecebido.getEmail()));
+        assertThat(true, equalTo(PasswordService.encoder().matches(usuario.getSenha(), usuarioRecebido.getSenha())));
     }
 }

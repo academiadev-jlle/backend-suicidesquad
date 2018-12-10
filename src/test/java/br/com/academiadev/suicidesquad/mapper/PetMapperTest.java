@@ -2,13 +2,12 @@ package br.com.academiadev.suicidesquad.mapper;
 
 import br.com.academiadev.suicidesquad.dto.LocalizacaoDTO;
 import br.com.academiadev.suicidesquad.dto.PetCreateDTO;
+import br.com.academiadev.suicidesquad.dto.PetDTO;
+import br.com.academiadev.suicidesquad.dto.PetDetailDTO;
 import br.com.academiadev.suicidesquad.entity.Localizacao;
 import br.com.academiadev.suicidesquad.entity.Pet;
 import br.com.academiadev.suicidesquad.entity.Usuario;
-import br.com.academiadev.suicidesquad.enums.Categoria;
-import br.com.academiadev.suicidesquad.enums.ComprimentoPelo;
-import br.com.academiadev.suicidesquad.enums.Porte;
-import br.com.academiadev.suicidesquad.enums.Tipo;
+import br.com.academiadev.suicidesquad.enums.*;
 import br.com.academiadev.suicidesquad.repository.LocalizacaoRepository;
 import br.com.academiadev.suicidesquad.service.PetService;
 import br.com.academiadev.suicidesquad.service.UsuarioService;
@@ -18,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -43,6 +45,17 @@ public class PetMapperTest {
                 .nome("Exemplo")
                 .email("exemplo@example.com")
                 .senha("hunter2")
+                .build();
+    }
+
+    private Pet buildPet(Usuario usuario) {
+        return Pet.builder()
+                .usuario(usuario)
+                .tipo(Tipo.GATO)
+                .porte(Porte.MEDIO)
+                .comprimentoPelo(ComprimentoPelo.MEDIO)
+                .categoria(Categoria.ACHADO)
+                .raca(Raca.GATO_SRD)
                 .build();
     }
 
@@ -130,5 +143,67 @@ public class PetMapperTest {
         assertThat(petB.getTipo(), equalTo(Tipo.CACHORRO));
         assertThat(petB.getLocalizacao().getId(), equalTo(localizacaoA.getId()));
         assertThat(localizacaoRepository.findAll(), hasSize(1));
+    }
+
+    @Test
+    public void dadoPet_quandoToDTO_entaoDeuCerto() {
+        Usuario usuario = buildUsuario();
+        Pet pet = buildPet(usuario);
+
+        PetDTO petDTO = petMapper.toDto(pet);
+
+        assertThat(petDTO.getId(), equalTo(pet.getId()));
+        assertThat(petDTO.getPorte(), equalTo(pet.getPorte().toString()));
+        assertThat(petDTO.getCategoria(), equalTo(pet.getCategoria().toString()));
+    }
+
+    @Test
+    public void dadoPet_quandoToDetailDTO_entaoDeuCerto(){
+        Usuario usuario = buildUsuario();
+        Pet pet = buildPet(usuario);
+
+        PetDetailDTO petDetailDTO = petMapper.toDetailDto(pet);
+
+        assertThat(petDetailDTO.getUsuario().getId(), equalTo(usuario.getId()));
+        assertThat(petDetailDTO.getRegistros().size(), equalTo(pet.getRegistros().size()));
+        assertThat(petDetailDTO.getEmail(), equalTo(usuario.getEmail()));
+        assertThat(petDetailDTO.getN_visitas(), equalTo(pet.getNumeroDeVisitas()));
+        assertThat(petDetailDTO.getDescricao(), equalTo(pet.getDescricao()));
+    }
+
+    @Test
+    public void dadoPetCreateDTO_quandoToEntity_entaoDeuCerto(){
+        Localizacao localizacaoA = localizacaoRepository.save(new Localizacao(
+                "Centro",
+                "São Francisco do Sul",
+                "Santa Catarina"));
+
+        List<String> cores = new ArrayList<>();
+
+        Usuario usuario = buildUsuario();
+        Pet pet = buildPet(usuario);
+        pet.setLocalizacao(localizacaoA);
+        PetCreateDTO petCreateDTO = new PetCreateDTO();
+
+        petCreateDTO.setCastracao(pet.getCastracao().toString());
+        petCreateDTO.setNome(pet.getNome());
+        petCreateDTO.setCategoria(pet.getCategoria().toString());
+        petCreateDTO.setTipo(pet.getTipo().toString());
+        petCreateDTO.setPorte(pet.getPorte().toString());
+        petCreateDTO.setComprimento_pelo(pet.getComprimentoPelo().toString());
+        petCreateDTO.setRaca(pet.getRaca().toString());
+        petCreateDTO.setCores(cores);
+
+        LocalizacaoDTO localizacaoA_DTO = new LocalizacaoDTO();
+        localizacaoA_DTO.setBairro(localizacaoA.getBairro());
+        localizacaoA_DTO.setCidade(localizacaoA.getCidade());
+        localizacaoA_DTO.setUf(localizacaoA.getUf());
+
+        petCreateDTO.setLocalizacao(localizacaoA_DTO);
+
+        Pet petRecebido = petMapper.toEntity(petCreateDTO);
+        petRecebido.setUsuario(usuario);
+
+        assertThat(petRecebido, equalTo(pet));
     }
 }
