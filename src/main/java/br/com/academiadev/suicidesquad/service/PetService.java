@@ -43,6 +43,9 @@ public class PetService {
     }
 
     public Pet save(Pet pet) {
+        if (pet.getRegistros().isEmpty()){
+            pet.addRegistro(new Registro(pet,Situacao.PROCURANDO));
+        }
         return petRepository.save(pet);
     }
 
