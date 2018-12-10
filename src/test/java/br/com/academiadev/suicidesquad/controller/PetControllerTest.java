@@ -414,6 +414,6 @@ public class PetControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        assertThat(pet.getSituacaoAtual(), nullValue());
+        assertThat(pet.getRegistros().size(), equalTo(1));
     }
 }
