@@ -27,4 +27,6 @@ public interface PetRepository extends JpaRepository<Pet, Long>, QuerydslPredica
             "  AND (p.dataNotificacaoDeInatividade < r1.data\n" +
             "       OR p.dataNotificacaoDeInatividade IS NULL)")
     List<Pet> findPetsDoUsuarioInativosNaoNotificadosDesde(Usuario usuario, LocalDateTime dataDeCorte);
+
+    List<Pet> findPetsByUsuario_Id(Long idUsuario);
 }

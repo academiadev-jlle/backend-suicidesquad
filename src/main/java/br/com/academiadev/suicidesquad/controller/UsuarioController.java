@@ -4,10 +4,13 @@ import br.com.academiadev.suicidesquad.dto.PetDTO;
 import br.com.academiadev.suicidesquad.dto.UsuarioCreateDTO;
 import br.com.academiadev.suicidesquad.dto.UsuarioDTO;
 import br.com.academiadev.suicidesquad.dto.UsuarioEditDTO;
+import br.com.academiadev.suicidesquad.entity.Pet;
 import br.com.academiadev.suicidesquad.entity.Usuario;
 import br.com.academiadev.suicidesquad.exception.EmailExistenteException;
 import br.com.academiadev.suicidesquad.exception.UsuarioNotFoundException;
+import br.com.academiadev.suicidesquad.mapper.PetMapper;
 import br.com.academiadev.suicidesquad.mapper.UsuarioMapper;
+import br.com.academiadev.suicidesquad.service.PetService;
 import br.com.academiadev.suicidesquad.service.UsuarioService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -19,6 +22,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class UsuarioController {
@@ -29,12 +33,18 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
+    private final PetService petService;
+
     private final UsuarioMapper usuarioMapper;
 
+    private final PetMapper petMapper;
+
     @Autowired
-    public UsuarioController(UsuarioService usuarioService, UsuarioMapper usuarioMapper) {
+    public UsuarioController(UsuarioService usuarioService, UsuarioMapper usuarioMapper, PetService petService, PetMapper petMapper) {
         this.usuarioService = usuarioService;
         this.usuarioMapper = usuarioMapper;
+        this.petService = petService;
+        this.petMapper = petMapper;
     }
 
     @ApiOperation(value = "Retorna o usuário pelo Id")
@@ -85,8 +95,11 @@ public class UsuarioController {
     @ApiResponses({
             @ApiResponse(code=200, message = "List de Pets do Usuário encontrada")
     })
-    @GetMapping("/usuarios/{id}/pets")
-    public Iterable<PetDTO> getPetsByIdUsuario(@PathVariable Long id){
-        return usuarioService.findPetsByUsuario(usuarioService.findById(id).orElseThrow(UsuarioNotFoundException::new));
+    @GetMapping("/usuarios/{idUsuario}/pets")
+    public Iterable<PetDTO> getPetsByIdUsuario(@PathVariable Long idUsuario) {
+        Usuario usuario = usuarioService.findById(idUsuario)
+                .orElseThrow(UsuarioNotFoundException::new);
+        List<Pet> pets = petService.findPetsByUsuario(usuario);
+        return petMapper.toDtos(pets);
     }
 }

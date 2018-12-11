@@ -42,6 +42,10 @@ public class PetService {
         return petRepository.findById(idPet);
     }
 
+    public List<Pet> findPetsByUsuario(Usuario usuario) {
+        return petRepository.findPetsByUsuario_Id(usuario.getId());
+    }
+
     public Pet save(Pet pet) {
         if (pet.getRegistros().isEmpty()){
             pet.addRegistro(new Registro(pet,Situacao.PROCURANDO));
