@@ -2,10 +2,7 @@ package br.com.academiadev.suicidesquad.controller;
 
 import br.com.academiadev.suicidesquad.entity.Pet;
 import br.com.academiadev.suicidesquad.entity.Usuario;
-import br.com.academiadev.suicidesquad.enums.Categoria;
-import br.com.academiadev.suicidesquad.enums.ComprimentoPelo;
-import br.com.academiadev.suicidesquad.enums.Porte;
-import br.com.academiadev.suicidesquad.enums.Tipo;
+import br.com.academiadev.suicidesquad.enums.*;
 import br.com.academiadev.suicidesquad.security.JwtTokenProvider;
 import br.com.academiadev.suicidesquad.service.PetService;
 import br.com.academiadev.suicidesquad.service.UsuarioService;
@@ -20,13 +17,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,6 +52,15 @@ public class UsuarioControllerTest {
                 .nome("Fulano")
                 .email("fulano@example.com")
                 .senha("hunter2")
+                .build();
+    }
+
+    private Pet buildPet() {
+        return Pet.builder()
+                .tipo(Tipo.GATO)
+                .porte(Porte.MEDIO)
+                .comprimentoPelo(ComprimentoPelo.MEDIO)
+                .categoria(Categoria.ACHADO)
                 .build();
     }
 
@@ -234,5 +239,46 @@ public class UsuarioControllerTest {
                 .content(objectMapper.writeValueAsString(usuarioJson))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void dadoUsuarioComPets_quandoBuscarPetsDoUsuario_entaoPetsEncontrados() throws Exception {
+        Usuario usuario = buildUsuario();
+        Pet petA = buildPet();
+        Pet petB = buildPet();
+        Pet petC = buildPet();
+
+        usuario.addPet(petA);
+        usuario.addPet(petB);
+        usuario.addPet(petC);
+
+        usuarioService.save(usuario);
+
+        mvc.perform(get(String.format("/usuarios/%d/pets", usuario.getId())))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$[0].id", equalTo(petA.getId().toString())))
+                .andExpect(jsonPath("$[1].id", equalTo(petB.getId().toString())))
+                .andExpect(jsonPath("$[2].id", equalTo(petC.getId().toString())))
+                .andExpect(jsonPath("$", hasSize(3)));
+    }
+
+    @Test
+    public void dadoUsuarioSemPets_quandoBuscarPetsPorUsuario_entaoVazio() throws Exception {
+        Usuario usuario = buildUsuario();
+        usuarioService.save(usuario);
+
+        mvc.perform(get(String.format("/usuarios/%d/pets", usuario.getId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", empty()));
+    }
+
+    @Test
+    public void dadoNenhumUsuario_quandoBuscarPetsPorUsuario_entaoNaoEncontrado() throws Exception {
+        Usuario usuario = buildUsuario();
+        usuarioService.save(usuario);
+
+        mvc.perform(get("/usuarios/999/pets"))
+                .andExpect(status().isNotFound());
     }
 }

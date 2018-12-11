@@ -1,8 +1,9 @@
 package br.com.academiadev.suicidesquad.service;
 
+import br.com.academiadev.suicidesquad.dto.PetDTO;
 import br.com.academiadev.suicidesquad.entity.Pet;
-import br.com.academiadev.suicidesquad.entity.PetFavorito;
 import br.com.academiadev.suicidesquad.entity.Usuario;
+import br.com.academiadev.suicidesquad.mapper.PetMapper;
 import br.com.academiadev.suicidesquad.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,12 @@ import java.util.Optional;
 @Service
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
+    private final PetMapper petMapper;
 
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PetMapper petMapper) {
         this.usuarioRepository = usuarioRepository;
+        this.petMapper = petMapper;
     }
 
     public Optional<Usuario> findById(Long id) {
@@ -60,5 +63,9 @@ public class UsuarioService {
 
     public void adicionarFavorito(Usuario usuario, Pet pet){
         usuario.addPetFavorito(pet);
+    }
+
+    public Iterable<PetDTO> findPetsByUsuario(Usuario usuario){
+        return petMapper.toDtos(usuario.getPets());
     }
 }

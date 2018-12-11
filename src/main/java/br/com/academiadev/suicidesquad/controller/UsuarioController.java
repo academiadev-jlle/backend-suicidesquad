@@ -1,5 +1,6 @@
 package br.com.academiadev.suicidesquad.controller;
 
+import br.com.academiadev.suicidesquad.dto.PetDTO;
 import br.com.academiadev.suicidesquad.dto.UsuarioCreateDTO;
 import br.com.academiadev.suicidesquad.dto.UsuarioDTO;
 import br.com.academiadev.suicidesquad.dto.UsuarioEditDTO;
@@ -79,5 +80,13 @@ public class UsuarioController {
         usuarioMapper.updateEntity(usuarioEditDTO, usuarioLogado);
         usuarioService.save(usuarioLogado);
         return ResponseEntity.ok().build();
+    }
+
+    @ApiResponses({
+            @ApiResponse(code=200, message = "List de Pets do Usuário encontrada")
+    })
+    @GetMapping("/usuarios/{id}/pets")
+    public Iterable<PetDTO> getPetsByIdUsuario(@PathVariable Long id){
+        return usuarioService.findPetsByUsuario(usuarioService.findById(id).orElseThrow(UsuarioNotFoundException::new));
     }
 }
