@@ -54,8 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 .antMatchers(
                     "/auth/facebook/authorization",
-                    "/auth/facebook/cadastrar_e_logar_via_callback",
-                    "/auth/facebook/cadastrar_e_logar_com_email_suplementar",
+                    "/auth/facebook/cadastrar_via_callback",
+                    "/auth/facebook/cadastrar_com_email_suplementar",
                     "/auth/facebook/logar_com_access_token",
                     "/auth/email"
                 ).permitAll()
