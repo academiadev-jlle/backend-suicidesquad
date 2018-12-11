@@ -77,7 +77,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                     HttpMethod.GET,
         "/usuarios",
-                    "/usuarios/{id}"
+                    "/usuarios/{id}",
+                        "/usuarios/{id}/pets"
                 ).permitAll()
                 .antMatchers(
                         HttpMethod.PUT,
