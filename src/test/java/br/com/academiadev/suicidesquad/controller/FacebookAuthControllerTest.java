@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -59,21 +59,22 @@ public class FacebookAuthControllerTest {
     }
 
     @Test
-    public void cadastrarViaCallback_quandoValidoComEmail_entaoRedirectionaComTokenSessao() throws Exception {
+    public void cadastrarViaCallback_quandoValidoComEmail_entaoRedirectionaComAcessToken() throws Exception {
         final String facebookCode = "i'm a legit code. it's true!";
         final String facebookAccessToken = "i'm a valid access token, believe me folks.";
         final User facebookUser = mock(User.class);
-        final Usuario usuario = mock(Usuario.class);
+        final Usuario usuario = Usuario.builder()
+                .nome("Fulano")
+                .email("fulano@example.com")
+                .build();
         when(facebookService.getAccessToken(facebookCode)).thenReturn(Optional.of(facebookAccessToken));
         when(facebookService.getUser(facebookAccessToken)).thenReturn(Optional.of(facebookUser));
         when(facebookService.buildUsuarioFromFacebookUser(facebookUser)).thenReturn(usuario);
-        when(usuario.getEmail()).thenReturn("fulano@example.com");
 
-        mvc.perform(get("/auth/facebook/cadastrar_e_logar_via_callback")
+        mvc.perform(get("/auth/facebook/cadastrar_via_callback")
                 .param("code", facebookCode))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl("http://example.com/?accessToken=" + facebookAccessToken ))
-                .andExpect(cookie().exists("token"));
+                .andExpect(redirectedUrl("http://example.com/?accessToken=" + facebookAccessToken + "&hasEmail=true"));
     }
 
     @Test
@@ -81,33 +82,32 @@ public class FacebookAuthControllerTest {
         final String facebookCode = "i'm a legit code. it's true!";
         final String facebookAccessToken = "i'm a valid access token, believe me folks.";
         final User facebookUser = mock(User.class);
-        final Usuario usuario = mock(Usuario.class);
+        final Usuario usuario = Usuario.builder()
+                .nome("Fulano")
+                .build();
         when(facebookService.getAccessToken(facebookCode)).thenReturn(Optional.of(facebookAccessToken));
         when(facebookService.getUser(facebookAccessToken)).thenReturn(Optional.of(facebookUser));
         when(facebookService.buildUsuarioFromFacebookUser(facebookUser)).thenReturn(usuario);
-        when(usuario.getEmail()).thenReturn(null);
 
-        mvc.perform(get("/auth/facebook/cadastrar_e_logar_via_callback")
+        mvc.perform(get("/auth/facebook/cadastrar_via_callback")
                 .param("code", facebookCode))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl("http://example.com/?accessToken=" + facebookAccessToken))
-                .andExpect(cookie().doesNotExist("token"));
+                .andExpect(redirectedUrl("http://example.com/?accessToken=" + facebookAccessToken + "&hasEmail=false"));
     }
 
     @Test
-    public void cadastrarViaCallback_quandoInvalido_entaoRedirecionaSemTokenSessao() throws Exception {
+    public void cadastrarViaCallback_quandoInvalido_entaoRedirecionaSemAcessToken() throws Exception {
         final String facebookCode = "i'm an invalid code. try me!";
         when(facebookService.getAccessToken(facebookCode)).thenReturn(Optional.empty());
 
-        mvc.perform(get("/auth/facebook/cadastrar_e_logar_via_callback")
+        mvc.perform(get("/auth/facebook/cadastrar_via_callback")
                 .param("code", facebookCode))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl("http://example.com/"))
-                .andExpect(cookie().doesNotExist("token"));
+                .andExpect(redirectedUrl("http://example.com/"));
     }
 
     @Test
-    public void cadastrarComEmailSuplementar_quandoValido_entaoCadastraERetornaTokenSessao() throws Exception {
+    public void cadastrarComEmailSuplementar_quandoValido_entaoCadastra() throws Exception {
         final String facebookAccessToken = "i'm a valid access token, believe me folks.";
         final User facebookUser = mock(User.class);
         final Usuario usuario = Usuario.builder().nome("Fulano").build();
@@ -120,11 +120,10 @@ public class FacebookAuthControllerTest {
         dto.put("access_token", facebookAccessToken);
         dto.put("email_suplementar", emailSuplementar);
 
-        mvc.perform(post("/auth/facebook/cadastrar_e_logar_com_email_suplementar")
+        mvc.perform(post("/auth/facebook/cadastrar_com_email_suplementar")
                 .content(objectMapper.writeValueAsString(dto))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(cookie().exists("token"));
+                .andExpect(status().isCreated());
 
         assertThat(usuarioService.existsByEmail(emailSuplementar), equalTo(true));
     }
@@ -148,11 +147,10 @@ public class FacebookAuthControllerTest {
         dto.put("access_token", facebookAccessToken);
         dto.put("email_suplementar", "fulano.b@example.com");
 
-        mvc.perform(post("/auth/facebook/cadastrar_e_logar_com_email_suplementar")
+        mvc.perform(post("/auth/facebook/cadastrar_com_email_suplementar")
                 .content(objectMapper.writeValueAsString(dto))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(cookie().doesNotExist("token"));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -177,7 +175,7 @@ public class FacebookAuthControllerTest {
                 .content(objectMapper.writeValueAsString(dto))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(cookie().exists("token"));
+                .andExpect(jsonPath("$.token", not(isEmptyString())));
     }
 
     @Test
@@ -191,7 +189,6 @@ public class FacebookAuthControllerTest {
         mvc.perform(post("/auth/facebook/logar_com_access_token")
                 .content(objectMapper.writeValueAsString(dto))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(cookie().doesNotExist("token"));
+                .andExpect(status().isBadRequest());
     }
 }
