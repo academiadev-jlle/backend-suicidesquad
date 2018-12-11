@@ -4,7 +4,6 @@ import br.com.academiadev.suicidesquad.dto.PetDTO;
 import br.com.academiadev.suicidesquad.dto.UsuarioCreateDTO;
 import br.com.academiadev.suicidesquad.dto.UsuarioDTO;
 import br.com.academiadev.suicidesquad.dto.UsuarioEditDTO;
-import br.com.academiadev.suicidesquad.entity.Pet;
 import br.com.academiadev.suicidesquad.entity.Usuario;
 import br.com.academiadev.suicidesquad.exception.EmailExistenteException;
 import br.com.academiadev.suicidesquad.exception.UsuarioNotFoundException;
@@ -20,7 +19,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 public class UsuarioController {
@@ -89,6 +87,6 @@ public class UsuarioController {
     })
     @GetMapping("/usuarios/{id}/pets")
     public Iterable<PetDTO> getPetsByIdUsuario(@PathVariable Long id){
-        return usuarioService.findPetsByUsuarioId(usuarioService.findById(id).orElseThrow(UsuarioNotFoundException::new));
+        return usuarioService.findPetsByUsuario(usuarioService.findById(id).orElseThrow(UsuarioNotFoundException::new));
     }
 }

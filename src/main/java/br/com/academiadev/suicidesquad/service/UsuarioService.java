@@ -65,7 +65,7 @@ public class UsuarioService {
         usuario.addPetFavorito(pet);
     }
 
-    public Iterable<PetDTO> findPetsByUsuarioId(Usuario usuario){
+    public Iterable<PetDTO> findPetsByUsuario(Usuario usuario){
         return petMapper.toDtos(usuario.getPets());
     }
 }
