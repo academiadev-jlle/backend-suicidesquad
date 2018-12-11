@@ -6,6 +6,7 @@ import br.com.academiadev.suicidesquad.entity.Usuario;
 import br.com.academiadev.suicidesquad.exception.EmailExistenteException;
 import br.com.academiadev.suicidesquad.exception.InvalidAccessTokenException;
 import br.com.academiadev.suicidesquad.exception.UsuarioExistenteException;
+import br.com.academiadev.suicidesquad.mapper.UsuarioMapper;
 import br.com.academiadev.suicidesquad.security.JwtTokenProvider;
 import br.com.academiadev.suicidesquad.service.FacebookService;
 import br.com.academiadev.suicidesquad.service.UsuarioService;
@@ -43,17 +44,20 @@ public class FacebookAuthController {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final UsuarioMapper usuarioMapper;
+
     private final ObjectMapper objectMapper;
 
     @Value("${app.social.facebook.frontend-redirect-uri:}")
     private String frontendRedirectUri;
 
     @Autowired
-    public FacebookAuthController(FacebookService facebookService, UsuarioService usuarioService, JwtTokenProvider jwtTokenProvider, ObjectMapper objectMapper) {
+    public FacebookAuthController(FacebookService facebookService, UsuarioService usuarioService, JwtTokenProvider jwtTokenProvider, ObjectMapper objectMapper, UsuarioMapper usuarioMapper) {
         this.facebookService = facebookService;
         this.usuarioService = usuarioService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.objectMapper = objectMapper;
+        this.usuarioMapper = usuarioMapper;
     }
 
     @GetMapping("/authorization")
@@ -157,7 +161,7 @@ public class FacebookAuthController {
         String token = jwtTokenProvider.getToken(usuario.getEmail(), Collections.emptyList());
         ObjectNode tokenJson = objectMapper.createObjectNode();
         tokenJson.put("token", token);
-        tokenJson.set("usuario", objectMapper.valueToTree(usuario));
+        tokenJson.set("usuario", objectMapper.valueToTree(usuarioMapper.toDto(usuario)));
         return ResponseEntity.ok(objectMapper.writeValueAsString(tokenJson));
     }
 }
